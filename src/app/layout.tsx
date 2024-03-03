@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
+import { SideBar } from "@/components/Sidebar";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -27,8 +28,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} text-zinc-100`}
+        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} flex h-full text-zinc-100`}
       >
+        <SideBar />
         {children}
       </body>
     </html>
