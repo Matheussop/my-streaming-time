@@ -9,7 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        roboto: ["Roboto", "sans-serif"],
+        primary: ["var(--font-roboto)"],
+        secondary: ["var(--font-titan-one)"],
       },
       colors: {
         dark: {
