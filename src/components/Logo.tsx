@@ -1,8 +1,8 @@
 export function Logo() {
   return (
-    <div className="font-secondary my-1 flex text-xl">
+    <div className="my-1 flex font-secondary text-xl">
       <p>My</p>
-      <span className="text-primary px-1">STREAMING</span>
+      <span className="px-1 text-primary">STREAMING</span>
       <p>Time</p>
     </div>
   );

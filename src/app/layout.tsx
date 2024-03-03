@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} flex h-full text-zinc-100`}
+        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} flex h-screen text-zinc-100`}
       >
         <SideBar />
         {children}
