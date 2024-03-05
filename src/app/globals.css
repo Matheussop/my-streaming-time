@@ -65,6 +65,15 @@
     --ring: 24 5.7% 82.9%;
   }
 }
+
+@layer base {
+  .font-outline-2 {
+    -webkit-text-stroke: 2px #1E1E1E;
+  }
+  .font-outline-4 {
+    -webkit-text-stroke: 4px #1E1E1E;
+  }
+}
  
 @layer base {
   * {
