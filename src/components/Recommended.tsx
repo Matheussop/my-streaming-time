@@ -1,23 +1,27 @@
-"use client";
-import { useEffect, useState } from "react";
 import Loading from "@/app/home/loading";
 import Image from "next/image";
 
 import { faker } from "@faker-js/faker";
-export function Recommended() {
-  const [randomImage, setRandomImage] = useState<string>("");
-  const [randomTitle, setRandomTitle] = useState<string>("");
 
-  useEffect(() => {
-    async function getTitleAndImage() {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+interface DataProps {
+  randomImage: string;
+  randomTitle: string;
+}
+export async function getData(): Promise<DataProps> {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      setRandomImage(await faker.image.urlPicsumPhotos());
-      setRandomTitle(await faker.music.songName());
-    }
+  const randomImage =
+    "https://m.media-amazon.com/images/I/71tnjmKWwJL._AC_UF1000,1000_QL80_.jpg";
+  const randomTitle = "Solo Leveling";
 
-    getTitleAndImage();
-  }, []);
+  return {
+    randomImage,
+    randomTitle,
+  };
+}
+
+export async function Recommended() {
+  const { randomImage, randomTitle } = await getData();
 
   return randomImage ? (
     <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
