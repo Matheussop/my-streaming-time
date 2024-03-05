@@ -1,7 +1,7 @@
 import Loading from "@/app/home/loading";
 import Image from "next/image";
 
-import { faker } from "@faker-js/faker";
+import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 
 interface DataProps {
   randomImage: string;
@@ -24,92 +24,36 @@ export async function Recommended() {
   const { randomImage, randomTitle } = await getData();
 
   return randomImage ? (
-    <div className="mt-6 grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-6">
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-        <Image
-          width={160}
-          height={160}
-          className="w-full"
-          src={randomImage}
-          alt="Capa do album {randomTitle}"
-        />
-        <div>
-          <strong className="font-semibold text-white">{randomTitle}</strong>
-          <p className="text-sm">Artist</p>
-          <p className="text-sm">Some description off album</p>
-        </div>
-      </div>
-    </div>
+    <Carousel className="flex w-full items-center">
+      <CarouselContent className="w-full gap-6">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <CarouselItem
+            key={index}
+            className="w-full pl-1 md:basis-1/3 lg:basis-1/5"
+          >
+            <div className="p-1">
+              <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
+                <Image
+                  width={160}
+                  height={160}
+                  src={randomImage}
+                  className="w-full"
+                  alt="Capa do album {randomTitle}"
+                />
+                <div>
+                  <strong className="font-semibold text-white">
+                    {randomTitle}
+                  </strong>
+                  <p className="text-sm">Artist</p>
+                  <p className="text-sm">Some description off album</p>
+                  <span className="text-4xl font-semibold">{index + 1}</span>
+                </div>
+              </div>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
   ) : (
     <Loading />
   );
