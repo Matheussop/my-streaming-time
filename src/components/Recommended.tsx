@@ -33,11 +33,14 @@ export async function Recommended() {
           >
             <div className="p-1">
               <div className="flex flex-col items-center gap-4 rounded bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
+                <span className="relative -left-20 top-4 text-4xl font-semibold">
+                  {index + 1}
+                </span>
                 <Image
                   width={160}
                   height={160}
                   src={randomImage}
-                  className="w-full"
+                  className="-mt-12 w-[90%] max-w-[220px]"
                   alt="Capa do album {randomTitle}"
                 />
                 <div>
@@ -46,7 +49,6 @@ export async function Recommended() {
                   </strong>
                   <p className="text-sm">Artist</p>
                   <p className="text-sm">Some description off album</p>
-                  <span className="text-4xl font-semibold">{index + 1}</span>
                 </div>
               </div>
             </div>
