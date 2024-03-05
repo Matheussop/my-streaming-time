@@ -131,8 +131,8 @@ export function TopStreaming() {
           </div>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-3 gap-6">
-          <SkeletonsArray length={6} width="full" height="20" />
+        <div className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <SkeletonsArray length={6} width="w-full" height="h-20" />
         </div>
       )}
     </div>

@@ -2,11 +2,12 @@ import { Skeleton } from "./ui/skeleton";
 
 interface Props {
   length: number;
-  width: string;
+  className?: string;
   height: string;
+  width: string;
 }
-export function SkeletonsArray({ length, width, height }: Props) {
+export function SkeletonsArray({ length, height, width }: Props) {
   return Array.from({ length }, (_, index) => (
-    <Skeleton key={index} className={`h-${height} w-${width}`} />
+    <Skeleton key={index} className={`${height} ${width} `} />
   ));
 }
