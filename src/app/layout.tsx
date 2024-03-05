@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} flex h-screen text-zinc-100`}
       >
         <SideBar />
-        {children}
+        <div className="ml-64 w-screen">{children}</div>
       </body>
     </html>
   );

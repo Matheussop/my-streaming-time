@@ -17,7 +17,7 @@ const boxLoadingRecommended = () => {
 
 export default function Home() {
   return (
-    <div className="flex w-screen flex-col p-6 font-primary">
+    <div className="flex flex-col p-6 font-primary">
       <main>
         <TopStreaming />
         <div className="flex flex-1">
