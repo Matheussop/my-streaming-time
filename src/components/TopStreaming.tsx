@@ -4,6 +4,7 @@ import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
+import { tv } from "tailwind-variants";
 
 // const getDateCache = unstable_cache(
 //   async () => {
@@ -21,6 +22,16 @@ import { SkeletonsArray } from "./SkeletonsArray";
 //     tags: ["top-streaming"],
 //   },
 // );
+
+const menuButtons = tv({
+  base: "font-medium flex items-center bg-transparent text-xl hover:text-white hover:border-transparent",
+  variants: {
+    status: {
+      active:
+        "font-bold rounded-none border-b-2 border-b-primary text-primary hover:rounded-sm ",
+    },
+  },
+});
 
 export function TopStreaming() {
   // const { randomImageDefault, randomTitleDefault } = await getDefaultData();
@@ -52,22 +63,22 @@ export function TopStreaming() {
 
   return (
     <div>
-      <div className="mt-10 flex items-center gap-5 text-2xl">
+      <div className="mt-10 flex items-center gap-5  text-2xl font-bold">
         <Button
           onClick={() => onHandleChangeTypeStreaming("series")}
-          className={`flex items-center bg-transparent text-xl hover:text-white ${typeStreaming === "series" ? "font-medium text-primary" : "text-zinc-200"}`}
+          className={`${typeStreaming === "series" ? menuButtons({ status: "active" }) : menuButtons()}`}
         >
           Series
         </Button>
         <Button
           onClick={() => onHandleChangeTypeStreaming("movies")}
-          className={`flex items-center bg-transparent text-xl hover:text-white ${typeStreaming === "movies" ? "text-primary" : "text-zinc-200"}`}
+          className={`${typeStreaming === "movies" ? menuButtons({ status: "active" }) : menuButtons()}`}
         >
           Filmes
         </Button>
         <Button
           onClick={() => onHandleChangeTypeStreaming("animes")}
-          className={`flex items-center bg-transparent text-xl hover:text-white ${typeStreaming === "animes" ? "text-primary" : "text-zinc-200"}`}
+          className={`${typeStreaming === "animes" ? menuButtons({ status: "active" }) : menuButtons()}`}
         >
           Animes
         </Button>
@@ -77,13 +88,13 @@ export function TopStreaming() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="group flex h-20 items-center gap-4 rounded bg-white/5 transition-all hover:bg-white/30"
+              className="group flex h-20 items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
             >
               <Image
                 width={104}
                 height={104}
                 src={randomImage}
-                alt="Capa do album {randomTitle}"
+                alt="Capa do filme {randomTitle}"
               />
               <strong className="flex">{randomTitle}</strong>
             </div>
