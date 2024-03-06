@@ -5,21 +5,22 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 
-// interface DataProps {
-//   randomImageDefault: string;
-//   randomTitleDefault: string;
-// }
-// export async function getDefaultData(): Promise<DataProps> {
-//   await new Promise((resolve) => setTimeout(resolve, 1500));
-
-//   const randomImageDefault = await faker.image.urlPicsumPhotos();
-//   const randomTitleDefault = await faker.music.songName();
-
-//   return {
-//     randomImageDefault,
-//     randomTitleDefault,
-//   };
-// }
+// const getDateCache = unstable_cache(
+//   async () => {
+//     const randomImage = await faker.image.urlPicsumPhotos({
+//       width: 120,
+//       height: 120,
+//     });
+//     const randomTitle = await faker.music.songName();
+//     const iso = new Date().toISOString();
+//     return { randomImage, randomTitle, iso };
+//   },
+//   [],
+//   {
+//     revalidate: 10,
+//     tags: ["top-streaming"],
+//   },
+// );
 
 export function TopStreaming() {
   // const { randomImageDefault, randomTitleDefault } = await getDefaultData();
@@ -28,8 +29,6 @@ export function TopStreaming() {
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
   >("series");
-
-  console.log("type of streaming", typeStreaming, new Date());
 
   useEffect(() => {
     setRandomImage("");
@@ -75,64 +74,24 @@ export function TopStreaming() {
       </div>
       {randomImage ? (
         <div className="mt-6 grid grid-cols-3 gap-6">
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition-all hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
-          <div className="group flex h-20 items-center gap-4 rounded bg-white/5 transition hover:bg-white/30">
-            <Image
-              width={104}
-              height={104}
-              src={randomImage}
-              alt="Capa do album {randomTitle}"
-            />
-            <strong className="flex">{randomTitle}</strong>
-          </div>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="group flex h-20 items-center gap-4 rounded bg-white/5 transition-all hover:bg-white/30"
+            >
+              <Image
+                width={104}
+                height={104}
+                src={randomImage}
+                alt="Capa do album {randomTitle}"
+              />
+              <strong className="flex">{randomTitle}</strong>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          <SkeletonsArray length={6} width="w-full" height="h-20" />
+          <SkeletonsArray length={6} className="h-20 w-full" />
         </div>
       )}
     </div>

@@ -20,8 +20,8 @@ export default function Home() {
       <main>
         <TopStreaming />
         <div className="flex flex-1">
-          <div className="mb-4 flex flex-1 flex-col">
-            <div className="mt-10 text-2xl font-semibold text-white">
+          <div className="flex flex-1 flex-col">
+            <div className="mb-4 mt-10 text-2xl font-semibold text-white">
               <h2>Recommended For Matheus Spindula</h2>
               {/* Todo Transformar em uma
     mensagem dinâmica 'relacionado' a cultura pop */}
