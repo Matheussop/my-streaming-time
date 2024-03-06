@@ -1,13 +1,14 @@
 import { Skeleton } from "./ui/skeleton";
+import { tv } from "tailwind-variants";
 
 interface Props {
   length: number;
   className?: string;
-  height: string;
-  width: string;
 }
-export function SkeletonsArray({ length, height, width }: Props) {
+
+const skeletons = tv({});
+export function SkeletonsArray({ length, className }: Props) {
   return Array.from({ length }, (_, index) => (
-    <Skeleton key={index} className={`${height} ${width} `} />
+    <Skeleton key={index} className={(skeletons(), className)} />
   ));
 }

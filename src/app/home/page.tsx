@@ -8,8 +8,7 @@ const boxLoadingRecommended = () => {
     <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-6">
       <SkeletonsArray
         length={6}
-        width="w-full"
-        height="h-[27rem] xl:max-h-[27rem] lg:max-h-[20rem] sm:max-h-24 md:max-h-[12rem]"
+        className="h-[27rem] w-full sm:max-h-24 md:max-h-[12rem] lg:max-h-[20rem] xl:max-h-[27rem]"
       />
     </div>
   );
