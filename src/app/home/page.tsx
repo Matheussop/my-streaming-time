@@ -1,3 +1,4 @@
+import { Categories } from "@/components/Categories";
 import { Recommended } from "@/components/Recommended";
 import { SkeletonsArray } from "@/components/SkeletonsArray";
 import { TopStreaming } from "@/components/TopStreaming";
@@ -22,12 +23,18 @@ export default function Home() {
         <div className="flex flex-1">
           <div className="flex flex-1 flex-col">
             <div className="mb-4 mt-10 text-2xl font-semibold text-white">
-              <h2>Recommended For Matheus Spindula</h2>
+              <h2>Recomendados para Matheus Luiz</h2>
               {/* Todo Transformar em uma
     mensagem dinâmica 'relacionado' a cultura pop */}
             </div>
             <Suspense fallback={boxLoadingRecommended()}>
               <Recommended />
+            </Suspense>
+            <div className="mb-4 mt-10 text-2xl font-semibold text-white">
+              <h2>Categorias</h2>
+            </div>
+            <Suspense fallback={boxLoadingRecommended()}>
+              <Categories />
             </Suspense>
           </div>
         </div>
