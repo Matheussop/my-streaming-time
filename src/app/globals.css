@@ -80,3 +80,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+input {
+  --tw-ring-shadow: 0 0 #000 !important;
+}

@@ -10,6 +10,7 @@ const nextConfig = {
     ];
   },
   images: {
+    // TODO: Mudar os patterns de imagens
     remotePatterns: [
       {
         protocol: "https",
@@ -22,6 +23,12 @@ const nextConfig = {
         hostname: "m.media-amazon.com",
         port: "",
         pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "br.web.img3.acsta.net",
+        port: "",
+        pathname: "/c_310_420/**",
       },
     ],
   },
