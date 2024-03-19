@@ -17,14 +17,14 @@ const boxLoadingRecommended = () => {
 
 export default function Home() {
   return (
-    <div className="flex flex-col p-6 font-primary">
+    <div className="flex flex-col px-6 font-primary">
       <main>
         <TopStreaming />
         <div className="flex flex-1">
           <div className="flex flex-1 flex-col">
             <div className="mb-4 mt-10 text-2xl font-semibold text-white">
               <h2>Recomendados para Matheus Luiz</h2>
-              {/* Todo Transformar em uma
+              {/* TODO Transformar em uma
     mensagem dinâmica 'relacionado' a cultura pop */}
             </div>
             <Suspense fallback={boxLoadingRecommended()}>

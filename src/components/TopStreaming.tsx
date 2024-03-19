@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
 
+// TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
 //   async () => {
 //     const randomImage = await faker.image.urlPicsumPhotos({
@@ -88,7 +89,7 @@ export function TopStreaming() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="group flex h-20 items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
+              className="group flex items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
             >
               <Image
                 width={104}
@@ -96,7 +97,7 @@ export function TopStreaming() {
                 src={randomImage}
                 alt="Capa do filme {randomTitle}"
               />
-              <strong className="flex">{randomTitle}</strong>
+              <strong>{randomTitle}</strong>
             </div>
           ))}
         </div>
