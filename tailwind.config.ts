@@ -25,6 +25,7 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         dark: {
+          600: "rgb(70, 70, 80)",
           700: "rgb(63 63 70)",
           800: "#1E1E1E",
         },
