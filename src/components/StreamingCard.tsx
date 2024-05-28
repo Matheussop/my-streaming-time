@@ -2,14 +2,19 @@ import { Star } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import Image from "next/image";
 
-export interface CardMovieProps {
+export interface StreamingCardProps {
   title: string;
   type: string;
   rate: number;
   imageUrl: string;
 }
 
-export function CardMovie({ title, type, rate, imageUrl }: CardMovieProps) {
+export function StreamingCard({
+  title,
+  type,
+  rate,
+  imageUrl,
+}: StreamingCardProps) {
   const length = 5;
   return (
     <div className="flex h-full items-center gap-2">

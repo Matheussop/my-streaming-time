@@ -14,7 +14,7 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-dark-600 fixed bottom-0 left-0 z-10 h-full w-64 border-r-2 border-zinc-400 p-6">
+    <aside className="fixed bottom-0 left-0 z-10 h-full w-64 border-r-2 border-zinc-400 bg-dark-600 p-6">
       <div className="flex h-full flex-col">
         <div className="flex-1 flex-col">
           <div className="my-3">
@@ -25,22 +25,22 @@ export function SideBar() {
               href="/home"
               className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/home" ? "text-primary" : "text-zinc-200"}`}
             >
-              <HomeIcon
-                size={24}
-                color="white"
-                className={`${pathname === "/" ? "fill-white" : ""}`}
-              />
+              <div
+                className={`rounded-full p-1 ${pathname === "/home" ? "bg-primary" : "fill-white"}`}
+              >
+                <HomeIcon size={24} color="white" />
+              </div>
               Home
             </Link>
             <Link
               href="/community"
               className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/community" ? "text-primary" : "text-zinc-200"}`}
             >
-              <Building
-                size={24}
-                color="white"
-                className={`${pathname === "/Community" ? "fill-white" : ""}`}
-              />
+              <div
+                className={`rounded-full p-1 ${pathname === "/community" ? "bg-primary" : "fill-white"}`}
+              >
+                <Building size={24} color="white" />
+              </div>
               Comunidade
             </Link>
           </nav>
@@ -51,12 +51,10 @@ export function SideBar() {
                 className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/Time" ? "text-primary" : "text-zinc-200"}`}
                 href="/Time"
               >
-                <div className="rounded-full bg-primary p-1">
-                  <Timer
-                    size={24}
-                    color="white"
-                    className={`${pathname === "/Time" ? "fill-white" : ""}`}
-                  />
+                <div
+                  className={`rounded-full p-1 ${pathname === "/Time" ? "bg-primary" : "fill-white"}`}
+                >
+                  <Timer size={24} color="white" />
                 </div>
                 Tempo de tela
               </Link>
@@ -69,17 +67,20 @@ export function SideBar() {
                 className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/Settings" ? "text-primary" : "text-zinc-200"}`}
                 href="/Settings"
               >
-                <div className="p-1">
-                  <Settings
-                    size={24}
-                    color="white"
-                    className={`${pathname === "/Settings" ? "fill-white" : ""}`}
-                  />
+                <div
+                  className={`rounded-full p-1 ${pathname === "/Settings" ? "bg-primary" : "fill-white"}`}
+                >
+                  <Settings size={24} color="white" />
                 </div>
                 Configurações
               </Link>
-              <Link className="flex items-center gap-2 py-2" href="/Logout">
-                <div className="p-1">
+              <Link
+                className={`flex items-center gap-2 py-2  ${pathname === "/Logout" ? "text-primary" : "text-zinc-200"}`}
+                href="/Logout"
+              >
+                <div
+                  className={`rounded-full p-1 ${pathname === "/Logout" ? "bg-primary" : "fill-white"}`}
+                >
                   <LogOut size={24} color="white" />
                 </div>
                 Sair
