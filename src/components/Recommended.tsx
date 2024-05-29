@@ -5,6 +5,11 @@ import { faker } from "@faker-js/faker";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 import { unstable_cache } from "next/cache";
 import { SkeletonsArray } from "./SkeletonsArray";
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card";
 
 const getDateCache = unstable_cache(
   async () => {
@@ -32,32 +37,60 @@ export async function Recommended() {
       <CarouselContent className="w-full gap-6">
         {Array.from({ length: 10 }).map((_, index) => (
           <CarouselItem
-            key={index}
             className="w-full pl-1 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+            key={index}
           >
-            <div className="p-1">
-              <div className="flex flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-                <span className="relative -left-20 top-4 text-4xl font-semibold">
-                  {index + 1}
-                </span>
-                <Image
-                  width={160}
-                  height={160}
-                  src={randomImage}
-                  placeholder={"blur"}
-                  blurDataURL={"/placeholder_gif.gif"}
-                  className="-mt-12 w-[90%] max-w-[220px] overflow-auto rounded-md"
-                  alt="Capa do filme {randomTitle}"
-                />
-                <div>
+            <HoverCard>
+              <HoverCardTrigger>
+                <div className="p-1">
+                  <div className="flex flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
+                    <span className="relative -left-20 top-4 text-4xl font-semibold">
+                      {index + 1}
+                    </span>
+                    <Image
+                      width={160}
+                      height={160}
+                      src={randomImage}
+                      placeholder={"blur"}
+                      blurDataURL={"/placeholder_gif.gif"}
+                      className="-mt-12 w-[90%] max-w-[220px] overflow-auto rounded-md"
+                      alt="Capa do filme {randomTitle}"
+                    />
+                    <div className="ml-5 w-full items-start">
+                      <strong className="font-semibold text-white">
+                        {randomTitle}
+                      </strong>
+                      <p className="text-sm">Tipo do filme</p>
+                      <div className="flex text-sm">
+                        <p className="mr-1 after:content-['_•_']">
+                          Time: 1h 58m
+                        </p>
+                        <p className="before:content-['_'] ">2021</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="fixed bottom-80 left-4 border-none bg-dark-700">
+                <div className="text-zinc-400">
                   <strong className="font-semibold text-white">
                     {randomTitle}
                   </strong>
                   <p className="text-sm">Tipo do filme</p>
-                  <p className="text-sm">Alguma descrição de algum filme</p>
+                  <p className="line-clamp-12 text-balance text-sm">
+                    Alguma descrição de algum filme Lorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Laudantium, nesciunt excepturi
+                    eligendi sunt ullam recusandae voluptates dolores impedit
+                    sit error quisquam rem obcaecati temporibus suscipit,
+                    commodi quo sint magnam molestias! Lorem ipsum dolor sit
+                    amet consectetur adipisicing elit. Laudantium, nesciunt
+                    excepturi eligendi sunt ullam recusandae voluptates dolores
+                    impedit sit error quisquam rem obcaecati temporibus
+                    suscipit, commodi quo sint magnam molestias!
+                  </p>
                 </div>
-              </div>
-            </div>
+              </HoverCardContent>
+            </HoverCard>
           </CarouselItem>
         ))}
       </CarouselContent>

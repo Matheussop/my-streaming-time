@@ -4,7 +4,7 @@ import { SkeletonsArray } from "@/components/SkeletonsArray";
 import { TopStreaming } from "@/components/TopStreaming";
 import { Suspense } from "react";
 
-const boxLoadingRecommended = () => {
+const boxLoading = () => {
   return (
     <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-6">
       <SkeletonsArray
@@ -21,19 +21,19 @@ export default function Home() {
       <main>
         <TopStreaming />
         <div className="flex flex-1">
-          <div className="flex flex-1 flex-col">
+          <div className="mb-4 flex flex-1 flex-col">
             <div className="mb-4 mt-10 text-2xl font-semibold text-white">
               <h2>Recomendados para Matheus Luiz</h2>
               {/* TODO Transformar em uma
     mensagem dinâmica 'relacionado' a cultura pop */}
             </div>
-            <Suspense fallback={boxLoadingRecommended()}>
+            <Suspense fallback={boxLoading()}>
               <Recommended />
             </Suspense>
             <div className="mb-4 mt-10 text-2xl font-semibold text-white">
               <h2>Categorias</h2>
             </div>
-            <Suspense fallback={boxLoadingRecommended()}>
+            <Suspense fallback={boxLoading()}>
               <Categories />
             </Suspense>
           </div>

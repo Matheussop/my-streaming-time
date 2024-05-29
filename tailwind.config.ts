@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      lineClamp: {
+        12: "12",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
