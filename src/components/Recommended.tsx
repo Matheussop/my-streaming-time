@@ -40,7 +40,7 @@ export async function Recommended() {
             className="w-full pl-1 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
             key={index}
           >
-            <HoverCard>
+            <HoverCard openDelay={500}>
               <HoverCardTrigger>
                 <div className="p-1">
                   <div className="flex flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
@@ -56,8 +56,8 @@ export async function Recommended() {
                       className="-mt-12 w-[90%] max-w-[220px] overflow-auto rounded-md"
                       alt="Capa do filme {randomTitle}"
                     />
-                    <div className="ml-5 w-full items-start">
-                      <strong className="font-semibold text-white">
+                    <div className="items-start">
+                      <strong className="line-clamp-3 font-semibold text-white">
                         {randomTitle}
                       </strong>
                       <p className="text-sm">Tipo do filme</p>
@@ -71,6 +71,7 @@ export async function Recommended() {
                   </div>
                 </div>
               </HoverCardTrigger>
+
               <HoverCardContent className="fixed bottom-80 left-4 border-none bg-dark-700">
                 <div className="text-zinc-400">
                   <strong className="font-semibold text-white">
