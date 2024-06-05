@@ -17,7 +17,7 @@ export function StreamingCard({
 }: StreamingCardProps) {
   const length = 5;
   return (
-    <div className="flex h-full items-center gap-2">
+    <div className="flex w-64 items-center gap-2">
       {imageUrl ? (
         <Image
           width={96}
@@ -29,7 +29,7 @@ export function StreamingCard({
         <Skeleton className="h-28 w-24" />
       )}
       <div className="flex flex-col">
-        <p className="w-[60%] overflow-hidden overflow-ellipsis whitespace-nowrap text-base">
+        <p className="line-clamp-2 overflow-hidden overflow-ellipsis text-base">
           {title}
         </p>
         <p className="text-sm text-zinc-400">{type}</p>

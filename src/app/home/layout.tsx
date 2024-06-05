@@ -6,7 +6,7 @@ export default function PageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mr-64 flex h-full">
+    <div className="flex h-full">
       {children}
       <RightBar />
     </div>

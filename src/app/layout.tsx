@@ -28,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable} flex h-screen text-zinc-100`}
+        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable}  text-zinc-100`}
       >
         <SideBar />
-        <div className="ml-64 w-screen">{children}</div>
+        <div className="w-screen flex-1">{children}</div>
       </body>
     </html>
   );

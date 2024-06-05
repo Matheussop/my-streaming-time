@@ -14,81 +14,71 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed bottom-0 left-0 z-10 h-full w-64 border-r-2 border-zinc-400 bg-dark-600 p-6">
-      <div className="flex h-full flex-col">
-        <div className="flex-1 flex-col">
+    <aside className="m-4 rounded-lg bg-dark-600 p-6 shadow-lg">
+      <div className="flex w-full items-center justify-between align-middle">
+        <div className="flex items-center space-x-5">
           <div className="my-3">
             <Logo />
           </div>
-          <nav className="mt-10 space-y-5">
+          <nav className="flex space-x-5">
             <Link
               href="/home"
-              className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/home" ? "text-primary" : "text-zinc-200"}`}
+              className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                pathname === "/home"
+                  ? "bg-primary text-white shadow-lg"
+                  : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
+              }`}
             >
-              <div
-                className={`rounded-full p-1 ${pathname === "/home" ? "bg-primary" : "fill-white"}`}
-              >
-                <HomeIcon size={24} color="white" />
-              </div>
+              <HomeIcon size={24} color="white" />
               Home
             </Link>
             <Link
               href="/community"
-              className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/community" ? "text-primary" : "text-zinc-200"}`}
+              className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                pathname === "/community"
+                  ? "bg-primary text-white shadow-lg"
+                  : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
+              }`}
             >
-              <div
-                className={`rounded-full p-1 ${pathname === "/community" ? "bg-primary" : "fill-white"}`}
-              >
-                <Building size={24} color="white" />
-              </div>
+              <Building size={24} color="white" />
               Comunidade
             </Link>
+            <Link
+              href="/Time"
+              className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                pathname === "/Time"
+                  ? "bg-primary text-white shadow-lg"
+                  : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
+              }`}
+            >
+              <Timer size={24} color="white" />
+              Tempo de tela
+            </Link>
+            <Link
+              href="/Settings"
+              className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                pathname === "/Settings"
+                  ? "bg-primary text-white shadow-lg"
+                  : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
+              }`}
+            >
+              <Settings size={24} color="white" />
+              Configurações
+            </Link>
+            <Link
+              href="/Logout"
+              className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                pathname === "/Logout"
+                  ? "bg-primary text-white shadow-lg"
+                  : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
+              }`}
+            >
+              <LogOut size={24} color="white" />
+              Sair
+            </Link>
           </nav>
-          <div className="pt-8">
-            <h3>Extras</h3>
-            <div className="mt-4">
-              <Link
-                className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/Time" ? "text-primary" : "text-zinc-200"}`}
-                href="/Time"
-              >
-                <div
-                  className={`rounded-full p-1 ${pathname === "/Time" ? "bg-primary" : "fill-white"}`}
-                >
-                  <Timer size={24} color="white" />
-                </div>
-                Tempo de tela
-              </Link>
-            </div>
-          </div>
-          <div className="pt-8">
-            <h3>Gerais</h3>
-            <div className="mt-4">
-              <Link
-                className={`flex items-center gap-3 text-sm font-semibold  ${pathname === "/Settings" ? "text-primary" : "text-zinc-200"}`}
-                href="/Settings"
-              >
-                <div
-                  className={`rounded-full p-1 ${pathname === "/Settings" ? "bg-primary" : "fill-white"}`}
-                >
-                  <Settings size={24} color="white" />
-                </div>
-                Configurações
-              </Link>
-              <Link
-                className={`flex items-center gap-2 py-2  ${pathname === "/Logout" ? "text-primary" : "text-zinc-200"}`}
-                href="/Logout"
-              >
-                <div
-                  className={`rounded-full p-1 ${pathname === "/Logout" ? "bg-primary" : "fill-white"}`}
-                >
-                  <LogOut size={24} color="white" />
-                </div>
-                Sair
-              </Link>
-            </div>
-          </div>
         </div>
-        <div className="mr-2 flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <div className="h-10 w-10 rounded-full bg-zinc-400 p-2"></div>
           <p>Matheus Luiz</p>
         </div>

@@ -17,7 +17,7 @@ const boxLoading = () => {
 
 export default function Home() {
   return (
-    <div className="flex flex-col px-6 font-primary">
+    <div className="m-4 mr-2 mt-2 flex flex-col rounded-lg bg-dark-600 p-6 font-primary shadow-lg">
       <main>
         <TopStreaming />
         <div className="flex flex-1">

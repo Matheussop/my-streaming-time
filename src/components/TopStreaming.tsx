@@ -64,7 +64,7 @@ export function TopStreaming() {
 
   return (
     <div>
-      <div className="mt-10 flex items-center gap-5  text-2xl font-bold">
+      <div className="flex items-center gap-5  text-2xl font-bold">
         <Button
           onClick={() => onHandleChangeTypeStreaming("series")}
           className={`${typeStreaming === "series" ? menuButtons({ status: "active" }) : menuButtons()}`}
