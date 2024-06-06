@@ -1,5 +1,5 @@
 import { Categories } from "@/components/Categories";
-import { Recommended } from "@/components/Recommended";
+import { Recommended } from "@/components/Recommended/RecommendedList";
 import { SkeletonsArray } from "@/components/SkeletonsArray";
 import { TopStreaming } from "@/components/TopStreaming";
 import { Suspense } from "react";
