@@ -56,7 +56,7 @@ export function CarouselCard({
           </div>
         </HoverCardTrigger>
 
-        <HoverCardContent className="fixed bottom-80 left-4 border-none bg-dark-700">
+        <HoverCardContent className="absolute left-4 border-none bg-dark-700 md:bottom-[10%] xl:bottom-80">
           <div className="text-zinc-400">
             <strong className="font-semibold text-white">{randomTitle}</strong>
             <p className="text-sm">Tipo do filme</p>

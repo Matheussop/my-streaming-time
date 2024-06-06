@@ -15,7 +15,7 @@ export function SideBar() {
 
   return (
     <aside className="m-4 rounded-lg bg-dark-600 p-6 shadow-lg">
-      <div className="flex w-full items-center justify-between align-middle">
+      <div className="flex items-center justify-between align-middle">
         <div className="flex items-center space-x-5">
           <div className="my-3">
             <Logo />
@@ -78,7 +78,7 @@ export function SideBar() {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="ml-10 flex items-center space-x-4">
           <div className="h-10 w-10 rounded-full bg-zinc-400 p-2"></div>
           <p>Matheus Luiz</p>
         </div>
