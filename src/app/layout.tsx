@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { SideBar } from "@/components/Sidebar";
+import { Toaster } from "sonner";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <SideBar />
         <div className="flex-1">{children}</div>
+        <Toaster />
       </body>
     </html>
   );
