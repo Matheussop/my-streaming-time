@@ -1,6 +1,25 @@
 import Image from "next/image";
 
-export default function Streaming({ params }: { params: { id: string } }) {
+const getDateCache = async (id: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const streamingImg =
+    "https://m.media-amazon.com/images/S/pv-target-images/06b3a88bd674980e8dfab3347c9d991379ba476b024a3a4a64556ebff88c8191.jpg";
+  const streamingTitle = "The Lord of the Rings: The Fellowship of the Ring";
+  return { streamingImg, streamingTitle };
+};
+
+export default async function Streaming({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const stars = 4;
+  const totalStars = 5;
+  const rating = 8.8;
+
+  const { streamingImg, streamingTitle } = await getDateCache(params.id);
+
   return (
     <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
@@ -8,19 +27,21 @@ export default function Streaming({ params }: { params: { id: string } }) {
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                The Lord of the Rings: The Fellowship of the Ring
+                {streamingTitle}
               </h1>
-              <div className="text-lg font-medium text-gray-500 dark:text-gray-400">
-                2001
-              </div>
+              <div className="text-lg font-medium text-gray-400">2001</div>
             </div>
-            <Image
-              src="/placeholder.svg"
-              alt="Movie Poster"
-              width={200}
-              height={200}
-              className="mx-auto aspect-[16/9] overflow-hidden rounded-xl object-cover"
-            />
+            <div>
+              <Image
+                alt="Movie Poster"
+                src={streamingImg}
+                width={600}
+                height={350}
+                placeholder={"blur"}
+                blurDataURL={"/placeholder_gif.gif"}
+                className="mx-auto aspect-[16/9] overflow-hidden rounded-xl object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -31,7 +52,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
               <h2 className="text-3xl font-bold tracking-tighter">
                 Plot Summary
               </h2>
-              <p className="mt-4 text-gray-500 dark:text-gray-400">
+              <p className="mt-4 text-gray-400">
                 The future of civilization rests in the fate of the One Ring,
                 which has been lost for centuries. Powerful forces are
                 unrelenting in their search for it. But fate has placed it in
@@ -48,34 +69,30 @@ export default function Streaming({ params }: { params: { id: string } }) {
               <ul className="mt-4 space-y-2">
                 <li>
                   <div className="font-medium">Directed by</div>
-                  <div className="text-gray-500 dark:text-gray-400">
-                    Peter Jackson
-                  </div>
+                  <div className="text-gray-400">Peter Jackson</div>
                 </li>
                 <li>
                   <div className="font-medium">Starring</div>
-                  <div className="text-gray-500 dark:text-gray-400">
+                  <div className="text-gray-400">
                     Elijah Wood, Ian McKellen, Viggo Mortensen, Sean Astin
                   </div>
                 </li>
                 <li>
                   <div className="font-medium">Screenplay</div>
-                  <div className="text-gray-500 dark:text-gray-400">
+                  <div className="text-gray-400">
                     Fran Walsh, Philippa Boyens, Peter Jackson, Stephen Sinclair
                   </div>
                 </li>
                 <li>
                   <div className="font-medium">Music</div>
-                  <div className="text-gray-500 dark:text-gray-400">
-                    Howard Shore
-                  </div>
+                  <div className="text-gray-400">Howard Shore</div>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </section>
-      <section className="w-full bg-gray-100 py-12 dark:bg-gray-800 md:py-24 lg:py-32">
+      <section className="mb-4 w-full rounded-lg bg-primary/80 p-6 py-12 shadow-lg dark:bg-gray-800 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6">
             <div>
@@ -86,24 +103,23 @@ export default function Streaming({ params }: { params: { id: string } }) {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div>
                 <div className="font-medium">Genre</div>
-                <div className="text-gray-500 dark:text-gray-400">
-                  Fantasy, Adventure
-                </div>
+                <div className="text-white/80">Fantasy, Adventure</div>
               </div>
               <div>
                 <div className="font-medium">Runtime</div>
-                <div className="text-gray-500 dark:text-gray-400">2h 58m</div>
+                <div className="text-white/80">2h 58m</div>
               </div>
               <div>
                 <div className="font-medium">Ratings</div>
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-white/80">
                   <div className="flex items-center gap-1">
-                    <StarIcon className="h-5 w-5 fill-primary" />
-                    <StarIcon className="h-5 w-5 fill-primary" />
-                    <StarIcon className="h-5 w-5 fill-primary" />
-                    <StarIcon className="h-5 w-5 fill-primary" />
-                    <StarIcon className="h-5 w-5 fill-muted stroke-muted-foreground" />
-                    8.8/10
+                    {[...Array(totalStars)].map((_, index) => (
+                      <StarIcon
+                        key={index}
+                        className={`h-5 w-5 stroke-gray-700 ${stars > index ? "fill-yellow" : "fill-gray-300"}`}
+                      />
+                    ))}
+                    <span className="ml-2 text-white">{rating}/10</span>
                   </div>
                 </div>
               </div>
