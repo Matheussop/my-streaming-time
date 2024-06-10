@@ -20,8 +20,8 @@ export default function Home() {
     <div className="m-4 mr-2 mt-2 flex flex-col rounded-lg bg-dark-600 p-6 font-primary shadow-lg">
       <main>
         <TopStreaming />
-        <div className="flex flex-1">
-          <div className="mb-4 flex flex-1 flex-col">
+        <div className="flex flex-1 break-all">
+          <div className="mb-4  flex flex-1 flex-col">
             <div className="mb-4 mt-10 text-2xl font-semibold text-white">
               <h2>Recomendados para Matheus Luiz</h2>
               {/* TODO Transformar em uma

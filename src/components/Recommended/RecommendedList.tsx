@@ -1,43 +1,57 @@
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { SkeletonsArray } from "../SkeletonsArray";
 import { unstable_cache } from "next/cache";
-import { faker } from "@faker-js/faker";
 import { CarouselCard } from "./CarouselCard";
+import { IMovie_Api, getMovies } from "@/app/api/movies";
 
+interface IMovie {
+  movieId: string;
+  movieImg: string;
+  movieTitle: string;
+  movieReleaseDate: number;
+  movieRating: number;
+  moviePlot: string;
+  movieYear: number;
+}
 const getDateCache = unstable_cache(
   async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const data = await getMovies();
 
-    const randomImage = await faker.image.urlPicsumPhotos({
-      width: 160,
-      height: 220,
-    });
-    const randomTitle = await faker.music.songName();
-    const id = await faker.string.uuid();
-    return { randomImage, randomTitle, id };
+    if (data.movies.length > 0) {
+      const moviesList: IMovie[] = data.movies.map((movie: IMovie_Api) => ({
+        movieId: movie.id,
+        movieImg: movie.url,
+        movieTitle: movie.title,
+        movieReleaseDate: movie.year,
+        movieRating: movie.rating,
+        moviePlot: movie.plot,
+        movieYear: movie.year,
+      }));
+      console.log(moviesList);
+      return moviesList;
+    }
+    return [] as IMovie[];
   },
   [],
   {
-    revalidate: 10,
+    revalidate: 5000,
     tags: ["recommendedStreamings"],
   },
 );
 export async function Recommended() {
-  const { randomImage, randomTitle, id } = await getDateCache();
-
-  return randomImage ? (
-    <Carousel className="flex w-full items-center">
-      <CarouselContent className="w-full gap-6">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <CarouselItem
-            className="w-full pl-1 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-            key={index}
-          >
+  const moviesList = await getDateCache();
+  return moviesList.length > 0 ? (
+    <Carousel className="flex items-center">
+      <CarouselContent className="gap-6">
+        {moviesList.map((movie, index) => (
+          <CarouselItem className="max-w-[15%] pl-1 " key={index}>
             <CarouselCard
-              id={id}
+              id={movie.movieId}
               index={index}
-              randomImage={randomImage}
-              randomTitle={randomTitle}
+              imageUrl={movie.movieImg}
+              titleStreaming={movie.movieTitle}
+              plot={movie.moviePlot}
+              year={movie.movieYear}
             />
           </CarouselItem>
         ))}
