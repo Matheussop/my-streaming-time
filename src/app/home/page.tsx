@@ -1,7 +1,7 @@
-import { Categories } from "@/components/Categories";
-import { Recommended } from "@/components/Recommended/RecommendedList";
-import { SkeletonsArray } from "@/components/SkeletonsArray";
-import { TopStreaming } from "@/components/TopStreaming";
+import { Recommended } from "@components/Recommended/RecommendedList";
+import { Categories } from "@components/common/Categories";
+import { SkeletonsArray } from "@components/common/SkeletonsArray";
+import { TopStreaming } from "@components/common/TopStreaming";
 import { Suspense } from "react";
 
 const boxLoading = () => {

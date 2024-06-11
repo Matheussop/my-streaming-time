@@ -1,9 +1,8 @@
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import { SkeletonsArray } from "../SkeletonsArray";
+import { SkeletonsArray } from "../common/SkeletonsArray";
 import { unstable_cache } from "next/cache";
 import { CarouselCard } from "./CarouselCard";
-import { IMovie_Api, getMovies } from "@/app/api/movies";
-
+import { getMovies, IMovie_Api } from "@app/api/movies";
 interface IMovie {
   movieId: string;
   movieImg: string;

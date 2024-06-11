@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
-import { SideBar } from "@/components/Sidebar";
+import { SideBar } from "@components/common/Sidebar";
 import { Toaster } from "sonner";
 
 const roboto = Roboto({

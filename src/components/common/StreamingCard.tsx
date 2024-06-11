@@ -1,6 +1,6 @@
 "use client";
 import { Star } from "lucide-react";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import { useState } from "react";
 

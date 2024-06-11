@@ -2,13 +2,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { IMovie_Api } from "@/app/api/movies";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { StreamingCard } from "./StreamingCard";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
+import { IMovie_Api } from "@app/api/movies";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
@@ -63,8 +63,6 @@ const MovieSearch = () => {
 
   useEffect(() => {
     console.log("Passei pelo useEffect");
-    console.log(movies.length);
-
     if (title) {
       debouncedFetchMovies(title);
     }

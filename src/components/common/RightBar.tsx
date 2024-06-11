@@ -1,6 +1,3 @@
-import { Search } from "lucide-react";
-import { Input } from "./ui/input";
-import { StreamingCard } from "./StreamingCard";
 import MovieSearch from "./MovieSearch";
 
 export function RightBar() {

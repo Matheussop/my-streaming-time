@@ -1,4 +1,4 @@
-import { RightBar } from "@/components/RightBar";
+import { RightBar } from "@components/common/RightBar";
 
 export default function PageLayout({
   children,

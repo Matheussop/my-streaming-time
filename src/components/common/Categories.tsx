@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { SkeletonsArray } from "./SkeletonsArray";
 import { faker } from "@faker-js/faker";
 import { unstable_cache } from "next/cache";
+import { SkeletonsArray } from "./SkeletonsArray";
 
 interface DataProps {
   typeOptionsExample: {

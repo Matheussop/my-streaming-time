@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
 
