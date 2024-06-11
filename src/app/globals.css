@@ -84,3 +84,13 @@
 input {
   --tw-ring-shadow: 0 0 #000 !important;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
