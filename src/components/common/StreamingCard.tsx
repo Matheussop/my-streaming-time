@@ -36,6 +36,7 @@ export function StreamingCard({
             src={src}
             alt={`Capa do filme ${title}`}
             onError={handleImageError}
+            fetchPriority="auto"
           />
         ) : (
           <Skeleton className="h-28 w-24" />
