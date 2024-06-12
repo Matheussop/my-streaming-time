@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ];
   },
+  experimental: {
+    forceSwcTransforms: true,
+  },
   images: {
     // TODO: Mudar os patterns de imagens
     remotePatterns: [

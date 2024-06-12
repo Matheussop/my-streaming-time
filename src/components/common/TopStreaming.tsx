@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
@@ -43,18 +42,14 @@ export function TopStreaming() {
   >("series");
 
   useEffect(() => {
-    setRandomImage("");
-    setRandomTitle("");
-
     async function getTitleAndImage() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      setRandomImage(await faker.image.urlPicsumPhotos());
-      setRandomTitle(await faker.music.songName());
+      setRandomImage("/default-movie-portrait.jpg");
+      setRandomTitle("Random Title");
     }
 
     getTitleAndImage();
-  }, [typeStreaming]);
+  }, []);
 
   const onHandleChangeTypeStreaming = (
     typeStreaming: "movies" | "series" | "animes",
@@ -95,14 +90,17 @@ export function TopStreaming() {
                 width={104}
                 height={104}
                 src={randomImage}
-                alt="Capa do filme {randomTitle}"
+                alt={`Capa do filme ${randomTitle}`}
               />
               <strong>{randomTitle}</strong>
             </div>
           ))}
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3">
+        <div
+          className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3 "
+          data-testid="skeletons-array"
+        >
           <SkeletonsArray length={6} className="h-20 w-full" />
         </div>
       )}

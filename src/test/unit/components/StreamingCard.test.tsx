@@ -8,6 +8,7 @@ jest.mock("next/image", () => ({
   default: ({ ...props }: any) => {
     // Remova propriedades não DOM diretamente se necessário
     const { blurDataURL, placeholder, fetchPriority, ...rest } = props;
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     return <img {...rest} />;
   },
 }));
