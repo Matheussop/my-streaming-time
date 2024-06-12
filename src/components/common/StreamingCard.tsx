@@ -37,9 +37,10 @@ export function StreamingCard({
             alt={`Capa do filme ${title}`}
             onError={handleImageError}
             fetchPriority="auto"
+            data-testid="image_movie"
           />
         ) : (
-          <Skeleton className="h-28 w-24" />
+          <Skeleton className="h-28 w-24" data-testid="progress_bar" />
         )}
       </div>
       <div className="flex flex-col">
@@ -50,9 +51,13 @@ export function StreamingCard({
         <div className="mt-2 flex">
           {Array.from({ length }, (_, index) =>
             index < rate ? (
-              <Star key={index} className="fill-yellow text-yellow" />
+              <Star
+                key={index}
+                className="fill-yellow text-yellow"
+                data-testid="star"
+              />
             ) : (
-              <Star key={index} className="text-zinc-400" />
+              <Star key={index} className="text-zinc-400" data-testid="star" />
             ),
           )}
         </div>
