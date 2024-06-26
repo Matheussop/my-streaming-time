@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:basic": "jest",
-    "test": "jest --config jest.config.js --watch"
+    "test": "jest --config jest.config.js --watch",
+    "test:coverage": "jest --config jest.config.js --coverage"
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.0.7",
