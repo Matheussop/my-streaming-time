@@ -20,7 +20,6 @@ const MovieSearch = () => {
   const fetchMovies = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
-        console.log("Chamei o fetch");
         const response = await axios.post(
           "http://localhost:5000/movies/findOrAddMovie",
           {

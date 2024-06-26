@@ -1,12 +1,18 @@
+import { getMovieById } from "@app/api/movies";
 import Image from "next/image";
-
+// id de test = 66678af93bbb58141f311444
 const getDateCache = async (id: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  const data = await getMovieById(id);
 
-  const streamingImg =
-    "https://m.media-amazon.com/images/S/pv-target-images/06b3a88bd674980e8dfab3347c9d991379ba476b024a3a4a64556ebff88c8191.jpg";
-  const streamingTitle = "The Lord of the Rings: The Fellowship of the Ring";
-  return { streamingImg, streamingTitle };
+  const streamingObj = {
+    title: data.title,
+    plot: data.plot,
+    rating: data.rating.toFixed(1),
+    stars: Math.round(data.rating / 2),
+    url: data.url,
+    year: new Date(data.release_date).getFullYear(),
+  };
+  return streamingObj;
 };
 
 export default async function Streaming({
@@ -14,12 +20,11 @@ export default async function Streaming({
 }: {
   params: { id: string };
 }) {
-  const stars = 4;
   const totalStars = 5;
-  const rating = 8.8;
 
-  const { streamingImg, streamingTitle } = await getDateCache(params.id);
-
+  const { title, year, plot, rating, stars, url } = await getDateCache(
+    params.id,
+  );
   return (
     <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
@@ -27,14 +32,14 @@ export default async function Streaming({
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                {streamingTitle}
+                {title}
               </h1>
-              <div className="text-lg font-medium text-gray-400">2001</div>
+              <div className="text-lg font-medium text-gray-400">{year}</div>
             </div>
             <div>
               <Image
                 alt="Movie Poster"
-                src={streamingImg}
+                src={url}
                 width={600}
                 height={350}
                 placeholder={"blur"}
@@ -52,15 +57,7 @@ export default async function Streaming({
               <h2 className="text-3xl font-bold tracking-tighter">
                 Plot Summary
               </h2>
-              <p className="mt-4 text-gray-400">
-                The future of civilization rests in the fate of the One Ring,
-                which has been lost for centuries. Powerful forces are
-                unrelenting in their search for it. But fate has placed it in
-                the hands of a young Hobbit named Frodo Baggins, who inherits
-                the Ring and steps into legend. A daunting task lies ahead for
-                Frodo when he becomes the Ringbearer - to destroy the One Ring
-                in the fires of Mount Doom where it was forged.
-              </p>
+              <p className="mt-4 text-gray-400">{plot}</p>
             </div>
             <div>
               <h2 className="text-3xl font-bold tracking-tighter">

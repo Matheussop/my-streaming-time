@@ -18,13 +18,13 @@ const getDateCache = unstable_cache(
 
     if (data.movies.length > 0) {
       const moviesList: IMovie[] = data.movies.map((movie: IMovie_Api) => ({
-        movieId: movie.id,
+        movieId: movie._id,
         movieImg: movie.url,
         movieTitle: movie.title,
-        movieReleaseDate: movie.year,
+        movieReleaseDate: movie.release_date,
         movieRating: movie.rating,
         moviePlot: movie.plot,
-        movieYear: movie.year,
+        movieYear: new Date(movie.release_date).getFullYear(),
       }));
       console.log(moviesList);
       return moviesList;
@@ -33,7 +33,7 @@ const getDateCache = unstable_cache(
   },
   [],
   {
-    revalidate: 5000,
+    revalidate: 50000,
     tags: ["recommendedStreamings"],
   },
 );

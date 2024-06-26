@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/movies/external";
+const API_URL = "http://localhost:5000/movies";
 
 export interface IMovie_Api {
-  id: string;
+  _id: string;
   title: string;
-  year: number;
+  release_date: number;
   plot: string;
   rating: number;
   url: string;
@@ -24,7 +24,7 @@ export const getMovies = async (): Promise<IMovies_Response> => {
   }
 };
 
-export const getMovieById = async (id: string) => {
+export const getMovieById = async (id: string): Promise<IMovie_Api> => {
   try {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
