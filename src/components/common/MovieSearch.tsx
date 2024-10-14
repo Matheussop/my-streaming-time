@@ -61,7 +61,6 @@ const MovieSearch = () => {
   );
 
   useEffect(() => {
-    console.log("Passei pelo useEffect");
     if (title) {
       debouncedFetchMovies(title);
     }

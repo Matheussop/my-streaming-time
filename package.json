@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test:basic": "jest",
     "test": "jest --config jest.config.js --watch",
+    "test:verbose": "jest --config jest.config.js --watch --verbose",
     "test:coverage": "jest --config jest.config.js --coverage"
   },
   "dependencies": {

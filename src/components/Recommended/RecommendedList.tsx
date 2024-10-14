@@ -26,7 +26,6 @@ const getDateCache = unstable_cache(
         moviePlot: movie.plot,
         movieYear: new Date(movie.release_date).getFullYear(),
       }));
-      console.log(moviesList);
       return moviesList;
     }
     return [] as IMovie[];
