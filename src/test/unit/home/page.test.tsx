@@ -2,9 +2,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import Home from "@app/home/page";
 import React from "react";
 
+let mockedRecommendedList: jest.Mock = jest.fn();
 // Definindo os mocks dos componentes antes dos testes
 jest.mock("@components/Recommended/RecommendedList", () => ({
-  Recommended: () => <div>Mocked Recommended List</div>,
+  Recommended: () => mockedRecommendedList(),
 }));
 
 jest.mock("@components/common/Categories", () => ({
@@ -20,13 +21,17 @@ jest.mock("@components/common/SkeletonsArray", () => ({
 }));
 
 describe("Home component", () => {
-  // Caso de teste 1: Verifica renderização normal com mock inicial
+  beforeEach(() => {
+    mockedRecommendedList.mockImplementation(() => (
+      <div>Mocked Recommended List</div>
+    ));
+  });
+
   it("Should render the main sections", async () => {
     render(<Home />);
 
     // Verificar se o TopStreaming foi renderizado imediatamente
     expect(screen.getByText("Mocked Top Streaming")).toBeInTheDocument();
-
     // Esperar que os componentes suspensos (Recommended e Categories) sejam carregados
     await waitFor(() => {
       expect(screen.getByText("Mocked Recommended List")).toBeInTheDocument();

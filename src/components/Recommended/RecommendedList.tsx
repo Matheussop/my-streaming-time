@@ -14,21 +14,26 @@ interface IMovie {
 }
 const getDateCache = unstable_cache(
   async () => {
-    const data = await getMovies();
-
-    if (data.movies.length > 0) {
-      const moviesList: IMovie[] = data.movies.map((movie: IMovie_Api) => ({
-        movieId: movie._id,
-        movieImg: movie.url,
-        movieTitle: movie.title,
-        movieReleaseDate: movie.release_date,
-        movieRating: movie.rating,
-        moviePlot: movie.plot,
-        movieYear: new Date(movie.release_date).getFullYear(),
-      }));
-      return moviesList;
+    try {
+      const data = await getMovies();
+      if (data.movies.length > 0) {
+        const moviesList: IMovie[] = data.movies.map((movie: IMovie_Api) => ({
+          movieId: movie._id,
+          movieImg: movie.url,
+          movieTitle: movie.title,
+          movieReleaseDate: movie.release_date,
+          movieRating: movie.rating,
+          moviePlot: movie.plot,
+          movieYear: new Date(movie.release_date).getFullYear(),
+        }));
+        return moviesList;
+      } else {
+        return [] as IMovie[];
+      }
+    } catch (error) {
+      console.error(error);
+      return [] as IMovie[];
     }
-    return [] as IMovie[];
   },
   [],
   {

@@ -19,8 +19,7 @@ export const getMovies = async (): Promise<IMovies_Response> => {
     const response = await axios.get(API_URL);
     return { movies: response.data };
   } catch (err) {
-    console.error("Error fetching movies", err);
-    throw err;
+    throw new Error("Failed to fetch movies");
   }
 };
 
@@ -29,8 +28,7 @@ export const getMovieById = async (id: string): Promise<IMovie_Api> => {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
   } catch (err) {
-    console.error(`Error fetching movie with id ${id}`, err);
-    throw err;
+    throw new Error(`Error fetching movie with id ${id}: ${err}`);
   }
 };
 
