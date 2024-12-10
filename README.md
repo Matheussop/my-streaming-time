@@ -1,65 +1,93 @@
-
 # My Streaming Time
 
-## Descrição
+A platform designed to help users track and organize their streaming activities across different services.
 
-O aplicativo My Streaming Time é uma plataforma projetada para ajudar os usuários a acompanhar e organizar suas atividades de visualização de seus streamings. Ele possui funcionalidades como:
+## Features
 
-- Verificar atualizações novas referentes ao streaming escolhido.
-- Acompanhar e organizar suas atividades de visualização.
-- Recomendações de novos streamings.
-- Análise e avaliações.
-- Entre outros.
+- Track new updates from your chosen streaming services
+- Organize and manage your watching activities
+- Get personalized streaming recommendations
+- Rate and analyze your watched content
+- And more...
 
-Este projeto está sendo criado para que eu possa colocar em prática alguns dos meus estudos em React.js, utilizando o framework Next.js.
+## Tech Stack
 
-## Requisitos
+- **Frontend:** React.js 18 with Next.js
+- **Styling:** Tailwind CSS
+- **UI Components:** Shadcn/UI
+- **Package Manager:** pnpm
 
-- O projeto utiliza React.js 18.
-- O projeto utiliza Next.js, Tailwind CSS, Shadcn/UI.
+## Getting Started
 
-## Instalação
+### Prerequisites
 
-Para instalar e configurar o projeto, siga os passos abaixo:
+- Node.js (LTS version)
+- pnpm package manager
 
-1. **Clone o repositório:**
+### Installation
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/Matheussop/my-streaming-time.git
    cd my-streaming-time
    ```
 
-2. **Instale as dependências:**
+2. Install dependencies:
    ```bash
    pnpm install
    ```
 
-3. **Inicie o projeto:**
+3. Start the development server:
    ```bash
    pnpm run dev
    ```
 
-## Uso
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Para iniciar o servidor de desenvolvimento, utilize o comando:
-```bash
-pnpm run dev
+## Development
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server |
+| `pnpm build` | Build for production |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
+
+### Project Structure
+
+```
+my-streaming-time/
+├── src/
+│   ├── app/         # Next.js app directory
+│   ├── components/  # Reusable components
+│   ├── lib/         # Utility functions
+│   └── styles/      # Global styles
+├── public/          # Static assets
+└── ...config files
 ```
 
-## Contribuição
+## Contributing
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests para melhorias ou correções. Por favor, siga as diretrizes de contribuição padrão e certifique-se de que todos os testes estejam passando antes de enviar uma pull request.
+We welcome contributions! Please follow these steps:
 
-## Licença
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Este projeto está licenciado sob a Licença MIT. Para mais detalhes, consulte o arquivo LICENSE.
+## Resources
 
-## Contato
+- [Design Mockups (Figma)](https://www.figma.com/file/bQm1CV2E9apIj88sB4TVqV/My-TV-Time)
+- [Project Kanban Board](https://www.notion.so/My-Streaming-Time-f6c7883b297f4e27b9c2df9319f095be?pvs=4)
 
-Entre em contato pelo email: [matheussopluiz@outlook.com](mailto:matheussopluiz@outlook.com)
+## License
 
-## Informações Adicionais
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
- [Figma](https://www.figma.com/file/bQm1CV2E9apIj88sB4TVqV/My-TV-Time?type=design&node-id=0%3A1&mode=design&t=sXvoUTbhkcPnQKzC-1)
+## Contact
 
- [Kambam Projeto](https://www.notion.so/My-Streaming-Time-f6c7883b297f4e27b9c2df9319f095be?pvs=4)
+For any inquiries, please reach out to [matheussopluiz@outlook.com](mailto:matheussopluiz@outlook.com)
  
