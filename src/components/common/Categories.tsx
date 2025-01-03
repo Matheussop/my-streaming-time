@@ -2,33 +2,32 @@ import Image from "next/image";
 import { faker } from "@faker-js/faker";
 import { unstable_cache } from "next/cache";
 import { SkeletonsArray } from "./SkeletonsArray";
+import axiosInstance from "@lib/axiosConfig";
+import { IStreamingTypeResponse } from "interfaces/streamingType";
 
-interface DataProps {
-  typeOptionsExample: {
-    type: string;
-  }[];
-  randomImage: string;
-}
 const getDateCache = unstable_cache(
   async () => {
-    const typeOptionsExample = [
-      { type: "Ação" },
-      { type: "Terror" },
-      { type: "Suspense" },
-      { type: "Drama" },
-      { type: "Romance" },
-      { type: "Aventura" },
-      { type: "Policial" },
-      { type: "Desenhos" },
-    ];
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    const { data }: { data: IStreamingTypeResponse[] } =
+      await axiosInstance.get("/streamingTypes");
 
     const randomImage = await faker.image.urlPicsumPhotos({
       width: 240,
       height: 240,
     });
-    // const randomTitle = await faker.music.songName();
-    return { randomImage, typeOptionsExample };
+
+    if (!data) {
+      return { randomImage, uniqueCategoryNames: [] };
+    }
+
+    const uniqueCategoryNames = Array.from(
+      new Set(
+        data.flatMap((streamingType) =>
+          streamingType.categories.map((category) => category.name),
+        ),
+      ),
+    );
+
+    return { randomImage, uniqueCategoryNames };
   },
   [],
   {
@@ -38,24 +37,24 @@ const getDateCache = unstable_cache(
 );
 
 export async function Categories() {
-  const { randomImage, typeOptionsExample } = await getDateCache();
+  const { randomImage, uniqueCategoryNames } = await getDateCache();
 
   return (
     <div className="m-y-10 flex items-center justify-center">
-      {randomImage ? (
+      {uniqueCategoryNames.length > 0 ? (
         <div className="grid grid-cols-4 gap-x-20 gap-y-10">
-          {typeOptionsExample.map((object, index) => (
+          {uniqueCategoryNames.map((object, index) => (
             <div
               key={index}
               className="flex flex-col items-center justify-center gap-y-4 text-center"
             >
-              <strong className="text-lg">{object.type}</strong>
+              <strong className="text-lg">{object}</strong>
               <div className="flex overflow-auto rounded-md">
                 <Image
                   width={240}
                   height={240}
                   src={randomImage}
-                  alt={`Capa da categoria ${object.type}`}
+                  alt={`Capa da categoria ${object}`}
                 />
               </div>
             </div>
