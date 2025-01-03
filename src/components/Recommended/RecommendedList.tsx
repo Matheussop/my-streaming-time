@@ -37,7 +37,7 @@ const getDateCache = unstable_cache(
   },
   [],
   {
-    revalidate: 50000,
+    revalidate: 10,
     tags: ["recommendedStreamings"],
   },
 );

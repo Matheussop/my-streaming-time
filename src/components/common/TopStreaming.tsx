@@ -43,7 +43,7 @@ export function TopStreaming() {
 
   useEffect(() => {
     async function getTitleAndImage() {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       setRandomImage("/default-movie-portrait.jpg");
       setRandomTitle("Random Title");
     }

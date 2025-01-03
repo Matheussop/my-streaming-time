@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/movies";
+import axiosInstance from "@lib/axiosConfig";
 
 export interface IMovie_Api {
   _id: string;
@@ -16,7 +14,7 @@ export interface IMovies_Response {
 
 export const getMovies = async (): Promise<IMovies_Response> => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axiosInstance.get("/movies");
     return { movies: response.data };
   } catch (err) {
     throw new Error("Failed to fetch movies");
@@ -25,7 +23,7 @@ export const getMovies = async (): Promise<IMovies_Response> => {
 
 export const getMovieById = async (id: string): Promise<IMovie_Api> => {
   try {
-    const response = await axios.get(`${API_URL}/${id}`);
+    const response = await axiosInstance.get(`/movies/${id}`);
     return response.data;
   } catch (err) {
     throw new Error(`Error fetching movie with id ${id}: ${err}`);
@@ -34,7 +32,7 @@ export const getMovieById = async (id: string): Promise<IMovie_Api> => {
 
 export const createMovie = async (movie: any) => {
   try {
-    const response = await axios.post(API_URL, movie);
+    const response = await axiosInstance.post("/movies", movie);
     return response.data;
   } catch (err) {
     console.error("Error creating movie", err);
@@ -44,7 +42,7 @@ export const createMovie = async (movie: any) => {
 
 export const updateMovie = async (id: string, movie: any) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, movie);
+    const response = await axiosInstance.put(`/movies/${id}`, movie);
     return response.data;
   } catch (err) {
     console.error(`Error updating movie with id ${id}`, err);
@@ -54,7 +52,7 @@ export const updateMovie = async (id: string, movie: any) => {
 
 export const deleteMovie = async (id: string) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await axiosInstance.delete(`/movies/${id}`);
     return response.data;
   } catch (err) {
     console.error(`Error deleting movie with id ${id}`, err);
