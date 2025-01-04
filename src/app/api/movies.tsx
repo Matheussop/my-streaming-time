@@ -1,15 +1,8 @@
 import axiosInstance from "@lib/axiosConfig";
+import { IMovie } from "interfaces/movie";
 
-export interface IMovie_Api {
-  _id: string;
-  title: string;
-  release_date: number;
-  plot: string;
-  rating: number;
-  url: string;
-}
 export interface IMovies_Response {
-  movies: IMovie_Api[];
+  movies: IMovie[];
 }
 
 export const getMovies = async (): Promise<IMovies_Response> => {
@@ -21,7 +14,41 @@ export const getMovies = async (): Promise<IMovies_Response> => {
   }
 };
 
-export const getMovieById = async (id: string): Promise<IMovie_Api> => {
+export const getMoviesByGenre = async (
+  genre: string,
+  page = 1,
+  limit = 10,
+): Promise<IMovies_Response> => {
+  try {
+    const body = { genre, page, limit };
+    const { data }: { data: IMovie[] } = await axiosInstance.post(
+      "/movies/byGenre",
+      body,
+    );
+    return { movies: data };
+  } catch (err) {
+    throw new Error("Failed to fetch movies by genre");
+  }
+};
+
+export const getMoviesByType = async (
+  type: string,
+  page = 1,
+  limit = 10,
+): Promise<IMovies_Response> => {
+  try {
+    const body = { type, page, limit };
+    const { data }: { data: IMovie[] } = await axiosInstance.post(
+      "/movies/ByType",
+      body,
+    );
+    return { movies: data };
+  } catch (err) {
+    throw new Error("Failed to fetch movies by type");
+  }
+};
+
+export const getMovieById = async (id: string): Promise<IMovie> => {
   try {
     const response = await axiosInstance.get(`/movies/${id}`);
     return response.data;
