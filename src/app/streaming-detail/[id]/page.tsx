@@ -9,6 +9,7 @@ const getDateCache = async (id: string) => {
     plot: data.plot,
     rating: data.rating.toFixed(1),
     stars: Math.round(data.rating / 2),
+    poster: data.poster,
     url: data.url,
     year: new Date(data.release_date).getFullYear(),
   };
@@ -22,7 +23,7 @@ export default async function Streaming({
 }) {
   const totalStars = 5;
 
-  const { title, year, plot, rating, stars, url } = await getDateCache(
+  const { title, year, plot, rating, stars, poster } = await getDateCache(
     params.id,
   );
   return (
@@ -39,7 +40,7 @@ export default async function Streaming({
             <div>
               <Image
                 alt="Movie Poster"
-                src={url}
+                src={poster}
                 width={600}
                 height={350}
                 placeholder={"blur"}

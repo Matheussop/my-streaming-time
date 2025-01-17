@@ -6,5 +6,6 @@ export interface IMovie {
   cast: string[];
   rating: number;
   genre: number[];
+  poster: string;
   url: string;
 }
