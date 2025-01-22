@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
+import { getMoviesByType } from "@app/api/movies";
+import { IMovie } from "@interfaces/movie";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -34,27 +36,35 @@ const menuButtons = tv({
 });
 
 export function TopStreaming() {
-  // const { randomImageDefault, randomTitleDefault } = await getDefaultData();
-  const [randomImage, setRandomImage] = useState("");
-  const [randomTitle, setRandomTitle] = useState("");
+  const [streaming, setStreaming] = useState<IMovie[]>([] as IMovie[]);
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
   >("series");
 
   useEffect(() => {
     async function getTitleAndImage() {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setRandomImage("/default-movie-portrait.jpg");
-      setRandomTitle("Random Title");
+      const streamingData = await getMoviesByType(typeStreaming);
+      setStreaming(streamingData.media);
     }
 
-    getTitleAndImage();
-  }, []);
+    if (!streaming || streaming.length <= 0) {
+      getTitleAndImage();
+    }
+  }, [streaming, typeStreaming]);
 
   const onHandleChangeTypeStreaming = (
     typeStreaming: "movies" | "series" | "animes",
   ) => {
+    setStreaming([]);
     setTypeStreaming(typeStreaming);
+  };
+
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    const target = e.target as HTMLImageElement;
+    target.src = "/default-movie-portrait.jpg";
+    target.srcset = "/default-movie-portrait.jpg";
   };
 
   return (
@@ -79,20 +89,24 @@ export function TopStreaming() {
           Animes
         </Button>
       </div>
-      {randomImage ? (
+      {streaming && streaming.length > 0 ? (
         <div className="mt-6 grid grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {streaming.map((media, index) => (
             <div
               key={index}
-              className="group flex items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
+              className="group flex h-28 w-full items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
             >
               <Image
-                width={104}
-                height={104}
-                src={randomImage}
-                alt={`Capa do filme ${randomTitle}`}
+                width={1000}
+                height={100}
+                placeholder={"blur"}
+                blurDataURL={"/blurred_image.png"}
+                src={media.poster}
+                onError={handleImageError}
+                alt={`Capa do filme ${media.title}`}
+                className="h-28 w-60 object-cover"
               />
-              <strong>{randomTitle}</strong>
+              <strong>{media.title}</strong>
             </div>
           ))}
         </div>
@@ -101,7 +115,7 @@ export function TopStreaming() {
           className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3 "
           data-testid="skeletons-array"
         >
-          <SkeletonsArray length={6} className="h-20 w-full" />
+          <SkeletonsArray length={6} className="h-28 w-full" />
         </div>
       )}
     </div>

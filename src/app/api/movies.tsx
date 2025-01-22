@@ -1,6 +1,10 @@
 import axiosInstance from "@lib/axiosConfig";
 import { IMovie } from "interfaces/movie";
 
+export interface ICommonMedia_Response {
+  media: IMovie[];
+}
+
 export interface IMovies_Response {
   movies: IMovie[];
 }
@@ -35,14 +39,12 @@ export const getMoviesByType = async (
   type: string,
   page = 1,
   limit = 10,
-): Promise<IMovies_Response> => {
+): Promise<ICommonMedia_Response> => {
   try {
-    const body = { type, page, limit };
-    const { data }: { data: IMovie[] } = await axiosInstance.post(
-      "/movies/ByType",
-      body,
+    const { data }: { data: ICommonMedia_Response } = await axiosInstance.get(
+      `/commonMedia?mediaType=${type}&limit=${6}`,
     );
-    return { movies: data };
+    return { media: data.media };
   } catch (err) {
     throw new Error("Failed to fetch movies by type");
   }
