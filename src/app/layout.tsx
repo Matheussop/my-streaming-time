@@ -27,10 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body
-        className={`bg-dark-700 ${roboto.variable} ${titan_One.variable}  text-zinc-100`}
-      >
+    <html lang="pt-BR" className={`${roboto.variable} ${titan_One.variable}`}>
+      <body className="bg-dark-700 text-zinc-100">
         <SideBar />
         <div className="flex-1 ">{children}</div>
         <Toaster toastOptions={toastOptions} theme="dark" />

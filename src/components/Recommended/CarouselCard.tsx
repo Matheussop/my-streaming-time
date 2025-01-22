@@ -43,7 +43,7 @@ export function CarouselCard({
                 src={imageUrl}
                 placeholder={"blur"}
                 blurDataURL={"/placeholder_gif.gif"}
-                className="-mt-12 h-[300px] overflow-auto rounded-md"
+                className="-mt-12 h-[300px] w-auto overflow-auto rounded-md"
                 alt={`Capa do filme ${titleStreaming}`}
               />
               <div className="items-start">

@@ -7,6 +7,7 @@ import { tv } from "tailwind-variants";
 import { getMoviesByType } from "@app/api/movies";
 import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
+import { AppError } from "@lib/appError";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -51,8 +52,8 @@ export function TopStreaming() {
           setStreaming(streamingData.media);
           return `Dados recuperados com sucesso`;
         },
-        error: (apiErro: any) => {
-          return `${apiErro}`;
+        error: (apiErro: AppError) => {
+          return `Erro: ${apiErro.message} (Status: ${apiErro.statusCode})`;
         },
       });
     }

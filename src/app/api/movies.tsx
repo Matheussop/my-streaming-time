@@ -1,3 +1,4 @@
+import { AppError } from "@lib/appError";
 import axiosInstance from "@lib/axiosConfig";
 import { IMovie } from "interfaces/movie";
 
@@ -31,7 +32,7 @@ export const getMoviesByGenre = async (
     );
     return { movies: data };
   } catch (err) {
-    throw new Error("Failed to fetch movies by genre");
+    throw AppError.fromError(err);
   }
 };
 
@@ -47,7 +48,7 @@ export const getMoviesByType = async (
 
     return { media: data.media };
   } catch (err: any) {
-    throw new Error(err.message);
+    throw AppError.fromError(err);
   }
 };
 
