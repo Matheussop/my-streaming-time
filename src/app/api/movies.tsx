@@ -44,9 +44,10 @@ export const getMoviesByType = async (
     const { data }: { data: ICommonMedia_Response } = await axiosInstance.get(
       `/commonMedia?mediaType=${type}&limit=${6}`,
     );
+
     return { media: data.media };
-  } catch (err) {
-    throw new Error("Failed to fetch movies by type");
+  } catch (err: any) {
+    throw new Error(err.message);
   }
 };
 

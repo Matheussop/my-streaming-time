@@ -6,6 +6,7 @@ import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
 import { getMoviesByType } from "@app/api/movies";
 import { IMovie } from "@interfaces/movie";
+import { toast } from "sonner";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -43,8 +44,17 @@ export function TopStreaming() {
 
   useEffect(() => {
     async function getTitleAndImage() {
-      const streamingData = await getMoviesByType(typeStreaming);
-      setStreaming(streamingData.media);
+      toast.promise(getMoviesByType(typeStreaming), {
+        loading: `Recuperando dado de ${typeStreaming}...`,
+        success: (data) => {
+          const streamingData = data;
+          setStreaming(streamingData.media);
+          return `Dados recuperados com sucesso`;
+        },
+        error: (apiErro: any) => {
+          return `${apiErro}`;
+        },
+      });
     }
 
     getTitleAndImage();

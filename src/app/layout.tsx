@@ -32,9 +32,15 @@ export default function RootLayout({
         className={`bg-dark-700 ${roboto.variable} ${titan_One.variable}  text-zinc-100`}
       >
         <SideBar />
-        <div className="flex-1">{children}</div>
-        <Toaster />
+        <div className="flex-1 ">{children}</div>
+        <Toaster toastOptions={toastOptions} theme="dark" />
       </body>
     </html>
   );
 }
+
+const toastOptions = {
+  classNames: {
+    toast: "bg-dark-700 text-zinc-100 border-none",
+  },
+};
