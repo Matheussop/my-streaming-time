@@ -10,7 +10,9 @@
     "test:basic": "jest",
     "test": "jest --config jest.config.js --watch",
     "test:verbose": "jest --config jest.config.js --watch --verbose",
-    "test:coverage": "jest --config jest.config.js --coverage"
+    "test:coverage": "jest --config jest.config.js --coverage",
+    "prettier:write": "prettier --write \"src/**/*.{ts,tsx}\""
+
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.0.7",
