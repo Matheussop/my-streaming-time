@@ -8,11 +8,11 @@ import { StreamingCard } from "./StreamingCard";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
-import { IMovie_Api } from "@app/api/movies";
+import { IMovie } from "@interfaces/movie";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
-  const [movies, setMovies] = useState<IMovie_Api[]>([] as IMovie_Api[]);
+  const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
   const [limit] = useState(10); // Número de itens por página
   const [hasMore, setHasMore] = useState(true);
@@ -33,7 +33,7 @@ const MovieSearch = () => {
           if (response.data.movies.length < limit) {
             setHasMore(false);
           }
-          setMovies((prevMovies: IMovie_Api[]) => [
+          setMovies((prevMovies: IMovie[]) => [
             ...prevMovies,
             ...response.data.movies,
           ]);

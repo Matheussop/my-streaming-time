@@ -2,12 +2,13 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { SkeletonsArray } from "../common/SkeletonsArray";
 import { unstable_cache } from "next/cache";
 import { CarouselCard } from "./CarouselCard";
-import { getMovies, IMovie_Api } from "@app/api/movies";
-interface IMovie {
+import { getMovies } from "@app/api/movies";
+import { IMovie } from "@interfaces/movie";
+interface IRecommendMovie {
   movieId: string;
   movieImg: string;
   movieTitle: string;
-  movieReleaseDate: number;
+  movieReleaseDate: string;
   movieRating: number;
   moviePlot: string;
   movieYear: number;
@@ -17,22 +18,24 @@ const getDateCache = unstable_cache(
     try {
       const data = await getMovies();
       if (data.movies.length > 0) {
-        const moviesList: IMovie[] = data.movies.map((movie: IMovie_Api) => ({
-          movieId: movie._id,
-          movieImg: movie.url,
-          movieTitle: movie.title,
-          movieReleaseDate: movie.release_date,
-          movieRating: movie.rating,
-          moviePlot: movie.plot,
-          movieYear: new Date(movie.release_date).getFullYear(),
-        }));
+        const moviesList: IRecommendMovie[] = data.movies.map(
+          (movie: IMovie) => ({
+            movieId: movie._id,
+            movieImg: movie.url,
+            movieTitle: movie.title,
+            movieReleaseDate: movie.release_date,
+            movieRating: movie.rating,
+            moviePlot: movie.plot,
+            movieYear: new Date(movie.release_date).getFullYear(),
+          }),
+        );
         return moviesList;
       } else {
-        return [] as IMovie[];
+        return [] as IRecommendMovie[];
       }
     } catch (error) {
       console.error(error);
-      return [] as IMovie[];
+      return [] as IRecommendMovie[];
     }
   },
   [],

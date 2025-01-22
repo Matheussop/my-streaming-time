@@ -47,10 +47,8 @@ export function TopStreaming() {
       setStreaming(streamingData.media);
     }
 
-    if (!streaming || streaming.length <= 0) {
-      getTitleAndImage();
-    }
-  }, [streaming, typeStreaming]);
+    getTitleAndImage();
+  }, [typeStreaming]);
 
   const onHandleChangeTypeStreaming = (
     typeStreaming: "movies" | "series" | "animes",
