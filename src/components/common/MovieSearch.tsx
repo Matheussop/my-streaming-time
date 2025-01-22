@@ -105,10 +105,12 @@ const MovieSearch = () => {
             style={{ overflow: "hidden" }}
             loader={<LoadingSpinner />}
             endMessage={
-              <p className="mt-4">
-                <div className="mx-4 mb-4 border-t-2 border-primary"></div>
-                Sem Mais Streamings para serem Mostrados
-              </p>
+              <div>
+                <p className="mt-4">
+                  <div className="mx-4 mb-4 border-t-2 border-primary"></div>
+                  Sem Mais Streamings para serem Mostrados
+                </p>
+              </div>
             }
           >
             <div className="grid grid-cols-1 gap-4">

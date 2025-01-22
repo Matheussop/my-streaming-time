@@ -26,21 +26,21 @@ export function StreamingCard({
 
   return (
     <div className="flex w-64 items-center gap-2">
-      <div className="min-w-24">
+      <div className="flex min-w-24 overflow-auto">
         {imageUrl ? (
           <Image
-            width={96}
-            height={110}
+            width={250}
+            height={250}
             placeholder={"blur"}
             blurDataURL={"/blurred_image.png"}
             src={src}
             alt={`Capa do filme ${title}`}
             onError={handleImageError}
-            fetchPriority="auto"
             data-testid="image_movie"
+            className="h-auto w-24 overflow-auto rounded-md"
           />
         ) : (
-          <Skeleton className="h-28 w-24" data-testid="progress_bar" />
+          <Skeleton className="h-40 w-24" data-testid="progress_bar" />
         )}
       </div>
       <div className="flex flex-col">
