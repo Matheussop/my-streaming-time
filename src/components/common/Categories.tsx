@@ -1,33 +1,36 @@
 import Image from "next/image";
-import { faker } from "@faker-js/faker";
 import { unstable_cache } from "next/cache";
 import { SkeletonsArray } from "./SkeletonsArray";
 import axiosInstance from "@lib/axiosConfig";
 import { IStreamingTypeResponse } from "interfaces/streamingType";
+import SafeImage from "./SafeImage";
 
 const getDateCache = unstable_cache(
   async () => {
     const { data }: { data: IStreamingTypeResponse[] } =
       await axiosInstance.get("/streamingTypes");
 
-    const randomImage = await faker.image.urlPicsumPhotos({
-      width: 240,
-      height: 240,
-    });
-
     if (!data) {
-      return { randomImage, uniqueCategoryNames: [] };
+      return { uniqueCategoryNames: [] };
     }
 
     const uniqueCategoryNames = Array.from(
       new Set(
         data.flatMap((streamingType) =>
-          streamingType.categories.map((category) => category.name),
+          streamingType.categories.map((category) => {
+            if (category.poster) {
+              return { name: category.name, poster: category.poster };
+            } else {
+              return {
+                name: category.name,
+                poster: "/default-movie-portrait.jpg",
+              };
+            }
+          }),
         ),
       ),
     );
-
-    return { randomImage, uniqueCategoryNames };
+    return { uniqueCategoryNames };
   },
   [],
   {
@@ -37,24 +40,24 @@ const getDateCache = unstable_cache(
 );
 
 export async function Categories() {
-  const { randomImage, uniqueCategoryNames } = await getDateCache();
+  const { uniqueCategoryNames } = await getDateCache();
 
   return (
     <div className="m-y-10 flex items-center justify-center">
       {uniqueCategoryNames.length > 0 ? (
-        <div className="grid grid-cols-4 gap-x-20 gap-y-10">
+        <div className="grid grid-cols-4 gap-x-16 gap-y-8">
           {uniqueCategoryNames.map((object, index) => (
             <div
               key={index}
               className="flex flex-col items-center justify-center gap-y-4 text-center"
             >
-              <strong className="text-lg">{object}</strong>
+              <strong className="text-lg">{object.name}</strong>
               <div className="flex overflow-auto rounded-md">
-                <Image
-                  width={240}
-                  height={240}
-                  src={randomImage}
-                  alt={`Capa da categoria ${object}`}
+                <SafeImage
+                  placeholder={"blur"}
+                  blurDataURL={"/blurred_image.png"}
+                  src={object.poster}
+                  alt={`Capa da categoria ${object.name}`}
                 />
               </div>
             </div>
