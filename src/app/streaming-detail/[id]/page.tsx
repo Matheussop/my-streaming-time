@@ -1,19 +1,23 @@
 import { getMovieById } from "@app/api/movies";
 import Image from "next/image";
-// id de test = 66678af93bbb58141f311444
-const getDateCache = async (id: string) => {
-  const data = await getMovieById(id);
+import { notFound } from "next/navigation";
 
-  const streamingObj = {
-    title: data.title,
-    plot: data.plot,
-    rating: data.rating.toFixed(1),
-    stars: Math.round(data.rating / 2),
-    poster: data.poster,
-    url: data.url,
-    year: new Date(data.release_date).getFullYear(),
-  };
-  return streamingObj;
+const getDateCache = async (id: string) => {
+  try {
+    const data = await getMovieById(id);
+    const streamingObj = {
+      title: data.title,
+      plot: data.plot,
+      rating: data.rating.toFixed(1),
+      stars: Math.round(data.rating / 2),
+      poster: data.poster,
+      url: data.url,
+      year: new Date(data.release_date).getFullYear(),
+    };
+    return streamingObj;
+  } catch (error) {
+    notFound();
+  }
 };
 
 export default async function Streaming({
