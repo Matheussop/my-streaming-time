@@ -52,11 +52,11 @@ export async function Categories() {
               className="flex flex-col items-center justify-center gap-y-4 text-center"
             >
               <strong className="text-lg">{object.name}</strong>
-              <div className="flex overflow-auto rounded-md">
+              <div className="flex rounded-md">
                 <SafeImage
                   placeholder={"blur"}
-                  blurDataURL={"/blurred_image.png"}
                   src={object.poster}
+                  className="h-40"
                   alt={`Capa da categoria ${object.name}`}
                 />
               </div>

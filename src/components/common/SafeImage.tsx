@@ -10,6 +10,7 @@ const SafeImage: React.FC<SafeImageProps> = ({
   alt,
   width = 1000,
   height = 1000,
+  className,
   ...rest
 }) => {
   const handleImageError = (
@@ -24,7 +25,8 @@ const SafeImage: React.FC<SafeImageProps> = ({
     <Image
       width={width}
       height={height}
-      className={cn("object-cover", rest.className)}
+      className={cn("object-cover", className)}
+      blurDataURL={"/blurred_image.png"}
       alt={alt}
       onError={handleImageError}
       {...rest}
