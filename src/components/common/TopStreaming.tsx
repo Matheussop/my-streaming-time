@@ -8,6 +8,7 @@ import { getMoviesByType } from "@app/api/movies";
 import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
 import { AppError } from "@lib/appError";
+import { useRouter } from "next/navigation";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -42,6 +43,7 @@ export function TopStreaming() {
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
   >("series");
+  const router = useRouter();
 
   useEffect(() => {
     async function getTitleAndImage() {
@@ -60,6 +62,10 @@ export function TopStreaming() {
 
     getTitleAndImage();
   }, [typeStreaming]);
+
+  const handleRedirectToDetail = (id: string) => {
+    router.push(`/streaming-detail/${id}`);
+  };
 
   const onHandleChangeTypeStreaming = (
     typeStreaming: "movies" | "series" | "animes",
@@ -104,6 +110,7 @@ export function TopStreaming() {
             <div
               key={index}
               className="group flex h-28 w-full items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
+              onClick={() => handleRedirectToDetail(media._id)}
             >
               <Image
                 width={1000}

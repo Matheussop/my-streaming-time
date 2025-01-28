@@ -13,12 +13,15 @@ const SafeImage: React.FC<SafeImageProps> = ({
   className,
   ...rest
 }) => {
+  const defaultImage = "/default-movie-portrait.jpg";
+  const defaultAlt = "Default image";
+
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
     const target = e.target as HTMLImageElement;
-    target.src = "/default-movie-portrait.jpg";
-    target.srcset = "/default-movie-portrait.jpg";
+    target.src = defaultImage;
+    target.srcset = defaultImage;
   };
 
   return (
@@ -27,7 +30,7 @@ const SafeImage: React.FC<SafeImageProps> = ({
       height={height}
       className={cn("object-cover", className)}
       blurDataURL={"/blurred_image.png"}
-      alt={alt}
+      alt={alt || defaultAlt}
       onError={handleImageError}
       {...rest}
     />

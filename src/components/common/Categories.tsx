@@ -52,7 +52,7 @@ export async function Categories() {
               className="flex flex-col items-center justify-center gap-y-4 text-center"
             >
               <strong className="text-lg">{object.name}</strong>
-              <div className="flex rounded-md">
+              <div className="flex overflow-auto rounded-md">
                 <SafeImage
                   placeholder={"blur"}
                   src={object.poster}
