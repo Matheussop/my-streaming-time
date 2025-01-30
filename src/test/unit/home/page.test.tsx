@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import Home from "@app/home/page";
+import Home from "@app/(home)/page";
 import React from "react";
 
 let mockedRecommendedList: jest.Mock = jest.fn();
