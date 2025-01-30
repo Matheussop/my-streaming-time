@@ -52,9 +52,12 @@ export const getMoviesByType = async (
   }
 };
 
-export const getMovieById = async (id: string): Promise<IMovie> => {
+export const getMovieById = async (
+  id: string,
+  streamingType: string,
+): Promise<IMovie> => {
   try {
-    const response = await axiosInstance.get(`/movies/${id}`);
+    const response = await axiosInstance.get(`/${streamingType}/${id}`);
     return response.data;
   } catch (err) {
     throw new Error(`Error fetching movie with id ${id}: ${err}`);

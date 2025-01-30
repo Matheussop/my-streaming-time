@@ -1,18 +1,35 @@
+"use client";
 import { getMovieById } from "@app/api/movies";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { useState, useEffect } from "react";
 
-const getDateCache = async (id: string) => {
+import { notFound, useRouter, useSearchParams } from "next/navigation";
+import { IMovie } from "@interfaces/movie";
+
+interface VisualMovieProps extends IMovie {
+  ratingValue: string;
+  stars: number;
+  year: number;
+}
+const getDateCache = async (
+  id: string,
+  streamingType: string,
+): Promise<VisualMovieProps> => {
   try {
-    const data = await getMovieById(id);
+    const data = await getMovieById(id, streamingType);
     const streamingObj = {
+      _id: data._id,
       title: data.title,
       plot: data.plot,
-      rating: data.rating.toFixed(1),
+      rating: data.rating,
+      ratingValue: data.rating.toFixed(1),
       stars: Math.round(data.rating / 2),
       poster: data.poster,
       url: data.url,
       year: new Date(data.release_date).getFullYear(),
+      release_date: data.release_date,
+      cast: data.cast,
+      genre: data.genre,
     };
     return streamingObj;
   } catch (error) {
@@ -20,16 +37,38 @@ const getDateCache = async (id: string) => {
   }
 };
 
-export default async function Streaming({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function Streaming({ params }: { params: { id: string } }) {
   const totalStars = 5;
+  const router = useRouter();
+  const { id } = params;
+  const searchParams = useSearchParams();
+  let typeStreaming = searchParams.get("typeStreaming")
+    ? searchParams.get("typeStreaming")
+    : "movies";
 
-  const { title, year, plot, rating, stars, poster } = await getDateCache(
-    params.id,
+  const [streaming, setStreaming] = useState<VisualMovieProps>(
+    {} as VisualMovieProps,
   );
+
+  useEffect(() => {
+    if (id) {
+      const fetchMovie = async () => {
+        const movieData = await getDateCache(
+          id as string,
+          typeStreaming as string,
+        );
+
+        setStreaming(movieData);
+      };
+
+      fetchMovie();
+    }
+  }, [id, typeStreaming, router]);
+
+  if (!streaming) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
@@ -37,14 +76,16 @@ export default async function Streaming({
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                {title}
+                {streaming.title}
               </h1>
-              <div className="text-lg font-medium text-gray-400">{year}</div>
+              <div className="text-lg font-medium text-gray-400">
+                {streaming.year}
+              </div>
             </div>
             <div>
               <Image
                 alt="Movie Poster"
-                src={poster}
+                src={streaming.poster}
                 width={600}
                 height={350}
                 placeholder={"blur"}
@@ -62,7 +103,7 @@ export default async function Streaming({
               <h2 className="text-3xl font-bold tracking-tighter">
                 Plot Summary
               </h2>
-              <p className="mt-4 text-gray-400">{plot}</p>
+              <p className="mt-4 text-gray-400">{streaming.plot}</p>
             </div>
             <div>
               <h2 className="text-3xl font-bold tracking-tighter">
@@ -105,7 +146,7 @@ export default async function Streaming({
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div>
                 <div className="font-medium">Genre</div>
-                <div className="text-white/80">Fantasy, Adventure</div>
+                <div className="text-white/80">{streaming.genre}</div>
               </div>
               <div>
                 <div className="font-medium">Runtime</div>
@@ -118,10 +159,12 @@ export default async function Streaming({
                     {[...Array(totalStars)].map((_, index) => (
                       <StarIcon
                         key={index}
-                        className={`h-5 w-5 stroke-gray-700 ${stars > index ? "fill-yellow" : "fill-gray-300"}`}
+                        className={`h-5 w-5 stroke-gray-700 ${streaming.stars > index ? "fill-yellow" : "fill-gray-300"}`}
                       />
                     ))}
-                    <span className="ml-2 text-white">{rating}/10</span>
+                    <span className="ml-2 text-white">
+                      {streaming.rating}/10
+                    </span>
                   </div>
                 </div>
               </div>

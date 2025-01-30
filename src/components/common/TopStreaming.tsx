@@ -46,7 +46,7 @@ export function TopStreaming() {
   const router = useRouter();
 
   useEffect(() => {
-    async function getTitleAndImage() {
+    async function getMediaByType() {
       toast.promise(getMoviesByType(typeStreaming), {
         loading: `Recuperando dado de ${typeStreaming}...`,
         success: (data) => {
@@ -60,11 +60,11 @@ export function TopStreaming() {
       });
     }
 
-    getTitleAndImage();
+    getMediaByType();
   }, [typeStreaming]);
 
   const handleRedirectToDetail = (id: string) => {
-    router.push(`/streaming-detail/${id}`);
+    router.push(`/streaming-detail/${id}?typeStreaming=${typeStreaming}`);
   };
 
   const onHandleChangeTypeStreaming = (
