@@ -14,22 +14,19 @@ const getDateCache = unstable_cache(
       return { uniqueCategoryNames: [] };
     }
 
-    const uniqueCategoryNames = Array.from(
-      new Set(
-        data.flatMap((streamingType) =>
-          streamingType.categories.map((category) => {
-            if (category.poster) {
-              return { name: category.name, poster: category.poster };
-            } else {
-              return {
-                name: category.name,
-                poster: "/default-movie-portrait.jpg",
-              };
-            }
-          }),
-        ),
-      ),
-    );
+    const categoryMap = new Map();
+
+    data.forEach((streamingType) => {
+      streamingType.categories.forEach((category) => {
+        if (!categoryMap.has(category.name)) {
+          categoryMap.set(category.name, {
+            name: category.name,
+            poster: category.poster || "/default-movie-portrait.jpg",
+          });
+        }
+      });
+    });
+    const uniqueCategoryNames = Array.from(categoryMap.values());
     return { uniqueCategoryNames };
   },
   [],
