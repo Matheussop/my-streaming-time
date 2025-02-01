@@ -1,5 +1,5 @@
 "use client";
-import { getMovieById } from "@app/api/movies";
+import { getMediaById } from "@app/api/movies";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -16,7 +16,7 @@ const getDateCache = async (
   streamingType: string,
 ): Promise<VisualMovieProps> => {
   try {
-    const data = await getMovieById(id, streamingType);
+    const data = await getMediaById(id, streamingType);
     const streamingObj = {
       _id: data._id,
       title: data.title,
@@ -65,7 +65,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
     }
   }, [id, typeStreaming, router]);
 
-  if (!streaming) {
+  if (!streaming || !streaming.title) {
     return <div>Loading...</div>;
   }
 
@@ -146,7 +146,17 @@ export default function Streaming({ params }: { params: { id: string } }) {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div>
                 <div className="font-medium">Genre</div>
-                <div className="text-white/80">{streaming.genre}</div>
+                <div className="text-white/80">
+                  <ul>
+                    {streaming.genre.map((item, index) => {
+                      if (typeof item === "number") {
+                        return <li key={index}>{item}</li>;
+                      } else {
+                        return <li key={index}>{item.name}</li>;
+                      }
+                    })}
+                  </ul>
+                </div>
               </div>
               <div>
                 <div className="font-medium">Runtime</div>

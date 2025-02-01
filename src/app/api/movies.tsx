@@ -52,7 +52,7 @@ export const getMoviesByType = async (
   }
 };
 
-export const getMovieById = async (
+export const getMediaById = async (
   id: string,
   streamingType: string,
 ): Promise<IMovie> => {

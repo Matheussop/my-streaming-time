@@ -1,3 +1,5 @@
+export type GenreObject = { id: string; name: string };
+
 export interface IMovie {
   _id: string;
   title: string;
@@ -5,7 +7,7 @@ export interface IMovie {
   plot: string;
   cast: string[];
   rating: number;
-  genre: number[];
+  genre: GenreObject[] | number[];
   poster: string;
   url: string;
 }
