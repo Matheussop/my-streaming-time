@@ -9,40 +9,34 @@ import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { IMovie } from "@interfaces/movie";
+import { findOrAddMovie } from "@app/api/movies";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
   const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // Número de itens por página
+
   const [hasMore, setHasMore] = useState(true);
+  const limit = 10;
 
   const fetchMovies = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/movies/findOrAddMovie",
-          {
-            title: searchTitle,
-            page: pageNumber,
-            limit,
-          },
-        );
+        const response = await findOrAddMovie(searchTitle, pageNumber, limit);
 
-        if (response.data.movies) {
-          if (response.data.movies.length < limit) {
+        if (response.movies) {
+          if (response.movies.length < limit) {
             setHasMore(false);
           }
           setMovies((prevMovies: IMovie[]) => [
             ...prevMovies,
-            ...response.data.movies,
+            ...response.movies,
           ]);
-          setPage(response.data.page);
+          setPage(response.page);
         } else {
           setHasMore(false);
         }
       } catch (err) {
-        console.error(err);
         setHasMore(false);
       }
     },
@@ -64,7 +58,7 @@ const MovieSearch = () => {
     if (title) {
       debouncedFetchMovies(title);
     }
-    // Limpar debounce na desmontagem do componente
+
     return () => {
       debouncedFetchMovies.cancel();
     };
@@ -79,7 +73,7 @@ const MovieSearch = () => {
   };
 
   return (
-    <div className="mb-4 flex h-[84vh] w-[15vw] flex-col p-4">
+    <div className="mb-4 flex h-[84vh] w-[15vw] flex-col p-2">
       <form
         className="mb-4 flex items-center gap-2"
         onSubmit={(e) => e.preventDefault()}
@@ -96,26 +90,29 @@ const MovieSearch = () => {
           <Search />
         </Button>
       </form>
-      <div className="hide-scrollbar mb-4 flex-grow overflow-y-auto">
+      <div
+        className="hide-scrollbar mb-4 flex-grow overflow-y-auto"
+        id="movie-list-box"
+      >
         {movies.length !== 0 ? (
           <InfiniteScroll
             dataLength={movies.length}
             next={loadMoreMovies}
             hasMore={hasMore}
+            scrollableTarget="movie-list-box"
             style={{ overflow: "hidden" }}
             loader={<LoadingSpinner />}
             endMessage={
-              <div>
-                <p className="mt-4">
-                  <div className="mx-4 mb-4 border-t-2 border-primary"></div>
-                  Sem Mais Streamings para serem Mostrados
-                </p>
+              <div className="mt-4 text-center">
+                <div className="mx-4 mb-4 border-t-2 border-primary"></div>
+
+                <p>Sem mais streamings para serem mostrados</p>
               </div>
             }
           >
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-2">
               {movies.map((movie, index) => (
-                <div key={index}>
+                <div key={index} className="pb-2">
                   <StreamingCard
                     title={movie.title}
                     type={"Action"}
@@ -127,7 +124,9 @@ const MovieSearch = () => {
             </div>
           </InfiniteScroll>
         ) : (
-          <div>TODO, Listar os mais novos Streamings. </div>
+          <div className="flex text-center">
+            <p>TODO, Listar os mais novos Streamings. </p>
+          </div>
         )}
       </div>
     </div>

@@ -25,7 +25,7 @@ export function StreamingCard({
   };
 
   return (
-    <div className="flex w-64 items-center gap-2">
+    <div className="flex min-w-52 items-center gap-2 rounded-md bg-white/5 p-2">
       <div className="flex min-w-24 overflow-auto">
         {imageUrl ? (
           <Image

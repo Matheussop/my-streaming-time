@@ -10,6 +10,9 @@ export interface IMovies_Response {
   movies: IMovie[];
 }
 
+export interface ISearch_Movie_Response extends IMovies_Response {
+  page: number;
+}
 export const getMovies = async (): Promise<IMovies_Response> => {
   try {
     const response = await axiosInstance.get("/movies");
@@ -90,6 +93,24 @@ export const deleteMovie = async (id: string) => {
     return response.data;
   } catch (err) {
     console.error(`Error deleting movie with id ${id}`, err);
+    throw err;
+  }
+};
+
+export const findOrAddMovie = async (
+  searchTitle: string,
+  pageNumber: number,
+  limit: number,
+): Promise<ISearch_Movie_Response> => {
+  try {
+    const response = await axiosInstance.post("/movies/findOrAddMovie", {
+      title: searchTitle,
+      page: pageNumber,
+      limit,
+    });
+    return response.data;
+  } catch (err) {
+    console.error(err);
     throw err;
   }
 };
