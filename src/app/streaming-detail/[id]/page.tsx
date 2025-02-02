@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { IMovie } from "@interfaces/movie";
+import { Button } from "@components/ui/button";
+import { changeViewedStreaming } from "@app/api/streamingHistory";
 
 interface VisualMovieProps extends IMovie {
   ratingValue: string;
@@ -22,7 +24,7 @@ const getDateCache = async (
       title: data.title,
       plot: data.plot,
       rating: data.rating,
-      ratingValue: data.rating.toFixed(1),
+      ratingValue: data.rating.toFixed(0),
       stars: Math.round(data.rating / 2),
       poster: data.poster,
       url: data.url,
@@ -42,6 +44,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { id } = params;
   const searchParams = useSearchParams();
+  const [viewed, setViewed] = useState(false);
   let typeStreaming = searchParams.get("typeStreaming")
     ? searchParams.get("typeStreaming")
     : "movies";
@@ -60,21 +63,49 @@ export default function Streaming({ params }: { params: { id: string } }) {
 
         setStreaming(movieData);
       };
-
+      const isViewed = async () => {
+        const data = {
+          streamingId: id,
+          userId: "676dae10ad02621d68372c36",
+        };
+        // const viewed = await getIsViewed(data);
+        setViewed(viewed);
+      };
       fetchMovie();
+      isViewed();
     }
-  }, [id, typeStreaming, router]);
+  }, [id, typeStreaming, router, viewed]);
 
   if (!streaming || !streaming.title) {
     return <div>Loading...</div>;
   }
 
+  const changeViewOfStreaming = async () => {
+    const data = {
+      streamingId: id,
+      title: streaming.title,
+      userId: "676dae10ad02621d68372c36",
+      durationInMinutes: 120,
+    };
+    await changeViewedStreaming(data, viewed); //TODO add userID on the request
+  };
+
+  const handleMarkIsViewed = () => {
+    changeViewOfStreaming();
+    setViewed((prev: boolean) => !prev);
+  };
   return (
     <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
         <div className="container space-y-10 xl:space-y-16">
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
+              <Button
+                className={`flex justify-center gap-2 rounded-full  text-white ${viewed ? "bg-amber-500" : "bg-primary hover:bg-primary"}`}
+                onClick={handleMarkIsViewed}
+              >
+                <span>{viewed ? "Not watch + " : "Viewed"}</span>
+              </Button>
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 {streaming.title}
               </h1>
@@ -173,7 +204,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
                       />
                     ))}
                     <span className="ml-2 text-white">
-                      {streaming.rating}/10
+                      {streaming.ratingValue}/10
                     </span>
                   </div>
                 </div>
