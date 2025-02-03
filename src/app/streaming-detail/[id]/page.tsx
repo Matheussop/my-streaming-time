@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { IMovie } from "@interfaces/movie";
 import { Button } from "@components/ui/button";
-import { changeViewedStreaming } from "@app/api/streamingHistory";
+import { changeViewedStreaming, getIsViewed } from "@app/api/streamingHistory";
 
 interface VisualMovieProps extends IMovie {
   ratingValue: string;
@@ -68,32 +68,33 @@ export default function Streaming({ params }: { params: { id: string } }) {
           streamingId: id,
           userId: "676dae10ad02621d68372c36",
         };
-        // const viewed = await getIsViewed(data);
-        setViewed(viewed);
+        const isViewed = await getIsViewed(data);
+        setViewed(isViewed);
       };
       fetchMovie();
       isViewed();
     }
-  }, [id, typeStreaming, router, viewed]);
+  }, [id, typeStreaming, router]);
 
   if (!streaming || !streaming.title) {
     return <div>Loading...</div>;
   }
 
-  const changeViewOfStreaming = async () => {
+  const changeViewOfStreaming = async (streamingViewed: boolean) => {
     const data = {
       streamingId: id,
       title: streaming.title,
       userId: "676dae10ad02621d68372c36",
       durationInMinutes: 120,
     };
-    await changeViewedStreaming(data, viewed); //TODO add userID on the request
+    await changeViewedStreaming(data, streamingViewed); //TODO add userID on the request
   };
 
-  const handleMarkIsViewed = () => {
-    changeViewOfStreaming();
+  const handleMarkIsViewed = (streamingViewed: boolean) => {
+    changeViewOfStreaming(streamingViewed);
     setViewed((prev: boolean) => !prev);
   };
+
   return (
     <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
@@ -101,10 +102,10 @@ export default function Streaming({ params }: { params: { id: string } }) {
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
               <Button
-                className={`flex justify-center gap-2 rounded-full  text-white ${viewed ? "bg-amber-500" : "bg-primary hover:bg-primary"}`}
-                onClick={handleMarkIsViewed}
+                className={`flex justify-center gap-2 rounded-full  text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
+                onClick={() => handleMarkIsViewed(!viewed)}
               >
-                <span>{viewed ? "Not watch + " : "Viewed"}</span>
+                <span>{viewed ? "Viewed" : "Not watch + "}</span>
               </Button>
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 {streaming.title}

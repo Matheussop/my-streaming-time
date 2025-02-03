@@ -27,12 +27,14 @@ export const changeViewedStreaming = async (
   }
 };
 
-export const getIsViewed = async (data: StreamingHistorySearch) => {
+export const getIsViewed = async (
+  data: StreamingHistorySearch,
+): Promise<boolean> => {
   try {
-    // const response = await axiosInstance.get(`/user-streaming-history`, {
-    //   params: data,
-    // });
-    // return response.data.viewed;
+    const response = await axiosInstance.get(`/user-streaming-history`, {
+      params: data,
+    });
+    return response.data.viewed;
   } catch (err) {
     throw AppError.fromError(err);
   }
