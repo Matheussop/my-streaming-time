@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -10,11 +9,13 @@ import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { IMovie } from "@interfaces/movie";
 import { findOrAddMovie } from "@app/api/movies";
+import { useRouter } from "next/navigation";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
   const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
+  const router = useRouter();
 
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
@@ -23,7 +24,7 @@ const MovieSearch = () => {
     async (pageNumber: number, searchTitle: string) => {
       try {
         const response = await findOrAddMovie(searchTitle, pageNumber, limit);
-
+        console.log(response);
         if (response.movies) {
           if (response.movies.length < limit) {
             setHasMore(false);
@@ -72,6 +73,10 @@ const MovieSearch = () => {
     setTitle(e.target.value);
   };
 
+  const handleRedirectToDetail = (id: string) => {
+    router.push(`/streaming-detail/${id}`);
+  };
+
   return (
     <div className="mb-4 flex h-[84vh] w-[15vw] flex-col p-2">
       <form
@@ -112,7 +117,11 @@ const MovieSearch = () => {
           >
             <div className="grid grid-cols-1 gap-2">
               {movies.map((movie, index) => (
-                <div key={index} className="pb-2">
+                <div
+                  key={index}
+                  className="cursor-pointer pb-2"
+                  onClick={() => handleRedirectToDetail(movie._id)}
+                >
                   <StreamingCard
                     title={movie.title}
                     type={"Action"}

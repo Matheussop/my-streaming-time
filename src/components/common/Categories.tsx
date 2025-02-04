@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import { SkeletonsArray } from "./SkeletonsArray";
 import axiosInstance from "@lib/axiosConfig";
