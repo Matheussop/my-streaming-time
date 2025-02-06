@@ -24,7 +24,6 @@ const MovieSearch = () => {
     async (pageNumber: number, searchTitle: string) => {
       try {
         const response = await findOrAddMovie(searchTitle, pageNumber, limit);
-        console.log(response);
         if (response.movies) {
           if (response.movies.length < limit) {
             setHasMore(false);

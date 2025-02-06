@@ -3,6 +3,7 @@ import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { SideBar } from "@components/common/Sidebar";
 import { Toaster } from "sonner";
+import ClientProvider from "./providers/clientProviders";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -30,7 +31,9 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${roboto.variable} ${titan_One.variable}`}>
       <body className="bg-dark-700 text-zinc-100">
         <SideBar />
-        <div className="flex-1 ">{children}</div>
+        <ClientProvider>
+          <div className="flex-1 ">{children}</div>
+        </ClientProvider>
         <Toaster toastOptions={toastOptions} theme="dark" />
       </body>
     </html>

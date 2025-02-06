@@ -9,6 +9,7 @@ import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
 import { AppError } from "@lib/appError";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@app/context/AppContext";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -44,6 +45,7 @@ export function TopStreaming() {
     "movies" | "series" | "animes"
   >("series");
   const router = useRouter();
+  const { setStreamingTypeContext } = useAppContext();
 
   useEffect(() => {
     async function getMediaByType() {
@@ -71,6 +73,7 @@ export function TopStreaming() {
     typeStreaming: "movies" | "series" | "animes",
   ) => {
     setStreaming([]);
+    setStreamingTypeContext(typeStreaming);
     setTypeStreaming(typeStreaming);
   };
 
