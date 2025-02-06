@@ -1,3 +1,5 @@
+import { IStreamingType } from "@app/context/AppContext";
+import { ISeries } from "@interfaces/series";
 import { AppError } from "@lib/appError";
 import axiosInstance from "@lib/axiosConfig";
 import { IMovie } from "interfaces/movie";
@@ -10,9 +12,18 @@ export interface IMovies_Response {
   movies: IMovie[];
 }
 
+export interface ISeries_Response {
+  series: ISeries[];
+}
+
 export interface ISearch_Movie_Response extends IMovies_Response {
   page: number;
 }
+
+export interface ISearch_Serie_Response extends ISeries_Response {
+  page: number;
+}
+
 export const getMovies = async (): Promise<IMovies_Response> => {
   try {
     const response = await axiosInstance.get("/movies");
@@ -98,19 +109,38 @@ export const deleteMovie = async (id: string) => {
 };
 
 export const findOrAddMovie = async (
-  searchTitle: string,
-  pageNumber: number,
+  streamingType: IStreamingType,
+  title: string,
+  page: number,
   limit: number,
-): Promise<ISearch_Movie_Response> => {
+): Promise<ISearch_Movie_Response | ISearch_Serie_Response> => {
   try {
-    const response = await axiosInstance.post("/movies/findOrAddMovie", {
-      title: searchTitle,
-      page: pageNumber,
-      limit,
-    });
+    let response;
+    if (streamingType === "movies") {
+      response = await axiosInstance.post(`/movies/findOrAddMovie`, {
+        title,
+        page,
+        limit,
+      });
+    } else if (streamingType === "series") {
+      response = await axiosInstance.post(`/series/findOrAddSerie`, {
+        title,
+        page,
+        limit,
+      });
+    } else if (streamingType === "animes") {
+      response = await axiosInstance.post(`/animes/search`, {
+        title,
+        page,
+        limit,
+      });
+    } else {
+      throw new Error("Invalid streaming type");
+    }
+
     return response.data;
   } catch (err) {
-    console.error(err);
+    console.error(`Failed to fetch ${streamingType}`, err);
     throw err;
   }
 };

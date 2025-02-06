@@ -8,39 +8,59 @@ import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { IMovie } from "@interfaces/movie";
-import { findOrAddMovie } from "@app/api/movies";
+import {
+  findOrAddMovie,
+  ISearch_Movie_Response,
+  ISearch_Serie_Response,
+} from "@app/api/movies";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@app/context/AppContext";
+import { toast } from "sonner";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
   const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
   const router = useRouter();
+  const { streamingTypeContext } = useAppContext();
 
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
 
+  const isMovieResponse = (
+    response: ISearch_Movie_Response | ISearch_Serie_Response,
+  ): response is ISearch_Movie_Response => {
+    return (response as ISearch_Movie_Response).movies !== undefined;
+  };
+
   const fetchMovies = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
-        const response = await findOrAddMovie(searchTitle, pageNumber, limit);
-        if (response.movies) {
-          if (response.movies.length < limit) {
+        const response = await findOrAddMovie(
+          streamingTypeContext,
+          searchTitle,
+          pageNumber,
+          limit,
+        );
+        const data = isMovieResponse(response)
+          ? response.movies
+          : response.series;
+
+        if (data) {
+          if (data.length < limit) {
             setHasMore(false);
           }
-          setMovies((prevMovies: IMovie[]) => [
-            ...prevMovies,
-            ...response.movies,
-          ]);
+          setMovies((prevMovies: IMovie[]) => [...prevMovies, ...data]);
           setPage(response.page);
         } else {
           setHasMore(false);
         }
       } catch (err) {
+        toast.error(`Erro ao buscar ${streamingTypeContext}`);
         setHasMore(false);
       }
     },
-    [limit],
+    [limit, streamingTypeContext],
   );
 
   const debouncedFetchMovies = useMemo(
@@ -62,7 +82,7 @@ const MovieSearch = () => {
     return () => {
       debouncedFetchMovies.cancel();
     };
-  }, [title, debouncedFetchMovies]);
+  }, [title, debouncedFetchMovies, streamingTypeContext]);
 
   const loadMoreMovies = () => {
     fetchMovies(page + 1, title);
@@ -73,7 +93,9 @@ const MovieSearch = () => {
   };
 
   const handleRedirectToDetail = (id: string) => {
-    router.push(`/streaming-detail/${id}`);
+    router.push(
+      `/streaming-detail/${id}?typeStreaming=${streamingTypeContext}`,
+    );
   };
 
   return (
