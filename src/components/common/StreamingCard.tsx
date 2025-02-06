@@ -1,8 +1,7 @@
 "use client";
 import { Star } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
-import Image from "next/image";
-import { useState } from "react";
+import SafeImage from "./SafeImage";
 
 export interface StreamingCardProps {
   title: string;
@@ -18,24 +17,15 @@ export function StreamingCard({
   imageUrl,
 }: StreamingCardProps) {
   const length = 5;
-  const [src, setSrc] = useState(imageUrl);
-
-  const handleImageError = (e: any) => {
-    setSrc("/default-movie-portrait.jpg"); // Caminho relativo à pasta public
-  };
 
   return (
     <div className="flex min-w-52 items-center gap-2 rounded-md bg-white/5 p-2">
       <div className="flex min-w-24 overflow-auto">
         {imageUrl ? (
-          <Image
-            width={250}
-            height={250}
+          <SafeImage
             placeholder={"blur"}
-            blurDataURL={"/blurred_image.png"}
-            src={src}
+            src={imageUrl}
             alt={`Capa do filme ${title}`}
-            onError={handleImageError}
             data-testid="image_movie"
             className="h-auto w-24 overflow-auto rounded-md"
           />
