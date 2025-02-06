@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, use } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -10,6 +10,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { IMovie } from "@interfaces/movie";
 import {
   findOrAddMovie,
+  getCommonMedia,
   ISearch_Movie_Response,
   ISearch_Serie_Response,
 } from "@app/api/movies";
@@ -20,6 +21,7 @@ import { toast } from "sonner";
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
   const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
+  const [topStreamings, setTopStreamings] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
   const router = useRouter();
   const { streamingTypeContext } = useAppContext();
@@ -33,6 +35,19 @@ const MovieSearch = () => {
     return (response as ISearch_Movie_Response).movies !== undefined;
   };
 
+  const fetchTopStreaming = useCallback(async () => {
+    try {
+      const response = await getCommonMedia(streamingTypeContext);
+      const data = response.media;
+
+      if (data) {
+        setTopStreamings(data);
+      }
+    } catch (err) {
+      toast.error(`Erro ao buscar ${streamingTypeContext}`);
+    }
+  }, [streamingTypeContext]);
+
   const fetchMovies = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
@@ -42,6 +57,7 @@ const MovieSearch = () => {
           pageNumber,
           limit,
         );
+        setTopStreamings([]);
         const data = isMovieResponse(response)
           ? response.movies
           : response.series;
@@ -84,6 +100,9 @@ const MovieSearch = () => {
     };
   }, [title, debouncedFetchMovies, streamingTypeContext]);
 
+  useEffect(() => {
+    fetchTopStreaming();
+  }, [fetchTopStreaming]);
   const loadMoreMovies = () => {
     fetchMovies(page + 1, title);
   };
@@ -145,7 +164,11 @@ const MovieSearch = () => {
                 >
                   <StreamingCard
                     title={movie.title}
-                    type={"Action"}
+                    type={
+                      typeof movie.genre[0] === "object"
+                        ? movie.genre[0].name
+                        : "Unknown"
+                    }
                     rate={movie.rating}
                     imageUrl={movie.url}
                   />
@@ -153,9 +176,32 @@ const MovieSearch = () => {
               ))}
             </div>
           </InfiniteScroll>
+        ) : topStreamings ? (
+          <div className="grid grid-cols-1 gap-2">
+            {topStreamings.map((movie, index) => (
+              <div
+                key={index}
+                className="cursor-pointer pb-2"
+                onClick={() => handleRedirectToDetail(movie._id)}
+              >
+                <StreamingCard
+                  title={movie.title}
+                  type={
+                    typeof movie.genre[0] === "object"
+                      ? movie.genre[0].name
+                      : "Unknown"
+                  }
+                  rate={movie.rating}
+                  imageUrl={movie.url}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="flex text-center">
-            <p>TODO, Listar os mais novos Streamings. </p>
+          <div className="mt-4 text-center">
+            <div className="mx-4 mb-4 border-t-2 border-primary"></div>
+
+            <p>Sem mais streamings para serem mostrados</p>
           </div>
         )}
       </div>

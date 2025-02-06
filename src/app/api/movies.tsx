@@ -24,6 +24,19 @@ export interface ISearch_Serie_Response extends ISeries_Response {
   page: number;
 }
 
+export const getCommonMedia = async (
+  streamingType: string,
+): Promise<ICommonMedia_Response> => {
+  try {
+    const response = await axiosInstance.get(
+      `/commonMedia?mediaType=${streamingType}`,
+    );
+    return { media: response.data.media };
+  } catch (err) {
+    throw AppError.fromError(err);
+  }
+};
+
 export const getMovies = async (): Promise<IMovies_Response> => {
   try {
     const response = await axiosInstance.get("/movies");
