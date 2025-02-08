@@ -44,9 +44,9 @@ export function SideBar() {
               Comunidade
             </Link>
             <Link
-              href="/Time"
+              href="/screen-time"
               className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
-                pathname === "/Time"
+                pathname === "/screen-time"
                   ? "bg-primary text-white shadow-lg"
                   : "bg-zinc-700 text-zinc-200 hover:bg-primary hover:text-white"
               }`}

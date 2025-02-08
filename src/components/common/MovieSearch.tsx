@@ -176,7 +176,7 @@ const MovieSearch = () => {
               ))}
             </div>
           </InfiniteScroll>
-        ) : topStreamings ? (
+        ) : topStreamings.length > 0 ? (
           <div className="grid grid-cols-1 gap-2">
             {topStreamings.map((movie, index) => (
               <div
