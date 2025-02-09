@@ -1,4 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+"use client";
+import { Building, Clock, Home, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,53 +12,58 @@ import {
   SidebarMenuItem,
 } from "./sidebar";
 import { Logo } from "@components/common/Logo";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Menu items.
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Community",
+    url: "/community",
+    icon: Building,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Screen Time",
+    url: "/screen-time",
+    icon: Clock,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="items-center justify-between">
           <SidebarGroupLabel className="my-4">
             <Logo />
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-4">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link
+                      href={item.url}
+                      className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                        pathname === item.url
+                          ? "bg-primary text-white shadow-lg"
+                          : "bg-zinc-700 text-zinc-200 hover:text-white"
+                      }`}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

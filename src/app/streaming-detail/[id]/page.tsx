@@ -167,7 +167,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
           </div>
         </div>
       </section>
-      <section className="mb-4 w-full rounded-lg bg-primary/80 p-6 py-12 shadow-lg dark:bg-gray-800 md:py-24 lg:py-32">
+      <section className="shadow-lgmd:py-24 mb-4 w-full rounded-lg bg-primary/75 p-6 py-12 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6">
             <div>
