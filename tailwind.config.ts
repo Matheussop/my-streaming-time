@@ -10,16 +10,6 @@ const config = {
   ],
   prefix: "",
   theme: {
-    sidebar: {
-      DEFAULT: "hsl(var(--sidebar-background))",
-      foreground: "hsl(var(--sidebar-foreground))",
-      primary: "hsl(var(--sidebar-primary))",
-      "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-      accent: "hsl(var(--sidebar-accent))",
-      "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-      border: "hsl(var(--sidebar-border))",
-      ring: "hsl(var(--sidebar-ring))",
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -38,14 +28,24 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         dark: {
-          600: "rgb(70, 70, 80)",
-          700: "rgb(63 63 70)",
-          800: "#1E1E1E",
-          900: "rgb(17 24 39)",
+          600: "hsl(var(--background-600))",
+          700: "hsl(var(--background))",
+          800: "hsl(var(--background-800))",
+          900: "hsl(var(--background-900))",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
         yellow: "#F5C518",
         primary: {
-          DEFAULT: "#F24E1E",
+          DEFAULT: "hsl(var(--primary-color))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {

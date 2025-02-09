@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import ClientProvider from "./providers/clientProviders";
 import { SidebarProvider, SidebarTrigger } from "@components/ui/sidebar";
 import { AppSidebar } from "@components/ui/app-sidebar";
+import { ThemeProvider } from "@components/theme-provider";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -33,17 +34,24 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${roboto.variable} ${titan_One.variable}`}>
       <body className="bg-dark-700 text-zinc-100">
         {/* <SideBar /> */}
-        <SidebarProvider>
-          <AppSidebar />
-          <ClientProvider>
-            <div className="flex-1 ">
-              <SidebarTrigger />
-              {children}
-            </div>
-          </ClientProvider>
-        </SidebarProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider>
+            <AppSidebar />
+            <ClientProvider>
+              <div className="flex-1 ">
+                <SidebarTrigger />
+                {children}
+              </div>
+            </ClientProvider>
+          </SidebarProvider>
 
-        <Toaster toastOptions={toastOptions} theme="dark" />
+          <Toaster toastOptions={toastOptions} theme="dark" />
+        </ThemeProvider>
       </body>
     </html>
   );
