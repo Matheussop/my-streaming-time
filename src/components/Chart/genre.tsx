@@ -4,7 +4,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
   LabelList,
   Rectangle,
   XAxis,
@@ -17,8 +16,6 @@ import {
   ChartTooltipContent,
 } from "@components/ui/chart";
 import { useState, useEffect } from "react";
-import { config } from "process";
-import { fill } from "lodash";
 
 const streamingGenre = [
   { genre: "Action", quantity: 300 },
@@ -32,12 +29,6 @@ interface ScreenTimeData {
   genre: string;
   quantity: number;
 }
-
-// const chartConfig = {
-//   quantity: {
-//     label: "Quantity",
-//   },
-// } satisfies ChartConfig;
 
 export default function GenreChart() {
   const [screenTime, setScreenTime] = useState<ScreenTimeData[] | undefined>(
@@ -69,6 +60,7 @@ export default function GenreChart() {
     setChartConfig(config);
     setScreenTime(newData);
   };
+
   useEffect(() => {
     fetchScreenTime();
   }, []);
@@ -79,8 +71,14 @@ export default function GenreChart() {
   return (
     <div>
       <ChartContainer config={chartConfig}>
-        <BarChart accessibilityLayer data={screenTime}>
-          <CartesianGrid vertical={false} />
+        <BarChart
+          accessibilityLayer
+          data={screenTime}
+          margin={{
+            top: 30,
+          }}
+        >
+          <CartesianGrid vertical={false} horizontal={false} />
           <XAxis
             dataKey="genre"
             tickLine={false}
@@ -107,7 +105,14 @@ export default function GenreChart() {
                 />
               );
             }}
-          />
+          >
+            <LabelList
+              position="top"
+              offset={12}
+              fontSize={12}
+              className="fill-white"
+            />
+          </Bar>
         </BarChart>
       </ChartContainer>
     </div>
