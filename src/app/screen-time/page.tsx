@@ -1,50 +1,18 @@
 "use client";
-import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
+import GenreChart from "@components/Chart/genre";
 
-interface ScreenTimeData {
-  totalMinutes: number;
-  categories: {
-    movies: { [key: string]: number };
-    series: { [key: string]: number };
-  };
-}
-
+const dataGlobalMetrics = [
+  { label: "Total Movies", value: "24" },
+  { label: "Total Movie Time", value: "320" },
+  { label: "Favorite Genre", value: "Action" },
+  { label: "Favorite Movie", value: "Dune" },
+  { label: "Total Series", value: "24" },
+  { label: "Total Series Time", value: "1000" },
+  { label: "Favorite Genre", value: "Drama" },
+  { label: "Favorite Series", value: "Mr Robot" },
+];
 export default function ScreenTime() {
-  const [screenTime, setScreenTime] = useState<ScreenTimeData | null>(null);
-
-  useEffect(() => {
-    const fetchScreenTime = async () => {
-      // Dados fictícios
-      const data: ScreenTimeData = {
-        totalMinutes: 2000,
-        categories: {
-          movies: {
-            Action: 300,
-            Comedy: 400,
-            Drama: 500,
-            Horror: 200,
-            "Sci-Fi": 100,
-          },
-          series: {
-            Action: 150,
-            Comedy: 500,
-            Drama: 1000,
-            Horror: 250,
-            "Sci-Fi": 100,
-          },
-        },
-      };
-      setScreenTime(data);
-    };
-
-    fetchScreenTime();
-  }, []);
-
-  if (!screenTime) {
-    return <div>Loading...</div>;
-  }
-
   const formatTime = (minutes: number) => {
     const days = Math.floor(minutes / 1440);
     const hours = Math.floor((minutes % 1440) / 60);
@@ -57,7 +25,7 @@ export default function ScreenTime() {
   };
 
   return (
-    <div className="m-4 flex min-h-[100dvh] flex-row justify-evenly rounded-lg bg-dark-600 p-6 shadow-lg md:grid-cols-2 md:gap-16 md:px-10">
+    <div className="m-4 flex min-h-[100dvh] flex-row justify-evenly rounded-lg bg-dark-600 p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
         <div className="container space-y-10 xl:space-y-16">
           <div className="mx-auto grid max-w-[1300px] justify-center gap-4 px-4 sm:px-6">
@@ -66,66 +34,23 @@ export default function ScreenTime() {
                 Screen Time
               </h1>
               <div className="text-lg font-medium text-gray-400">
-                Total Time Watched: {formatTime(screenTime.totalMinutes)}
+                Total Time Watched: {formatTime(2000)}
               </div>
             </div>
           </div>
           <div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Total Movies</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {Object.keys(screenTime.categories.movies).length}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Total Movie Time</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {formatTime(
-                    Object.values(screenTime.categories.movies).reduce(
-                      (acc, minutes) => acc + minutes,
-                      0,
-                    ),
-                  )}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Favorite Genre</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {Object.keys(screenTime.categories.movies).length}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Favorite Movie</h3>
-                <p className="text-lg font-medium text-gray-400">Dune</p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Total Episodes Series</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {Object.keys(screenTime.categories.series).length}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Total Series Time</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {formatTime(
-                    Object.values(screenTime.categories.series).reduce(
-                      (acc, minutes) => acc + minutes,
-                      0,
-                    ),
-                  )}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Favorite Genre</h3>
-                <p className="text-lg font-medium text-gray-400">
-                  {Object.keys(screenTime.categories.movies).length}
-                </p>
-              </div>
-              <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-                <h3 className="text-xl font-bold">Favorite Series</h3>
-                <p className="text-lg font-medium text-gray-400">One Piece</p>
-              </div>
+            <div className=" grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {dataGlobalMetrics.map((item, index) => (
+                <div
+                  key={index}
+                  className="rounded-lg bg-gray-700 p-4 shadow-md"
+                >
+                  <h3 className="text-xl font-bold">{item.label}</h3>
+                  <p className="text-lg font-medium text-gray-400">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -140,42 +65,20 @@ export default function ScreenTime() {
             <TabsContent value="movies">
               <div className="grid gap-10 sm:px-10 md:grid-cols-2 md:gap-16">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tighter">
+                  <h2 className="mb-4 text-3xl font-bold tracking-tighter">
                     Time Watched by Category
                   </h2>
-                  <ul className="mt-4 space-y-2">
-                    {Object.entries(screenTime.categories.movies).map(
-                      ([category, minutes]) => (
-                        <li key={category}>
-                          <div className="font-medium">{category}</div>
-                          <div className="text-gray-400">
-                            {formatTime(minutes)}
-                          </div>
-                        </li>
-                      ),
-                    )}
-                  </ul>
+                  <GenreChart />
                 </div>
               </div>
             </TabsContent>
             <TabsContent value="series">
               <div className="grid gap-10 sm:px-10 md:grid-cols-2 md:gap-16">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tighter">
+                  <h2 className="mb-4 text-3xl font-bold tracking-tighter">
                     Time Watched by Category
                   </h2>
-                  <ul className="mt-4 space-y-2">
-                    {Object.entries(screenTime.categories.series).map(
-                      ([category, minutes]) => (
-                        <li key={category}>
-                          <div className="font-medium">{category}</div>
-                          <div className="text-gray-400">
-                            {formatTime(minutes)}
-                          </div>
-                        </li>
-                      ),
-                    )}
-                  </ul>
+                  <GenreChart />
                 </div>
               </div>
             </TabsContent>
