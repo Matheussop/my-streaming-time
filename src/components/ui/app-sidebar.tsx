@@ -89,7 +89,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="focus-visible:outline-none">
+      <SidebarFooter className="focus-visible:outline-hidden">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -101,7 +101,7 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-[--radix-popper-anchor-width]"
+                className="w-(--radix-popper-anchor-width)"
               >
                 <DropdownMenuItem className="rounded-t-sm bg-zinc-700 px-2 py-2 transition duration-300 hover:bg-zinc-800">
                   <span>Account</span>

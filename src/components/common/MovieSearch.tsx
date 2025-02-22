@@ -128,7 +128,7 @@ const MovieSearch = () => {
           value={title}
           onChange={handleInputChange}
           placeholder="Pesquisar"
-          className="rounded-2xl border-2 border-zinc-400 bg-dark-600 bg-opacity-85 outline-none ring-offset-transparent focus:ring-0 focus-visible:border-primary"
+          className="rounded-2xl border-2 border-zinc-400 bg-dark-600 bg-opacity-85 outline-hidden ring-offset-transparent focus:ring-0 focus-visible:border-primary"
         />
 
         <Button type="button" onClick={() => debouncedFetchMovies(title)}>
@@ -136,7 +136,7 @@ const MovieSearch = () => {
         </Button>
       </form>
       <div
-        className="hide-scrollbar mb-4 flex-grow overflow-y-auto"
+        className="hide-scrollbar mb-4 grow overflow-y-auto"
         id="movie-list-box"
       >
         {movies.length !== 0 ? (

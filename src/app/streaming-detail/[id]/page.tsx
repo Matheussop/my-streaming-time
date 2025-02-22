@@ -122,7 +122,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
                 height={350}
                 placeholder={"blur"}
                 blurDataURL={"/placeholder_gif.gif"}
-                className="mx-auto aspect-[16/9] overflow-hidden rounded-xl object-cover"
+                className="mx-auto aspect-16/9 overflow-hidden rounded-xl object-cover"
               />
             </div>
           </div>
