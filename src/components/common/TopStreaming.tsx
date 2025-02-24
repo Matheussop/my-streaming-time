@@ -41,12 +41,11 @@ const menuButtons = tv({
 
 export function TopStreaming() {
   const [streaming, setStreaming] = useState<IMovie[]>([] as IMovie[]);
+  const router = useRouter();
+  const { setStreamingTypeContext, getStreamingTypeContext } = useAppContext();
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
-  >("series");
-  const router = useRouter();
-  const { setStreamingTypeContext } = useAppContext();
-
+  >(getStreamingTypeContext || "series");
   useEffect(() => {
     async function getMediaByType() {
       toast.promise(getMoviesByType(typeStreaming), {

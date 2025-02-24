@@ -24,7 +24,7 @@ const MovieSearch = () => {
   const [topStreamings, setTopStreamings] = useState<IMovie[]>([] as IMovie[]);
   const [page, setPage] = useState(1);
   const router = useRouter();
-  const { streamingTypeContext } = useAppContext();
+  const { getStreamingTypeContext } = useAppContext();
 
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
@@ -37,22 +37,22 @@ const MovieSearch = () => {
 
   const fetchTopStreaming = useCallback(async () => {
     try {
-      const response = await getCommonMedia(streamingTypeContext);
+      const response = await getCommonMedia(getStreamingTypeContext);
       const data = response.media;
 
       if (data) {
         setTopStreamings(data);
       }
     } catch (err) {
-      toast.error(`Erro ao buscar ${streamingTypeContext}`);
+      toast.error(`Erro ao buscar ${getStreamingTypeContext}`);
     }
-  }, [streamingTypeContext]);
+  }, [getStreamingTypeContext]);
 
   const fetchMovies = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
         const response = await findOrAddMovie(
-          streamingTypeContext,
+          getStreamingTypeContext,
           searchTitle,
           pageNumber,
           limit,
@@ -72,11 +72,11 @@ const MovieSearch = () => {
           setHasMore(false);
         }
       } catch (err) {
-        toast.error(`Erro ao buscar ${streamingTypeContext}`);
+        toast.error(`Erro ao buscar ${getStreamingTypeContext}`);
         setHasMore(false);
       }
     },
-    [limit, streamingTypeContext],
+    [limit, getStreamingTypeContext],
   );
 
   const debouncedFetchMovies = useMemo(
@@ -98,7 +98,7 @@ const MovieSearch = () => {
     return () => {
       debouncedFetchMovies.cancel();
     };
-  }, [title, debouncedFetchMovies, streamingTypeContext]);
+  }, [title, debouncedFetchMovies, getStreamingTypeContext]);
 
   useEffect(() => {
     fetchTopStreaming();
@@ -113,7 +113,7 @@ const MovieSearch = () => {
 
   const handleRedirectToDetail = (id: string) => {
     router.push(
-      `/streaming-detail/${id}?typeStreaming=${streamingTypeContext}`,
+      `/streaming-detail/${id}?typeStreaming=${getStreamingTypeContext}`,
     );
   };
 
@@ -128,7 +128,7 @@ const MovieSearch = () => {
           value={title}
           onChange={handleInputChange}
           placeholder="Pesquisar"
-          className="rounded-2xl border-2 border-zinc-400 bg-dark-600 bg-opacity-85 outline-hidden ring-offset-transparent focus:ring-0 focus-visible:border-primary"
+          className="bg-dark-600 outline-hidden focus-visible:border-primary rounded-2xl border-2 border-zinc-400 bg-opacity-85 ring-offset-transparent focus:ring-0"
         />
 
         <Button type="button" onClick={() => debouncedFetchMovies(title)}>
@@ -149,7 +149,7 @@ const MovieSearch = () => {
             loader={<LoadingSpinner />}
             endMessage={
               <div className="mt-4 text-center">
-                <div className="mx-4 mb-4 border-t-2 border-primary"></div>
+                <div className="border-primary mx-4 mb-4 border-t-2"></div>
 
                 <p>Sem mais streamings para serem mostrados</p>
               </div>
@@ -199,7 +199,7 @@ const MovieSearch = () => {
           </div>
         ) : (
           <div className="mt-4 text-center">
-            <div className="mx-4 mb-4 border-t-2 border-primary"></div>
+            <div className="border-primary mx-4 mb-4 border-t-2"></div>
 
             <p>Sem mais streamings para serem mostrados</p>
           </div>
