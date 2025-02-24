@@ -96,13 +96,13 @@ export default function Streaming({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="m-4 flex min-h-[100dvh] flex-col rounded-lg bg-dark-600 p-6 shadow-lg">
+    <div className="bg-dark-600 m-4 flex min-h-[100dvh] flex-col rounded-lg p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
         <div className="container space-y-10 xl:space-y-16">
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
               <Button
-                className={`flex justify-center gap-2 rounded-full  text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
+                className={`flex justify-center gap-2 rounded-full text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
                 onClick={() => handleMarkIsViewed(!viewed)}
               >
                 <span>{viewed ? "Viewed" : "Not watch + "}</span>
@@ -167,7 +167,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
           </div>
         </div>
       </section>
-      <section className="shadow-lgmd:py-24 mb-4 w-full rounded-lg bg-primary/75 p-6 py-12 lg:py-32">
+      <section className="shadow-lgmd:py-24 bg-primary/75 mb-4 w-full rounded-lg p-6 py-12 lg:py-32">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6">
             <div>

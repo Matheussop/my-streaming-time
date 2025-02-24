@@ -33,17 +33,14 @@ export function CarouselCard({
       <HoverCard openDelay={500}>
         <HoverCardTrigger>
           <div className="p-1">
-            <div className="flex  flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 text-zinc-400 hover:bg-white/30">
-              <span className="relative -left-20 top-4 text-4xl font-semibold">
-                {index + 1}
-              </span>
+            <div className="flex flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 pt-20 text-zinc-400 hover:bg-white/30">
               <Image
                 width={220}
                 height={280}
                 src={imageUrl}
                 placeholder={"blur"}
                 blurDataURL={"/placeholder_gif.gif"}
-                className="-mt-12 h-[300px] w-auto overflow-auto rounded-md"
+                className="-mt-16 h-[300px] w-auto overflow-auto rounded-md sm:h-[50px] md:h-[200px] 2xl:h-[300px]"
                 alt={`Capa do filme ${titleStreaming}`}
               />
               <div className="items-start">
@@ -60,7 +57,7 @@ export function CarouselCard({
           </div>
         </HoverCardTrigger>
 
-        <HoverCardContent className="absolute left-4 border-none bg-dark-700 md:bottom-[10%] xl:bottom-80">
+        <HoverCardContent className="bg-dark-700 absolute left-4 border-none md:bottom-[10%] xl:bottom-80">
           <div className="text-zinc-400">
             <strong className="font-semibold text-white">
               {titleStreaming}

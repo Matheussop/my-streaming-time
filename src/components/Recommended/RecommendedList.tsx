@@ -48,9 +48,9 @@ export async function Recommended() {
   const moviesList = await getDateCache();
   return moviesList.length > 0 ? (
     <Carousel className="flex items-center">
-      <CarouselContent className="gap-6">
+      <CarouselContent>
         {moviesList.map((movie, index) => (
-          <CarouselItem className="max-w-[15%] pl-1 " key={index}>
+          <CarouselItem className="max-w-[16%] " key={index}>
             <CarouselCard
               id={movie.movieId}
               index={index}

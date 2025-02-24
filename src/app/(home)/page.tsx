@@ -17,12 +17,12 @@ const boxLoading = () => {
 
 export default function Home() {
   return (
-    <div className="m-4 mr-2 mt-2 flex flex-col rounded-lg bg-dark-600 p-6 font-primary shadow-lg">
+    <div className="bg-dark-600 font-primary m-4 mt-2 mr-2 flex flex-col rounded-lg p-6 shadow-lg">
       <main>
         <TopStreaming />
         <div className="flex flex-1 break-all">
-          <div className="mb-4  flex flex-1 flex-col">
-            <div className="mb-4 mt-10 text-2xl font-semibold text-white">
+          <div className="mb-4 flex flex-1 flex-col">
+            <div className="mt-10 mb-4 text-2xl font-semibold text-white">
               <h2>Recomendados para Matheus Luiz</h2>
               {/* TODO Transformar em uma
     mensagem dinâmica 'relacionado' a cultura pop */}
@@ -30,7 +30,7 @@ export default function Home() {
             <Suspense fallback={boxLoading()}>
               <Recommended />
             </Suspense>
-            <div className="mb-4 mt-10 text-2xl font-semibold text-white">
+            <div className="mt-10 mb-4 text-2xl font-semibold text-white">
               <h2>Categorias</h2>
             </div>
             <Suspense fallback={boxLoading()}>

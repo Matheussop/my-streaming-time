@@ -25,7 +25,7 @@ export default function ScreenTime() {
   };
 
   return (
-    <div className="m-4 flex min-h-[100dvh] flex-row justify-evenly rounded-lg bg-dark-600 p-6 shadow-lg">
+    <div className="bg-dark-600 m-4 flex min-h-[100dvh] flex-row justify-evenly rounded-lg p-6 shadow-lg">
       <section className="w-full pt-12 md:pt-24 lg:pt-32">
         <div className="container space-y-10 xl:space-y-16">
           <div className="mx-auto grid max-w-[1300px] justify-center gap-4 px-4 sm:px-6">
@@ -39,7 +39,7 @@ export default function ScreenTime() {
             </div>
           </div>
           <div>
-            <div className=" grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {dataGlobalMetrics.map((item, index) => (
                 <div
                   key={index}
