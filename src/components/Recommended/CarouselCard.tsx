@@ -14,6 +14,7 @@ interface CarouselCardProps {
   titleStreaming: string;
   plot: string;
   year: number;
+  typeStreaming: string;
 }
 export function CarouselCard({
   id,
@@ -21,10 +22,11 @@ export function CarouselCard({
   titleStreaming,
   plot,
   year,
+  typeStreaming,
 }: CarouselCardProps) {
   const router = useRouter();
   function handleRedirectToDetail() {
-    router.push(`/streaming-detail/${id}`);
+    router.push(`/streaming-detail/${id}?typeStreaming=${typeStreaming}`);
   }
 
   return (

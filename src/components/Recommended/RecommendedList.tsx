@@ -2,40 +2,36 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { SkeletonsArray } from "../common/SkeletonsArray";
 import { unstable_cache } from "next/cache";
 import { CarouselCard } from "./CarouselCard";
-import { getMovies } from "api/movies";
-import { IMovie } from "@interfaces/movie";
-interface IRecommendMovie {
-  movieId: string;
-  movieImg: string;
-  movieTitle: string;
-  movieReleaseDate: string;
-  movieRating: number;
-  moviePlot: string;
-  movieYear: number;
-}
+import { getCommonMedia } from "api/commonContents";
+import { ICommonMedia } from "@interfaces/commonMedia";
+
 const getDateCache = unstable_cache(
   async () => {
     try {
-      const data = await getMovies();
-      if (data.movies.length > 0) {
-        const moviesList: IRecommendMovie[] = data.movies.map(
-          (movie: IMovie) => ({
-            movieId: movie._id,
-            movieImg: movie.url,
-            movieTitle: movie.title,
-            movieReleaseDate: movie.release_date,
-            movieRating: movie.rating,
-            moviePlot: movie.plot,
-            movieYear: new Date(movie.release_date).getFullYear(),
-          }),
-        );
+      const data = await getCommonMedia();
+      if (data.length > 0) {
+        const moviesList: ICommonMedia[] = data.map((media: ICommonMedia) => ({
+          _id: media._id,
+          url: media.url,
+          title: media.title,
+          contentType: media.contentType === "movie" ? "movies" : "series",
+          releaseDate: media.releaseDate,
+          rating: media.rating,
+          plot: media.plot,
+          year: new Date(media.releaseDate).getFullYear(),
+          genre: media.genre,
+          poster: media.poster,
+          tmdbId: media.tmdbId,
+          cast: media.cast,
+          status: media.status,
+        }));
         return moviesList;
       } else {
-        return [] as IRecommendMovie[];
+        return [] as ICommonMedia[];
       }
     } catch (error) {
       console.error(error);
-      return [] as IRecommendMovie[];
+      return [] as ICommonMedia[];
     }
   },
   [],
@@ -45,19 +41,20 @@ const getDateCache = unstable_cache(
   },
 );
 export async function Recommended() {
-  const moviesList = await getDateCache();
-  return moviesList.length > 0 ? (
+  const commonMediaList = await getDateCache();
+  return commonMediaList.length > 0 ? (
     <Carousel className="flex items-center">
       <CarouselContent>
-        {moviesList.map((movie, index) => (
+        {commonMediaList.map((media, index) => (
           <CarouselItem className="max-w-[16%]" key={index}>
             <CarouselCard
-              id={movie.movieId}
+              id={media._id}
               index={index}
-              imageUrl={movie.movieImg}
-              titleStreaming={movie.movieTitle}
-              plot={movie.moviePlot}
-              year={movie.movieYear}
+              imageUrl={media.url ?? ""}
+              titleStreaming={media.title}
+              plot={media.plot ?? ""}
+              year={new Date(media.releaseDate).getFullYear()}
+              typeStreaming={media.contentType}
             />
           </CarouselItem>
         ))}
