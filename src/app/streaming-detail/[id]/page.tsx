@@ -7,6 +7,7 @@ import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { IMovie } from "@interfaces/movie";
 import { Button } from "@components/ui/button";
 import { changeViewedStreaming, getIsViewed } from "@app/api/streamingHistory";
+import { toast } from "sonner";
 
 interface VisualMovieProps extends IMovie {
   ratingValue: string;
@@ -65,8 +66,8 @@ export default function Streaming({ params }: { params: { id: string } }) {
       };
       const isViewed = async () => {
         const data = {
-          streamingId: id,
-          userId: "676dae10ad02621d68372c36",
+          contentId: id,
+          userId: "67745a741402bcf82462362a",
         };
         const isViewed = await getIsViewed(data);
         setViewed(isViewed);
@@ -82,17 +83,23 @@ export default function Streaming({ params }: { params: { id: string } }) {
 
   const changeViewOfStreaming = async (streamingViewed: boolean) => {
     const data = {
-      streamingId: id,
+      userId: "67745a741402bcf82462362a",
+      contentId: id,
+      contentType: typeStreaming === "movies" ? "movie" : typeStreaming,
       title: streaming.title,
-      userId: "676dae10ad02621d68372c36",
-      durationInMinutes: 120,
+      watchedDurationInMinutes: 120,
     };
     await changeViewedStreaming(data, streamingViewed); //TODO add userID on the request
   };
 
   const handleMarkIsViewed = (streamingViewed: boolean) => {
-    changeViewOfStreaming(streamingViewed);
-    setViewed((prev: boolean) => !prev);
+    changeViewOfStreaming(streamingViewed)
+      .then(() => {
+        setViewed((prev: boolean) => !prev);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   return (
@@ -103,7 +110,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
             <div>
               <Button
                 className={`flex justify-center gap-2 rounded-full text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
-                onClick={() => handleMarkIsViewed(!viewed)}
+                onClick={() => handleMarkIsViewed(viewed)}
               >
                 <span>{viewed ? "Viewed" : "Not watch + "}</span>
               </Button>

@@ -1,26 +1,32 @@
 import { AppError } from "@lib/appError";
 import axiosInstance from "@lib/axiosConfig";
 
-interface StreamingHistorySearch {
-  streamingId: string;
+interface BodyStreamingInHistory {
+  contentId: string;
   userId: string;
 }
 
-interface BodyAddStreamingInHistory extends StreamingHistorySearch {
-  title: string;
-  durationInMinutes: number;
+interface BodyAddStreamingInHistory extends BodyStreamingInHistory {
+  contentId: string;
+  userId: string;
+  contentType: string;
+  watchedDurationInMinutes: number;
 }
 
 export const changeViewedStreaming = async (
-  data: BodyAddStreamingInHistory,
+  data: BodyAddStreamingInHistory | BodyStreamingInHistory,
   viewed: boolean,
 ) => {
   try {
     if (viewed) {
-      await axiosInstance.post(`/user-streaming-history`, data);
+      const queryParams = new URLSearchParams();
+      queryParams.set("contentId", data.contentId);
+      queryParams.set("userId", data.userId);
+      await axiosInstance.delete(
+        `/user-streaming-history/remove-entry?${queryParams.toString()}`,
+      );
     } else {
-      const { title, durationInMinutes, ...putData } = data;
-      await axiosInstance.put(`/user-streaming-history`, putData);
+      await axiosInstance.post(`/user-streaming-history`, data);
     }
   } catch (err) {
     throw AppError.fromError(err);
@@ -28,7 +34,7 @@ export const changeViewedStreaming = async (
 };
 
 export const getIsViewed = async (
-  data: StreamingHistorySearch,
+  data: BodyStreamingInHistory,
 ): Promise<boolean> => {
   try {
     const response = await axiosInstance.get(`/user-streaming-history`, {
