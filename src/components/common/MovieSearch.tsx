@@ -128,7 +128,7 @@ const MovieSearch = () => {
           value={title}
           onChange={handleInputChange}
           placeholder="Pesquisar"
-          className="bg-dark-600 outline-hidden focus-visible:border-primary rounded-2xl border-2 border-zinc-400 bg-opacity-85 ring-offset-transparent focus:ring-0"
+          className="bg-dark-600 focus-visible:border-primary bg-opacity-85 rounded-2xl border-2 border-zinc-400 ring-offset-transparent outline-hidden focus:ring-0"
         />
 
         <Button type="button" onClick={() => debouncedFetchMovies(title)}>

@@ -50,7 +50,7 @@ export async function Recommended() {
     <Carousel className="flex items-center">
       <CarouselContent>
         {moviesList.map((movie, index) => (
-          <CarouselItem className="max-w-[16%] " key={index}>
+          <CarouselItem className="max-w-[16%]" key={index}>
             <CarouselCard
               id={movie.movieId}
               index={index}

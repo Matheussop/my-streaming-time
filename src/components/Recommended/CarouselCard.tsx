@@ -17,7 +17,6 @@ interface CarouselCardProps {
 }
 export function CarouselCard({
   id,
-  index,
   imageUrl,
   titleStreaming,
   plot,
@@ -50,7 +49,7 @@ export function CarouselCard({
                 <p className="text-sm">TODO make logic genre</p>
                 <div className="flex text-sm">
                   <p className="mr-1 after:content-['_•_']">Time: 1h 58m</p>
-                  <p className="before:content-['_'] ">{year}</p>
+                  <p className="before:content-['_']">{year}</p>
                 </div>
               </div>
             </div>
@@ -63,7 +62,7 @@ export function CarouselCard({
               {titleStreaming}
             </strong>
             <p className="text-sm">Tipo do filme</p>
-            <p className="line-clamp-12 text-balance text-sm">{plot}</p>
+            <p className="line-clamp-12 text-sm text-balance">{plot}</p>
           </div>
         </HoverCardContent>
       </HoverCard>

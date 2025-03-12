@@ -86,7 +86,7 @@ export function TopStreaming() {
 
   return (
     <div>
-      <div className="flex items-center gap-5  text-2xl font-bold">
+      <div className="flex items-center gap-5 text-2xl font-bold">
         <Button
           onClick={() => onHandleChangeTypeStreaming("series")}
           className={`${typeStreaming === "series" ? menuButtons({ status: "active" }) : menuButtons()}`}
@@ -130,7 +130,7 @@ export function TopStreaming() {
         </div>
       ) : (
         <div
-          className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3 "
+          className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3"
           data-testid="skeletons-array"
         >
           <SkeletonsArray length={6} className="h-28 w-full" />
