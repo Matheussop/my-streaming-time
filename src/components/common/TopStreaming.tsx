@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
-import { getMoviesByType } from "api/movies";
 import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
 import { AppError } from "@lib/appError";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "context/AppContext";
+import { getCommonMediaByType } from "api/commonContents";
+import { ISeries } from "@interfaces/series";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -40,7 +41,9 @@ const menuButtons = tv({
 });
 
 export function TopStreaming() {
-  const [streaming, setStreaming] = useState<IMovie[]>([] as IMovie[]);
+  const [streaming, setStreaming] = useState<IMovie[] | ISeries[]>(
+    [] as IMovie[] | ISeries[],
+  );
   const router = useRouter();
   const { setStreamingTypeContext, getStreamingTypeContext } = useAppContext();
   const [typeStreaming, setTypeStreaming] = useState<
@@ -48,11 +51,10 @@ export function TopStreaming() {
   >(getStreamingTypeContext || "series");
   useEffect(() => {
     async function getMediaByType() {
-      toast.promise(getMoviesByType(typeStreaming), {
+      toast.promise(getCommonMediaByType(typeStreaming), {
         loading: `Recuperando dado de ${typeStreaming}...`,
         success: (data) => {
-          const streamingData = data;
-          setStreaming(streamingData.media);
+          setStreaming(data);
           return `Dados recuperados com sucesso`;
         },
         error: (apiErro: AppError) => {
@@ -119,7 +121,7 @@ export function TopStreaming() {
                 height={100}
                 placeholder={"blur"}
                 blurDataURL={"/blurred_image.png"}
-                src={media.poster}
+                src={media.poster ?? ""}
                 onError={handleImageError}
                 alt={`Capa do filme ${media.title}`}
                 className="h-28 w-60 object-cover"

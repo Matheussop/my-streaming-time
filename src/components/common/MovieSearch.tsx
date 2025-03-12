@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo, use } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -7,21 +7,22 @@ import { StreamingCard } from "./StreamingCard";
 import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
-import { IMovie } from "@interfaces/movie";
-import {
-  findOrAddMovie,
-  getCommonMedia,
-  ISearch_Movie_Response,
-  ISearch_Serie_Response,
-} from "api/movies";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "context/AppContext";
 import { toast } from "sonner";
+import { getCommonMediaByType } from "api/commonContents";
+import { ICommonMedia } from "@interfaces/commonMedia";
+import { findOrAddMovie, ISearch_Serie_Response } from "api/movies";
+import { ISearch_Movie_Response } from "api/movies";
 
 const MovieSearch = () => {
   const [title, setTitle] = useState("");
-  const [movies, setMovies] = useState<IMovie[]>([] as IMovie[]);
-  const [topStreamings, setTopStreamings] = useState<IMovie[]>([] as IMovie[]);
+  const [streaming, setStreaming] = useState<ICommonMedia[]>(
+    [] as ICommonMedia[],
+  );
+  const [topStreamings, setTopStreamings] = useState<ICommonMedia[]>(
+    [] as ICommonMedia[],
+  );
   const [page, setPage] = useState(1);
   const router = useRouter();
   const { getStreamingTypeContext } = useAppContext();
@@ -37,8 +38,8 @@ const MovieSearch = () => {
 
   const fetchTopStreaming = useCallback(async () => {
     try {
-      const response = await getCommonMedia(getStreamingTypeContext);
-      const data = response.media;
+      const response = await getCommonMediaByType(getStreamingTypeContext);
+      const data = response;
 
       if (data) {
         setTopStreamings(data);
@@ -48,7 +49,7 @@ const MovieSearch = () => {
     }
   }, [getStreamingTypeContext]);
 
-  const fetchMovies = useCallback(
+  const fetchStreaming = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
         const response = await findOrAddMovie(
@@ -66,7 +67,10 @@ const MovieSearch = () => {
           if (data.length < limit) {
             setHasMore(false);
           }
-          setMovies((prevMovies: IMovie[]) => [...prevMovies, ...data]);
+          setStreaming((prevStreaming: ICommonMedia[]) => [
+            ...prevStreaming,
+            ...data,
+          ]);
           setPage(response.page);
         } else {
           setHasMore(false);
@@ -79,32 +83,32 @@ const MovieSearch = () => {
     [limit, getStreamingTypeContext],
   );
 
-  const debouncedFetchMovies = useMemo(
+  const debouncedFetchStreaming = useMemo(
     () =>
       debounce((searchTitle: string) => {
-        setMovies([]);
+        setStreaming([]);
         setPage(1);
         setHasMore(true);
-        fetchMovies(1, searchTitle);
+        fetchStreaming(1, searchTitle);
       }, 500),
-    [fetchMovies],
+    [fetchStreaming],
   );
 
   useEffect(() => {
     if (title) {
-      debouncedFetchMovies(title);
+      debouncedFetchStreaming(title);
     }
 
     return () => {
-      debouncedFetchMovies.cancel();
+      debouncedFetchStreaming.cancel();
     };
-  }, [title, debouncedFetchMovies, getStreamingTypeContext]);
+  }, [title, debouncedFetchStreaming, getStreamingTypeContext]);
 
   useEffect(() => {
     fetchTopStreaming();
   }, [fetchTopStreaming]);
-  const loadMoreMovies = () => {
-    fetchMovies(page + 1, title);
+  const loadMoreStreaming = () => {
+    fetchStreaming(page + 1, title);
   };
 
   const handleInputChange = (e: any) => {
@@ -131,7 +135,7 @@ const MovieSearch = () => {
           className="bg-dark-600 focus-visible:border-primary bg-opacity-85 rounded-2xl border-2 border-zinc-400 ring-offset-transparent outline-hidden focus:ring-0"
         />
 
-        <Button type="button" onClick={() => debouncedFetchMovies(title)}>
+        <Button type="button" onClick={() => debouncedFetchStreaming(title)}>
           <Search />
         </Button>
       </form>
@@ -139,10 +143,10 @@ const MovieSearch = () => {
         className="hide-scrollbar mb-4 grow overflow-y-auto"
         id="movie-list-box"
       >
-        {movies.length !== 0 ? (
+        {streaming.length !== 0 ? (
           <InfiniteScroll
-            dataLength={movies.length}
-            next={loadMoreMovies}
+            dataLength={streaming.length}
+            next={loadMoreStreaming}
             hasMore={hasMore}
             scrollableTarget="movie-list-box"
             style={{ overflow: "hidden" }}
@@ -156,7 +160,7 @@ const MovieSearch = () => {
             }
           >
             <div className="grid grid-cols-1 gap-2">
-              {movies.map((movie, index) => (
+              {streaming.map((movie, index) => (
                 <div
                   key={index}
                   className="cursor-pointer pb-2"
@@ -169,8 +173,8 @@ const MovieSearch = () => {
                         ? movie.genre[0].name
                         : "Unknown"
                     }
-                    rate={movie.rating}
-                    imageUrl={movie.url}
+                    rate={movie.rating ?? 0}
+                    imageUrl={movie.url ?? ""}
                   />
                 </div>
               ))}
@@ -191,8 +195,8 @@ const MovieSearch = () => {
                       ? movie.genre[0].name
                       : "Unknown"
                   }
-                  rate={movie.rating}
-                  imageUrl={movie.url}
+                  rate={movie.rating ?? 0}
+                  imageUrl={movie.url ?? ""}
                 />
               </div>
             ))}

@@ -69,11 +69,13 @@ export const getMoviesByType = async (
   limit = 10,
 ): Promise<ICommonMedia_Response> => {
   try {
-    const { data }: { data: ICommonMedia_Response } = await axiosInstance.get(
-      `/commonMedia?mediaType=${type}&limit=${6}`,
-    );
-
-    return { media: data.media };
+    if (type === "movies") {
+      return await axiosInstance.get(`/movies`);
+    } else if (type === "series") {
+      return await axiosInstance.get(`/series`);
+    } else {
+      throw new Error("Invalid streaming type");
+    }
   } catch (err: any) {
     throw AppError.fromError(err);
   }

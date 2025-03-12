@@ -20,19 +20,21 @@ const getDateCache = async (
 ): Promise<VisualMovieProps> => {
   try {
     const data = await getMediaById(id, streamingType);
-    const streamingObj = {
+    const streamingObj: VisualMovieProps = {
       _id: data._id,
       title: data.title,
       plot: data.plot,
       rating: data.rating,
-      ratingValue: data.rating.toFixed(0),
-      stars: Math.round(data.rating / 2),
-      poster: data.poster,
+      ratingValue: data.rating?.toFixed(0) ?? "0",
+      stars: Math.round(data.rating ?? 0 / 2),
+      poster: data.poster ?? "",
       url: data.url,
-      year: new Date(data.release_date).getFullYear(),
-      release_date: data.release_date,
+      year: new Date(data.releaseDate).getFullYear(),
+      releaseDate: data.releaseDate,
       cast: data.cast,
       genre: data.genre,
+      durationTime: data.durationTime,
+      contentType: data.contentType,
     };
     return streamingObj;
   } catch (error) {
@@ -124,7 +126,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
             <div>
               <Image
                 alt="Movie Poster"
-                src={streaming.poster}
+                src={streaming.poster ?? ""}
                 width={600}
                 height={350}
                 placeholder={"blur"}

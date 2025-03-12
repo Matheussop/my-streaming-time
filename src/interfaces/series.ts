@@ -1,15 +1,15 @@
-export type GenreObject = { id: string; name: string };
+import { ICommonMedia } from "./commonMedia";
 
-export interface ISeries {
-  _id: string;
+interface ISeasonSummary {
+  seasonId: string;
+  seasonNumber: number;
   title: string;
-  release_date: string;
-  plot: string;
-  cast: string[];
-  rating: number;
-  numberEpisodes: number;
-  numberSeasons: number;
-  genre: GenreObject[] | number[];
-  poster: string;
-  url: string;
+  episodeCount: number;
+  releaseDate: string;
+}
+
+export interface ISeries extends ICommonMedia {
+  totalEpisodes: number;
+  totalSeasons: number;
+  seasonsSummary?: ISeasonSummary[];
 }
