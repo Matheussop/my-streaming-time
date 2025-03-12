@@ -1,42 +1,47 @@
-import { unstable_cache } from "next/cache";
+"use client";
 import { SkeletonsArray } from "./SkeletonsArray";
 import axiosInstance from "@lib/axiosConfig";
-import { IStreamingTypeResponse } from "interfaces/streamingType";
+import { IGenreReference, IStreamingType } from "interfaces/streamingType";
 import SafeImage from "./SafeImage";
+import { useAppContext } from "context/AppContext";
+import { useEffect, useState } from "react";
 
-const getDateCache = unstable_cache(
-  async () => {
-    const { data }: { data: IStreamingTypeResponse[] } =
-      await axiosInstance.get("/streamingTypes");
+export function Categories() {
+  const { getStreamingTypeContext } = useAppContext();
+  const [uniqueCategoryNames, setUniqueCategoryNames] = useState<
+    IGenreReference[]
+  >([]);
 
-    if (!data) {
-      return { uniqueCategoryNames: [] };
-    }
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data }: { data: IStreamingType } = await axiosInstance.get(
+          `/streamingTypes/name/${getStreamingTypeContext}`,
+        );
 
-    const categoryMap = new Map();
-
-    data.forEach((streamingType) => {
-      streamingType.categories.forEach((category) => {
-        if (!categoryMap.has(category.name)) {
-          categoryMap.set(category.name, {
-            name: category.name,
-            poster: category.poster || "/default-movie-portrait.jpg",
-          });
+        if (!data || !data.supportedGenres) {
+          setUniqueCategoryNames([]);
+          return;
         }
-      });
-    });
-    const uniqueCategoryNames = Array.from(categoryMap.values());
-    return { uniqueCategoryNames };
-  },
-  [],
-  {
-    revalidate: 10,
-    tags: ["categoriesStreamings"],
-  },
-);
 
-export async function Categories() {
-  const { uniqueCategoryNames } = await getDateCache();
+        const categoryMap = new Map();
+
+        data.supportedGenres.forEach((genre) => {
+          categoryMap.set(genre.name, {
+            name: genre.name,
+            poster: genre.poster || "/default-movie-portrait.jpg",
+          });
+        });
+
+        setUniqueCategoryNames(Array.from(categoryMap.values()));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setUniqueCategoryNames([]);
+      }
+    };
+
+    fetchCategories();
+  }, [getStreamingTypeContext]);
 
   return (
     <div className="m-y-10 flex items-center justify-center">

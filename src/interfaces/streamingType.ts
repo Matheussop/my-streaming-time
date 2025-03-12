@@ -1,21 +1,12 @@
-export interface ICategory {
+export interface IGenreReference {
+  _id: string;
   id: number;
   name: string;
-  poster?: string;
+  poster: string;
 }
-
-export interface IStreamingTypeCreate {
+export interface IStreamingType {
   name: string;
-  categories: ICategory[];
-}
-
-export interface IStreamingTypeUpdate {
-  name?: string;
-  categories?: ICategory[];
-}
-
-export interface IStreamingTypeResponse extends IStreamingTypeCreate {
-  _id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  supportedGenres?: IGenreReference[];
+  description?: string;
+  isActive?: boolean;
 }
