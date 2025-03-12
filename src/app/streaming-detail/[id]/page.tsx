@@ -1,12 +1,12 @@
 "use client";
-import { getMediaById } from "@app/api/movies";
+import { getMediaById } from "api/movies";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { IMovie } from "@interfaces/movie";
 import { Button } from "@components/ui/button";
-import { changeViewedStreaming, getIsViewed } from "@app/api/streamingHistory";
+import { changeViewedStreaming, getIsViewed } from "api/streamingHistory";
 import { toast } from "sonner";
 
 interface VisualMovieProps extends IMovie {

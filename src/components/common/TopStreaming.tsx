@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
 import { tv } from "tailwind-variants";
-import { getMoviesByType } from "@app/api/movies";
+import { getMoviesByType } from "api/movies";
 import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
 import { AppError } from "@lib/appError";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "@app/context/AppContext";
+import { useAppContext } from "context/AppContext";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(

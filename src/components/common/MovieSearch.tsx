@@ -13,9 +13,9 @@ import {
   getCommonMedia,
   ISearch_Movie_Response,
   ISearch_Serie_Response,
-} from "@app/api/movies";
+} from "api/movies";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "@app/context/AppContext";
+import { useAppContext } from "context/AppContext";
 import { toast } from "sonner";
 
 const MovieSearch = () => {

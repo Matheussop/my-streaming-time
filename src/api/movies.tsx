@@ -1,4 +1,4 @@
-import { IStreamingType } from "@app/context/AppContext";
+import { IStreamingType } from "context/AppContext";
 import { ISeries } from "@interfaces/series";
 import { AppError } from "@lib/appError";
 import axiosInstance from "@lib/axiosConfig";

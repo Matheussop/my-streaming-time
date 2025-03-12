@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from "./tooltip";
 import { Button } from "./button";
-import { useIsMobile } from "@app/context/use-mobile";
+import { useIsMobile } from "context/use-mobile";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

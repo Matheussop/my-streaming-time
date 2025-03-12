@@ -2,7 +2,7 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { SkeletonsArray } from "../common/SkeletonsArray";
 import { unstable_cache } from "next/cache";
 import { CarouselCard } from "./CarouselCard";
-import { getMovies } from "@app/api/movies";
+import { getMovies } from "api/movies";
 import { IMovie } from "@interfaces/movie";
 interface IRecommendMovie {
   movieId: string;
