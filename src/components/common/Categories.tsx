@@ -11,10 +11,13 @@ export function Categories() {
   const [uniqueCategoryNames, setUniqueCategoryNames] = useState<
     IGenreReference[]
   >([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setIsLoading(true);
+
         const { data }: { data: IStreamingType } = await axiosInstance.get(
           `/streamingTypes/name/${getStreamingTypeContext}`,
         );
@@ -33,10 +36,17 @@ export function Categories() {
           });
         });
 
-        setUniqueCategoryNames(Array.from(categoryMap.values()));
+        const newCategories = Array.from(categoryMap.values());
+
+        // Small delay to ensure smooth transition
+        setTimeout(() => {
+          setUniqueCategoryNames(newCategories);
+          setIsLoading(false);
+        }, 300);
       } catch (error) {
         console.error("Error fetching categories:", error);
         setUniqueCategoryNames([]);
+        setIsLoading(false);
       }
     };
 
@@ -53,11 +63,20 @@ export function Categories() {
               className="flex flex-col items-center justify-center gap-y-4 text-center"
             >
               <strong className="text-lg">{object.name}</strong>
-              <div className="flex overflow-auto rounded-md">
+              <div className="relative flex overflow-auto rounded-md">
+                {isLoading && (
+                  <div className="bg-opacity-50 absolute inset-0 z-10 flex items-center justify-center bg-black transition-opacity duration-300">
+                    <SafeImage
+                      src="/default-movie-portrait.jpg"
+                      className="relative z-0 h-40"
+                      alt="Carregando imagem"
+                    />
+                  </div>
+                )}
                 <SafeImage
                   placeholder={"blur"}
                   src={object.poster}
-                  className="h-40"
+                  className="relative z-0 h-40"
                   alt={`Capa da categoria ${object.name}`}
                 />
               </div>
