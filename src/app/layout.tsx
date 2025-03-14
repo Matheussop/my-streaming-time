@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import { AppProvider } from "../context/AppContext";
+import { AppProvider } from "@context/AppContext";
 import dynamic from "next/dynamic";
 import { AppSidebar } from "@components/ui/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@components/ui/sidebar";
