@@ -4,7 +4,8 @@ import { SkeletonsArray } from "@components/common/SkeletonsArray";
 import { TopStreaming } from "@components/common/TopStreaming";
 import { Suspense } from "react";
 
-const boxLoading = () => {
+// Improved loading component with better naming
+const ContentSectionSkeleton = () => {
   return (
     <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-6">
       <SkeletonsArray
@@ -15,7 +16,24 @@ const boxLoading = () => {
   );
 };
 
+// Dynamic greeting message generator
+const getGreetingMessage = () => {
+  /* TODO Transformar em uma
+    mensagem dinâmica 'relacionado' a cultura pop */
+  const messages = [
+    "Recomendados para você",
+    "Escolhidos especialmente para você",
+    "Você pode gostar destes",
+    "Baseado no seu histórico",
+    "Selecionados para o seu gosto",
+  ];
+
+  return messages[Math.floor(Math.random() * messages.length)];
+};
+
 export default function Home() {
+  const greetingMessage = getGreetingMessage();
+
   return (
     <div className="bg-dark-600 font-primary m-4 mt-2 mr-2 flex flex-col rounded-lg p-6 shadow-lg">
       <main>
@@ -23,17 +41,15 @@ export default function Home() {
         <div className="flex flex-1 break-all">
           <div className="mb-4 flex flex-1 flex-col">
             <div className="mt-10 mb-4 text-2xl font-semibold text-white">
-              <h2>Recomendados para Matheus Luiz</h2>
-              {/* TODO Transformar em uma
-    mensagem dinâmica 'relacionado' a cultura pop */}
+              <h2>{greetingMessage}</h2>
             </div>
-            <Suspense fallback={boxLoading()}>
+            <Suspense fallback={<ContentSectionSkeleton />}>
               <Recommended />
             </Suspense>
             <div className="mt-10 mb-4 text-2xl font-semibold text-white">
               <h2>Categorias</h2>
             </div>
-            <Suspense fallback={boxLoading()}>
+            <Suspense fallback={<ContentSectionSkeleton />}>
               <Categories />
             </Suspense>
           </div>
