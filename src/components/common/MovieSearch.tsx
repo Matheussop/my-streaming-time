@@ -8,7 +8,7 @@ import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { useRouter } from "next/navigation";
-import { useAppContext, useStreamingType } from "context/AppContext";
+import { useStreamingType } from "context/AppContext";
 import { toast } from "sonner";
 import { getCommonMediaByType } from "api/commonContents";
 import { ICommonMedia } from "@interfaces/commonMedia";
