@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Roboto, Titan_One } from "next/font/google";
+import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import { AppProvider } from "@context/AppContext";
 import dynamic from "next/dynamic";
 import { AppSidebar } from "@components/ui/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@components/ui/sidebar";
@@ -29,8 +28,6 @@ const titan_One = Titan_One({
   variable: "--font-titan-one",
 });
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
 export const metadata: Metadata = {
   title: "My Streaming Time",
   description: "Track your streaming time across different platforms",
@@ -45,10 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${roboto.variable} ${titan_One.variable} bg-background min-h-screen font-sans antialiased`}
-      >
+    <html lang="pt-BR" className={`${titan_One.variable} ${roboto.variable}`}>
+      <body className={`bg-background min-h-screen text-zinc-100`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -61,12 +56,11 @@ export default function RootLayout({
               <ErrorBoundary>
                 <div className="flex-1">
                   <SidebarTrigger />
-                  <AppProvider>{children}</AppProvider>
+                  {children}
                 </div>
               </ErrorBoundary>
             </ClientProvider>
           </SidebarProvider>
-
           <Toaster toastOptions={toastOptions} theme="dark" />
         </ThemeProvider>
       </body>
