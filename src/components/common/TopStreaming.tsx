@@ -8,7 +8,7 @@ import { IMovie } from "@interfaces/movie";
 import { toast } from "sonner";
 import { AppError } from "@lib/appError";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "context/AppContext";
+import { useSetStreamingType, useStreamingType } from "context/AppContext";
 import { getCommonMediaByType } from "api/commonContents";
 import { ISeries } from "@interfaces/series";
 
@@ -45,10 +45,10 @@ export function TopStreaming() {
     [] as IMovie[] | ISeries[],
   );
   const router = useRouter();
-  const { setStreamingTypeContext, getStreamingTypeContext } = useAppContext();
+  const setStreamingTypeContext = useSetStreamingType();
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
-  >(getStreamingTypeContext || "series");
+  >(useStreamingType || "series");
   useEffect(() => {
     async function getMediaByType() {
       toast.promise(getCommonMediaByType(typeStreaming), {

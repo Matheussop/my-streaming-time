@@ -3,23 +3,22 @@ import { SkeletonsArray } from "./SkeletonsArray";
 import axiosInstance from "@lib/axiosConfig";
 import { IGenreReference, IStreamingType } from "interfaces/streamingType";
 import SafeImage from "./SafeImage";
-import { useAppContext } from "context/AppContext";
+import { useStreamingType } from "@context/AppContext";
 import { useEffect, useState } from "react";
 
 export function Categories() {
-  const { getStreamingTypeContext } = useAppContext();
   const [uniqueCategoryNames, setUniqueCategoryNames] = useState<
     IGenreReference[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const currentStreamingType = useStreamingType();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
 
         const { data }: { data: IStreamingType } = await axiosInstance.get(
-          `/streamingTypes/name/${getStreamingTypeContext}`,
+          `/streamingTypes/name/${currentStreamingType}`,
         );
 
         if (!data || !data.supportedGenres) {
@@ -51,7 +50,7 @@ export function Categories() {
     };
 
     fetchCategories();
-  }, [getStreamingTypeContext]);
+  }, [currentStreamingType]);
 
   return (
     <div className="m-y-10 flex items-center justify-center">

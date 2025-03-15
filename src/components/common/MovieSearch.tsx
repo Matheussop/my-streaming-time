@@ -8,7 +8,7 @@ import { debounce } from "lodash";
 import { Search } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "context/AppContext";
+import { useAppContext, useStreamingType } from "context/AppContext";
 import { toast } from "sonner";
 import { getCommonMediaByType } from "api/commonContents";
 import { ICommonMedia } from "@interfaces/commonMedia";
@@ -25,7 +25,7 @@ const MovieSearch = () => {
   );
   const [page, setPage] = useState(1);
   const router = useRouter();
-  const { getStreamingTypeContext } = useAppContext();
+  const currentStreamingType = useStreamingType();
 
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
@@ -38,22 +38,22 @@ const MovieSearch = () => {
 
   const fetchTopStreaming = useCallback(async () => {
     try {
-      const response = await getCommonMediaByType(getStreamingTypeContext);
+      const response = await getCommonMediaByType(currentStreamingType);
       const data = response;
 
       if (data) {
         setTopStreamings(data);
       }
     } catch (err) {
-      toast.error(`Erro ao buscar ${getStreamingTypeContext}`);
+      toast.error(`Erro ao buscar ${currentStreamingType}`);
     }
-  }, [getStreamingTypeContext]);
+  }, [currentStreamingType]);
 
   const fetchStreaming = useCallback(
     async (pageNumber: number, searchTitle: string) => {
       try {
         const response = await findOrAddMovie(
-          getStreamingTypeContext,
+          currentStreamingType,
           searchTitle,
           pageNumber,
           limit,
@@ -76,11 +76,11 @@ const MovieSearch = () => {
           setHasMore(false);
         }
       } catch (err) {
-        toast.error(`Erro ao buscar ${getStreamingTypeContext}`);
+        toast.error(`Erro ao buscar ${currentStreamingType}`);
         setHasMore(false);
       }
     },
-    [limit, getStreamingTypeContext],
+    [limit, currentStreamingType],
   );
 
   const debouncedFetchStreaming = useMemo(
@@ -102,7 +102,7 @@ const MovieSearch = () => {
     return () => {
       debouncedFetchStreaming.cancel();
     };
-  }, [title, debouncedFetchStreaming, getStreamingTypeContext]);
+  }, [title, debouncedFetchStreaming, currentStreamingType]);
 
   useEffect(() => {
     fetchTopStreaming();
@@ -117,7 +117,7 @@ const MovieSearch = () => {
 
   const handleRedirectToDetail = (id: string) => {
     router.push(
-      `/streaming-detail/${id}?typeStreaming=${getStreamingTypeContext}`,
+      `/streaming-detail/${id}?typeStreaming=${currentStreamingType}`,
     );
   };
 
