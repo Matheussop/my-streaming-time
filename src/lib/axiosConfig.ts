@@ -10,7 +10,7 @@ import { AppError } from "./appError";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // Create axios instance with default config
-const axiosInstance: AxiosInstance = axios.create({
+export const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 10000,
   headers: {
@@ -43,5 +43,4 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(AppError.fromError(error));
   },
 );
-
 export default axiosInstance;

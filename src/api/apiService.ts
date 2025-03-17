@@ -97,7 +97,7 @@ export const historyApi = {
 // Recommendations API
 export const recommendationsApi = {
   // Get recommendations
-  getRecommendations: async (limit: number = 6): Promise<ICommonMedia[]> => {
+  getRecommendations: async (limit: number = 10): Promise<ICommonMedia[]> => {
     try {
       const response = await axiosInstance.get("/commonMedia", {
         params: { limit },
