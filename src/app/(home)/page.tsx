@@ -4,7 +4,6 @@ import { SkeletonsArray } from "@components/common/SkeletonsArray";
 import { TopStreaming } from "@components/common/TopStreaming";
 import { Suspense } from "react";
 
-// Improved loading component with better naming
 const ContentSectionSkeleton = () => {
   return (
     <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-6">

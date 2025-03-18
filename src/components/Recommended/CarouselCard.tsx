@@ -4,31 +4,42 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@components/ui/hover-card";
+import { ICommonMedia } from "@interfaces/commonMedia";
+import { IGenreReference } from "@interfaces/streamingType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-interface CarouselCardProps {
+interface CarouselCardProps extends ICommonMedia {
   id: string;
   index: number;
   imageUrl: string;
-  titleStreaming: string;
-  plot: string;
   year: number;
   typeStreaming: string;
 }
 export function CarouselCard({
   id,
   imageUrl,
-  titleStreaming,
+  title,
   plot,
   year,
   typeStreaming,
-}: CarouselCardProps) {
+  genre,
+}: Partial<CarouselCardProps>) {
   const router = useRouter();
+
+  const genreName = (genre: IGenreReference[], limit: number) => {
+    return genre
+      .slice(0, limit)
+      .map((g) => g.name)
+      .join(", ");
+  };
+
   function handleRedirectToDetail() {
     router.push(`/streaming-detail/${id}?typeStreaming=${typeStreaming}`);
   }
 
+  const genreFormat = genreName(genre as IGenreReference[], 2);
+  const genreFull = genreName(genre as IGenreReference[], genre?.length ?? 0);
   return (
     <div onClick={handleRedirectToDetail}>
       <HoverCard openDelay={500}>
@@ -38,20 +49,22 @@ export function CarouselCard({
               <Image
                 width={220}
                 height={280}
-                src={imageUrl}
+                src={imageUrl ?? ""}
                 placeholder={"blur"}
                 blurDataURL={"/placeholder_gif.gif"}
                 className="-mt-16 h-[300px] w-auto overflow-auto rounded-md sm:h-[50px] md:h-[200px] 2xl:h-[300px]"
-                alt={`Capa do filme ${titleStreaming}`}
+                alt={`Capa do filme ${title}`}
               />
               <div className="items-start">
-                <strong className="line-clamp-3 font-semibold text-white">
-                  {titleStreaming}
+                <strong className="line-clamp-2 min-h-[3em] font-semibold text-white">
+                  {title}
                 </strong>
-                <p className="text-sm">TODO make logic genre</p>
+                <p className="line-clamp-1 text-sm text-balance">
+                  {genreFormat}
+                </p>
                 <div className="flex text-sm">
                   <p className="mr-1 after:content-['_•_']">Time: 1h 58m</p>
-                  <p className="before:content-['_']">{year}</p>
+                  <p className="before:content-['_']">{year ?? "N/A"}</p>
                 </div>
               </div>
             </div>
@@ -60,11 +73,12 @@ export function CarouselCard({
 
         <HoverCardContent className="bg-dark-700 absolute left-4 border-none md:bottom-[10%] xl:bottom-80">
           <div className="text-zinc-400">
-            <strong className="font-semibold text-white">
-              {titleStreaming}
-            </strong>
-            <p className="text-sm">Tipo do filme</p>
+            <strong className="font-semibold text-white">{title}</strong>
+            <p className="text-sm">{typeStreaming?.toUpperCase()}</p>
             <p className="line-clamp-12 text-sm text-balance">{plot}</p>
+            <p className="mt-2 line-clamp-4 text-sm text-balance">
+              Genre: {genreFull}
+            </p>
           </div>
         </HoverCardContent>
       </HoverCard>

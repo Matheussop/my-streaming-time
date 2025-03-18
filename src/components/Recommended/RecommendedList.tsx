@@ -3,6 +3,7 @@ import { CarouselCard } from "./CarouselCard";
 import { ICommonMedia } from "@interfaces/commonMedia";
 import { serverApi } from "@lib/server/serverApiRequest";
 import { AppError } from "@lib/appError";
+import console from "console";
 
 export async function getRecommendations() {
   try {
@@ -10,7 +11,7 @@ export async function getRecommendations() {
       data: await serverApi<ICommonMedia[], { limit: number }>(`/commonMedia`, {
         method: "GET",
         params: {
-          limit: 6,
+          limit: 10,
         },
         next: {
           revalidate: 60, // Cache por 24 horas
@@ -29,7 +30,6 @@ export async function getRecommendations() {
 }
 export async function Recommended() {
   const { data: recommendations, error } = await getRecommendations();
-
   // Client Side request
   // const {
   //   data: recommendations,
@@ -64,9 +64,14 @@ export async function Recommended() {
               id={media._id}
               index={index}
               imageUrl={media.url ?? ""}
-              titleStreaming={media.title}
+              title={media.title}
               plot={media.plot ?? ""}
-              year={new Date(media.releaseDate).getFullYear()}
+              genre={media.genre ?? []}
+              year={
+                isNaN(new Date(media.releaseDate).getTime())
+                  ? undefined
+                  : new Date(media.releaseDate).getFullYear()
+              }
               typeStreaming={media.contentType}
             />
           </CarouselItem>

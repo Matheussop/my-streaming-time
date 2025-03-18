@@ -1,4 +1,4 @@
-import { IStreamingType } from "context/AppContext";
+import { StreamingType } from "context/AppContext";
 import { ISeries } from "@interfaces/series";
 import { AppError } from "@lib/appError";
 import axiosInstance from "@lib/axiosConfig";
@@ -124,7 +124,7 @@ export const deleteMovie = async (id: string) => {
 };
 
 export const findOrAddMovie = async (
-  streamingType: IStreamingType,
+  streamingType: StreamingType,
   title: string,
   page: number,
   limit: number,
