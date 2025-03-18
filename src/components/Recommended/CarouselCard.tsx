@@ -35,7 +35,8 @@ export function CarouselCard({
   };
 
   function handleRedirectToDetail() {
-    router.push(`/streaming-detail/${id}?typeStreaming=${typeStreaming}`);
+    const type = typeStreaming === "movie" ? "movies" : "series";
+    router.push(`/streaming-detail/${id}?typeStreaming=${type}`);
   }
 
   const genreFormat = genreName(genre as IGenreReference[], 2);
