@@ -10,6 +10,7 @@ import { changeViewedStreaming, getIsViewed } from "api/streamingHistory";
 import { toast } from "sonner";
 import { IGenreReference } from "@interfaces/streamingType";
 import { ISeries } from "@interfaces/series";
+import Loading from "./loading";
 
 const backgroundColorGenre = [
   "bg-red-700",
@@ -104,7 +105,7 @@ export default function Streaming({ params }: { params: { id: string } }) {
   }, [id, typeStreaming, router]);
 
   if (!streaming || !streaming.title) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const changeViewOfStreaming = async (streamingViewed: boolean) => {
