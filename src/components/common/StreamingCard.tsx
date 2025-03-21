@@ -34,7 +34,7 @@ export function StreamingCard({
         )}
       </div>
       <div className="flex flex-col">
-        <p className="line-clamp-2 overflow-hidden text-ellipsis text-base">
+        <p className="line-clamp-2 overflow-hidden text-base text-ellipsis">
           {title}
         </p>
         <p className="text-sm text-zinc-400">{type}</p>
