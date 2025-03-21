@@ -8,33 +8,57 @@ import { IMovie } from "@interfaces/movie";
 import { Button } from "@components/ui/button";
 import { changeViewedStreaming, getIsViewed } from "api/streamingHistory";
 import { toast } from "sonner";
+import { IGenreReference } from "@interfaces/streamingType";
+import { ISeries } from "@interfaces/series";
+
+const backgroundColorGenre = [
+  "bg-red-700",
+  "bg-blue-700",
+  "bg-green-700",
+  "bg-yellow-700",
+  "bg-purple-700",
+  "bg-pink-700",
+  "bg-orange-700",
+];
 
 interface VisualMovieProps extends IMovie {
   ratingValue: string;
   stars: number;
-  year: number;
+  releaseDateFormatted: string;
 }
+
+interface VisualSeriesProps extends ISeries {
+  ratingValue: string;
+  stars: number;
+  releaseDateFormatted: string;
+}
+
+type VisualStreamingProps = VisualMovieProps | VisualSeriesProps;
+
 const getDateCache = async (
   id: string,
   streamingType: string,
-): Promise<VisualMovieProps> => {
+): Promise<VisualStreamingProps> => {
   try {
     const data = await getMediaById(id, streamingType);
-    const streamingObj: VisualMovieProps = {
-      _id: data._id,
-      title: data.title,
+    const streamingObj: VisualMovieProps | VisualSeriesProps = {
       plot: data.plot,
       rating: data.rating,
       ratingValue: data.rating?.toFixed(0) ?? "0",
       stars: Math.round(data.rating ?? 0 / 2),
       poster: data.poster ?? "",
       url: data.url,
-      year: new Date(data.releaseDate).getFullYear(),
-      releaseDate: data.releaseDate,
+      //change to Brazilian format
+      releaseDateFormatted: new Date(data.releaseDate).toLocaleDateString(
+        "pt-BR",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        },
+      ),
       cast: data.cast,
-      genre: data.genre,
-      durationTime: data.durationTime,
-      contentType: data.contentType,
+      ...data,
     };
     return streamingObj;
   } catch (error) {
@@ -52,8 +76,8 @@ export default function Streaming({ params }: { params: { id: string } }) {
     ? searchParams.get("typeStreaming")
     : "movies";
 
-  const [streaming, setStreaming] = useState<VisualMovieProps>(
-    {} as VisualMovieProps,
+  const [streaming, setStreaming] = useState<VisualStreamingProps>(
+    {} as VisualStreamingProps,
   );
 
   useEffect(() => {
@@ -120,7 +144,35 @@ export default function Streaming({ params }: { params: { id: string } }) {
                 {streaming.title}
               </h1>
               <div className="text-lg font-medium text-gray-400">
-                {streaming.year}
+                {streaming.releaseDateFormatted}
+              </div>
+              <div className="mt-2 text-white/80">
+                <ul className="flex flex-wrap gap-2">
+                  {(streaming.genre as IGenreReference[]).map(
+                    (item: IGenreReference, index: number) => (
+                      <li
+                        key={index}
+                        className={`${backgroundColorGenre[index]} rounded-full px-2 py-1 text-sm font-medium text-white/90`}
+                      >
+                        {item.name}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+              <div className="mt-2 text-white/80">
+                {"totalEpisodes" in streaming &&
+                  "totalSeasons" in streaming && (
+                    <div>
+                      {streaming.totalEpisodes} episodes -{" "}
+                      {streaming.totalSeasons} seasons
+                    </div>
+                  )}
+              </div>
+              <div>
+                {streaming.status && (
+                  <div className="mt-2 text-white/80">{streaming.status}</div>
+                )}
               </div>
             </div>
             <div>
@@ -176,9 +228,9 @@ export default function Streaming({ params }: { params: { id: string } }) {
           </div>
         </div>
       </section>
-      <section className="shadow-lgmd:py-24 bg-primary/75 mb-4 w-full rounded-lg p-6 py-12 lg:py-32">
+      <section className="bg-primary/75 mb-4 w-full rounded-lg p-6 py-12 shadow-lg md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
-          <div className="grid gap-6">
+          <div className="grid gap-2">
             <div>
               <h2 className="text-3xl font-bold tracking-tighter">
                 Additional Details
@@ -186,17 +238,14 @@ export default function Streaming({ params }: { params: { id: string } }) {
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div>
-                <div className="font-medium">Genre</div>
-                <div className="text-white/80">
-                  <ul>
-                    {streaming.genre.map((item, index) => {
-                      if (typeof item === "number") {
-                        return <li key={index}>{item}</li>;
-                      } else {
-                        return <li key={index}>{item.name}</li>;
-                      }
-                    })}
-                  </ul>
+                <div className="font-medium">Trailer</div>
+                <div>
+                  <iframe
+                    src={streaming.poster}
+                    width="100%"
+                    height="250"
+                    title="Trailer"
+                  ></iframe>
                 </div>
               </div>
               <div>
