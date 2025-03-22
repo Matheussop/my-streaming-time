@@ -24,6 +24,10 @@ const SafeImage: React.FC<SafeImageProps> = ({
     target.srcset = defaultImage;
   };
 
+  if (!rest.src || rest.src === "") {
+    rest.src = defaultImage;
+  }
+
   return (
     <Image
       width={width}

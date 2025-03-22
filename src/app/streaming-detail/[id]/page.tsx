@@ -1,7 +1,7 @@
 "use client";
 import { getMediaById } from "api/movies";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { IMovie } from "@interfaces/movie";
@@ -67,10 +67,14 @@ const getDateCache = async (
   }
 };
 
-export default function Streaming({ params }: { params: { id: string } }) {
+export default function Streaming({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const totalStars = 5;
   const router = useRouter();
-  const { id } = params;
+  const { id } = use(params);
   const searchParams = useSearchParams();
   const [viewed, setViewed] = useState(false);
   let typeStreaming = searchParams.get("typeStreaming")

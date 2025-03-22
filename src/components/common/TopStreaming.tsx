@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useSetStreamingType, useStreamingType } from "context/AppContext";
 import { getCommonMediaByType } from "api/commonContents";
 import { ISeries } from "@interfaces/series";
+import SafeImage from "./SafeImage";
 
 // TODO estudar uma formar de separar o menu dos cards
 // const getDateCache = unstable_cache(
@@ -46,9 +47,11 @@ export function TopStreaming() {
   );
   const router = useRouter();
   const setStreamingTypeContext = useSetStreamingType();
+  const currentStreamingType = useStreamingType();
   const [typeStreaming, setTypeStreaming] = useState<
     "movies" | "series" | "animes"
-  >(useStreamingType || "series");
+  >(currentStreamingType || "series");
+
   useEffect(() => {
     async function getMediaByType() {
       toast.promise(getCommonMediaByType(typeStreaming), {
@@ -116,13 +119,10 @@ export function TopStreaming() {
               className="group flex h-28 w-full items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
               onClick={() => handleRedirectToDetail(media._id)}
             >
-              <Image
+              <SafeImage
                 width={1000}
                 height={100}
-                placeholder={"blur"}
-                blurDataURL={"/blurred_image.png"}
                 src={media.poster ?? ""}
-                onError={handleImageError}
                 alt={`Capa do filme ${media.title}`}
                 className="h-28 w-60 object-cover"
               />
