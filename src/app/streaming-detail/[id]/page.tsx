@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { IGenreReference } from "@interfaces/streamingType";
 import { ISeries } from "@interfaces/series";
 import Loading from "./loading";
+import { Star } from "lucide-react";
 
 const backgroundColorGenre = [
   "bg-red-700",
@@ -246,7 +247,7 @@ export default function Streaming({
                 <div className="font-medium">Trailer</div>
                 <div>
                   <iframe
-                    src={streaming.poster}
+                    src={`https://www.youtube.com/embed/${streaming.videoUrl}`}
                     width="100%"
                     height="250"
                     title="Trailer"
@@ -262,7 +263,7 @@ export default function Streaming({
                 <div className="text-white/80">
                   <div className="flex items-center gap-1">
                     {[...Array(totalStars)].map((_, index) => (
-                      <StarIcon
+                      <Star
                         key={index}
                         className={`h-5 w-5 stroke-gray-700 ${streaming.stars > index ? "fill-yellow" : "fill-gray-300"}`}
                       />
@@ -278,24 +279,5 @@ export default function Streaming({
         </div>
       </section>
     </div>
-  );
-}
-
-function StarIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
   );
 }

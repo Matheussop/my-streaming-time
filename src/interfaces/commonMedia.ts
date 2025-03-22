@@ -17,4 +17,5 @@ export interface ICommonMedia {
   tmdbId?: number;
   poster?: string;
   url?: string;
+  videoUrl?: string;
 }
