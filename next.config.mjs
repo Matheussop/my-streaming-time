@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    forceSwcTransforms: true,
-  },
   images: {
     // TODO: Mudar os patterns de imagens
     remotePatterns: [
