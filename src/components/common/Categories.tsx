@@ -5,6 +5,7 @@ import { IGenreReference, IStreamingType } from "interfaces/streamingType";
 import SafeImage from "./SafeImage";
 import { useStreamingType } from "@context/AppContext";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function Categories() {
   const [uniqueCategoryNames, setUniqueCategoryNames] = useState<
@@ -12,6 +13,8 @@ export function Categories() {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const currentStreamingType = useStreamingType();
+  const router = useRouter();
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -52,6 +55,10 @@ export function Categories() {
     fetchCategories();
   }, [currentStreamingType]);
 
+  const handleRedirectToCategoryPage = (categoryName: string) => {
+    router.push(`/categories/${categoryName}`);
+  };
+
   return (
     <div className="m-y-10 flex items-center justify-center">
       {uniqueCategoryNames.length > 0 ? (
@@ -59,7 +66,9 @@ export function Categories() {
           {uniqueCategoryNames.map((object, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center gap-y-4 text-center"
+              className="flex flex-col items-center justify-center gap-y-4 text-center 
+              cursor-pointer hover:bg-white/10 transition-all duration-300 hover:scale-105 rounded-md p-2"
+              onClick={() => handleRedirectToCategoryPage(object.name)}
             >
               <strong className="text-lg">{object.name}</strong>
               <div className="relative flex overflow-auto rounded-md">

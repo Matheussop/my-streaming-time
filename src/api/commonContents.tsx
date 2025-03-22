@@ -34,3 +34,28 @@ export const getCommonMediaByType = async (
     throw AppError.fromError(err);
   }
 };
+
+export const getCommonMediaByGenre = async (
+  genre: string,
+  type: string = "all",
+  page = 1,
+  limit = 10,
+): Promise<IMovie[] | ISeries[]> => {
+  try {
+    let endpoint = '';
+    const params = { page, limit, genre };
+    
+    if (type === "movies") {
+      endpoint = "/movies/byGenre";
+    } else if (type === "series") {
+      endpoint = "/series/byGenre";
+    } else {
+      endpoint = "/commonMedia/byGenre"; // Default endpoint for all media types
+    }
+    
+    const response = await axiosInstance.post(endpoint, params);
+    return response.data;
+  } catch (err) {
+    throw AppError.fromError(err);
+  }
+};

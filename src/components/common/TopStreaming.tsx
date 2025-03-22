@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SkeletonsArray } from "./SkeletonsArray";
@@ -79,14 +78,6 @@ export function TopStreaming() {
     setStreaming([]);
     setStreamingTypeContext(typeStreaming);
     setTypeStreaming(typeStreaming);
-  };
-
-  const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>,
-  ) => {
-    const target = e.target as HTMLImageElement;
-    target.src = "/default-movie-portrait.jpg";
-    target.srcset = "/default-movie-portrait.jpg";
   };
 
   return (
