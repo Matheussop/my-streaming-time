@@ -12,6 +12,7 @@ import { IGenreReference } from "@interfaces/streamingType";
 import { ISeries } from "@interfaces/series";
 import Loading from "./loading";
 import { Star } from "lucide-react";
+import ListBySeason from "@components/episodes/ListBySeason";
 
 const backgroundColorGenre = [
   "bg-red-700",
@@ -233,6 +234,16 @@ export default function Streaming({
             </div>
           </div>
         </div>
+      </section>
+      <section>
+        {"totalEpisodes" in streaming && "totalSeasons" in streaming && (
+          <ListBySeason seasonsSummary={streaming.seasonsSummary} seriesId={streaming._id} />
+        )}
+        {!("totalEpisodes" in streaming) && (
+          <div className="container px-4 py-8 md:px-6">
+            <p className="text-gray-400">Este título não possui episódios disponíveis.</p>
+          </div>
+        )}
       </section>
       <section className="bg-primary/75 mb-4 w-full rounded-lg p-6 py-12 shadow-lg md:py-24 lg:py-32">
         <div className="container px-4 md:px-6">
