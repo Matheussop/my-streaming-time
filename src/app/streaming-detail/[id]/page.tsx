@@ -237,12 +237,10 @@ export default function Streaming({
       </section>
       <section>
         {"totalEpisodes" in streaming && "totalSeasons" in streaming && (
-          <ListBySeason seasonsSummary={streaming.seasonsSummary} seriesId={streaming._id} />
-        )}
-        {!("totalEpisodes" in streaming) && (
-          <div className="container px-4 py-8 md:px-6">
-            <p className="text-gray-400">Este título não possui episódios disponíveis.</p>
-          </div>
+          <ListBySeason
+            seasonsSummary={streaming.seasonsSummary}
+            seriesId={streaming._id}
+          />
         )}
       </section>
       <section className="bg-primary/75 mb-4 w-full rounded-lg p-6 py-12 shadow-lg md:py-24 lg:py-32">

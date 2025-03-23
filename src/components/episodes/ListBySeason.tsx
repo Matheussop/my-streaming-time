@@ -13,6 +13,8 @@ import Image from "next/image";
 import { seasonApi } from "api/season";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { ChevronDown } from "lucide-react";
+import { set } from "lodash";
+import SafeImage from "@components/common/SafeImage";
 
 interface ListBySeasonProps {
   seasonsSummary?: ISeason[] | ISeasonSummary[];
@@ -23,25 +25,26 @@ export default function ListBySeason({
   seasonsSummary,
   seriesId,
 }: ListBySeasonProps) {
-  const [selectedSeason, setSelectedSeason] = useState<string>("1");
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string>("1");
   const [seasons, setSeasons] = useState<ISeason[] | ISeasonSummary[]>([]);
   const [episodes, setEpisodes] = useState<Record<string, IEpisode[]>>({});
   const [isAnimating, setIsAnimating] = useState(true);
   const [animationInProgress, setAnimationInProgress] = useState(false);
-  const [currentSeasonNumber, setCurrentSeasonNumber] = useState<number | null>(
-    null,
+  const [currentSeasonData, setCurrentSeasonData] = useState<ISeason>(
+    {} as ISeason,
   );
   const [isExpanded, setIsExpanded] = useState(false);
   const episodesLimit = 3;
 
-  const { isLoading, error, execute } = useApiRequest<IEpisode[]>(
+  const { isLoading, error, execute } = useApiRequest<ISeason>(
     (seriesId: string, seasonNumber: number) =>
       seasonApi.getEpisodesBySeasonNumber(seriesId, seasonNumber),
     {
-      onSuccess: (data) => {
+      onSuccess: (data: ISeason) => {
+        setCurrentSeasonData(data);
         setEpisodes((prev) => ({
           ...prev,
-          [selectedSeason]: data,
+          [selectedSeasonId]: data.episodes || [],
         }));
       },
       onError: (error) => {
@@ -50,49 +53,46 @@ export default function ListBySeason({
     },
   );
 
+  const currentSeason = seasons.find(
+    (season) =>
+      ("seasonId" in season ? season.seasonId : season._id) ===
+      selectedSeasonId,
+  );
+
   useEffect(() => {
     if (seasonsSummary?.length) {
       setSeasons(seasonsSummary);
 
-      if (seasonsSummary.length > 0 && selectedSeason === "1") {
+      if (seasonsSummary.length > 0 && selectedSeasonId === "1") {
         const firstSeasonId =
           "seasonId" in seasonsSummary[0]
             ? seasonsSummary[0].seasonId
             : seasonsSummary[0]._id;
-        setSelectedSeason(firstSeasonId);
+        setSelectedSeasonId(firstSeasonId);
       }
     }
-  }, [seasonsSummary, selectedSeason]);
+  }, [seasonsSummary, selectedSeasonId]);
 
-  // Efeito para buscar episódios quando a temporada selecionada mudar
   useEffect(() => {
-    if (!selectedSeason || !seriesId || !seasons.length) return;
+    if (!selectedSeasonId || !seriesId || !seasons.length) return;
 
-    const season = seasons.find(
-      (s) => ("seasonId" in s ? s.seasonId : s._id) === selectedSeason,
-    );
+    const season = currentSeason;
 
-    if (season && !episodes[selectedSeason]) {
+    if (season && !episodes[selectedSeasonId]) {
       const seasonNumber = season.seasonNumber;
-      setCurrentSeasonNumber(seasonNumber);
       execute(seriesId, seasonNumber);
     }
-  }, [selectedSeason, seriesId, seasons, execute, episodes]);
+  }, [selectedSeasonId, seriesId, seasons, execute, episodes, currentSeason]);
 
   if (!seasonsSummary || seasonsSummary.length === 0) {
     return null;
   }
 
-  const currentSeason = seasons.find(
-    (season) =>
-      ("seasonId" in season ? season.seasonId : season._id) === selectedSeason,
-  );
-
   const handleSeasonChange = (value: string) => {
     setIsAnimating(false);
     setIsExpanded(false);
     setTimeout(() => {
-      setSelectedSeason(value);
+      setSelectedSeasonId(value);
       setIsAnimating(true);
     }, 300);
   };
@@ -102,9 +102,8 @@ export default function ListBySeason({
     setAnimationInProgress(true);
 
     if (isExpanded) {
-      // Recolhendo - inicia a animação imediatamente
       const cards = document.querySelectorAll(
-        `.episode-card-${selectedSeason}`,
+        `.episode-card-${selectedSeasonId}`,
       );
 
       // Aplicar animação imediatamente em todos os cartões que serão escondidos
@@ -134,7 +133,7 @@ export default function ListBySeason({
             }, 20);
           }, 20);
         },
-        Math.max((cards.length - episodesLimit) * 30 + 150, 200),
+        Math.max((cards.length - episodesLimit) * 10, 200),
       );
     } else {
       // Expandindo
@@ -152,20 +151,19 @@ export default function ListBySeason({
   return (
     <div className="w-full px-4 py-8 md:px-6">
       <h2 className="mb-6 text-3xl font-bold tracking-tighter">Episódios</h2>
-
       <div className="mb-8 max-w-xs">
-        <Select value={selectedSeason} onValueChange={handleSeasonChange}>
+        <Select value={selectedSeasonId} onValueChange={handleSeasonChange}>
           <SelectTrigger className="w-full border-white/20 bg-white/5 text-white">
             <SelectValue placeholder="Selecione uma temporada" />
           </SelectTrigger>
-          <SelectContent className="bg-dark-700 border-white/20 text-white">
+          <SelectContent className="bg-dark-700 max-h-[300px] border-white/20 text-white">
             {seasons.map((season) => (
               <SelectItem
                 key={"seasonId" in season ? season.seasonId : season._id}
                 value={"seasonId" in season ? season.seasonId : season._id}
                 className="focus:bg-white/10 focus:text-white"
               >
-                Temporada {season.seasonNumber}
+                {season.title} - Temporada {season.seasonNumber}
               </SelectItem>
             ))}
           </SelectContent>
@@ -178,10 +176,11 @@ export default function ListBySeason({
         >
           <div className="mb-4">
             <h3 className="text-xl font-medium">
-              {currentSeason.title || `Temporada ${currentSeason.seasonNumber}`}
+              {currentSeasonData?.title ||
+                `Temporada ${currentSeasonData?.seasonNumber}`}
             </h3>
-            {"plot" in currentSeason && currentSeason.plot && (
-              <p className="mt-2 text-gray-400">{currentSeason.plot}</p>
+            {"plot" in currentSeasonData && currentSeasonData?.plot && (
+              <p className="mt-2 text-gray-400">{currentSeasonData.plot}</p>
             )}
           </div>
 
@@ -197,30 +196,27 @@ export default function ListBySeason({
             </div>
           )}
 
-          {!isLoading && !error && episodes[selectedSeason] && (
+          {!isLoading && !error && episodes[selectedSeasonId] && (
             <>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {episodes[selectedSeason]
+                {episodes[selectedSeasonId]
                   .slice(
                     0,
                     isExpanded
-                      ? episodes[selectedSeason].length
+                      ? episodes[selectedSeasonId].length
                       : episodesLimit,
                   )
                   .map((episode, index) => {
-                    const delayClass =
-                      index <= 8 ? `delay-${index * 50}` : "delay-400"; // Limita os atrasos para evitar muitas classes
-
                     return (
                       <Card
                         key={`episode-${episode._id || index}-${currentSeason.seasonNumber}`}
-                        className={`episode-card-${selectedSeason} transform overflow-hidden bg-white/5 transition-all duration-300 hover:bg-white/10 ${isAnimating ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}
+                        className={`episode-card-${selectedSeasonId} transform overflow-hidden bg-white/5 transition-all duration-300 hover:scale-105 hover:bg-white/10 ${isAnimating ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}
                         data-index={index}
                       >
                         <div className="flex flex-col p-4">
                           <div className="flex items-center gap-4">
                             {episode.poster && (
-                              <Image
+                              <SafeImage
                                 src={episode.poster}
                                 alt={
                                   episode.title ||
@@ -228,7 +224,7 @@ export default function ListBySeason({
                                 }
                                 width={120}
                                 height={68}
-                                className="rounded-md object-cover"
+                                className="max-h-16 rounded-md object-cover"
                               />
                             )}
                             <div>
@@ -254,7 +250,7 @@ export default function ListBySeason({
                   })}
               </div>
 
-              {episodes[selectedSeason].length > episodesLimit && (
+              {episodes[selectedSeasonId].length > episodesLimit && (
                 <div className="mt-8 flex justify-center">
                   <button
                     onClick={toggleExpanded}
@@ -267,7 +263,7 @@ export default function ListBySeason({
                   >
                     {isExpanded
                       ? "Ver menos"
-                      : `Ver mais (${episodes[selectedSeason].length - episodesLimit} episódios)`}
+                      : `Ver mais (${episodes[selectedSeasonId].length - episodesLimit} episódios)`}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
                     />

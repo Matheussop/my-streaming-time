@@ -22,10 +22,14 @@ const menuButtons = tv({
   },
 });
 
-export default function CategoryPage({ params }: { params: Promise<{ genreName: string }> }) {
-  const {genreName}  = use(params);
+export default function CategoryPage({
+  params,
+}: {
+  params: Promise<{ genreName: string }>;
+}) {
+  const { genreName } = use(params);
   const decodedGenreName = decodeURIComponent(genreName);
-  
+
   const [streaming, setStreaming] = useState<IMovie[] | ISeries[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
@@ -43,7 +47,7 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
 
   useEffect(() => {
     if (!isMounted) return;
-    
+
     async function getMediaByGenre() {
       setIsLoading(true);
       toast.promise(getCommonMediaByGenre(decodedGenreName, typeStreaming), {
@@ -65,7 +69,9 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
 
   const handleRedirectToDetail = (id: string) => {
     if (!isMounted) return;
-    router.push(`/streaming-detail/${id}?typeStreaming=${typeStreaming === "all" ? currentStreamingType : typeStreaming}`);
+    router.push(
+      `/streaming-detail/${id}?typeStreaming=${typeStreaming === "all" ? currentStreamingType : typeStreaming}`,
+    );
   };
 
   const onHandleChangeTypeStreaming = (
@@ -83,9 +89,11 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
     <div className="container py-6">
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-bold">Gênero: {decodedGenreName}</h1>
-        <p className="text-gray-400">Encontre todas as mídias do gênero selecionado</p>
+        <p className="text-gray-400">
+          Encontre todas as mídias do gênero selecionado
+        </p>
       </div>
-      
+
       <div className="flex items-center gap-5 text-2xl font-bold">
         <Button
           onClick={() => onHandleChangeTypeStreaming("all")}
@@ -112,7 +120,7 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
           Animes
         </Button>
       </div>
-      
+
       {isLoading ? (
         <div
           className="mt-6 grid grid-cols-3 gap-6 sm:grid-cols-2 md:grid-cols-3"
@@ -125,7 +133,7 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
           {streaming.map((media, index) => (
             <div
               key={index}
-              className="group flex h-28 w-full items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30 cursor-pointer"
+              className="group flex h-28 w-full cursor-pointer items-center gap-4 overflow-auto rounded-md bg-white/5 transition-all hover:bg-white/30"
               onClick={() => handleRedirectToDetail(media._id)}
             >
               <SafeImage
@@ -140,7 +148,7 @@ export default function CategoryPage({ params }: { params: Promise<{ genreName: 
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-60">
+        <div className="flex h-60 items-center justify-center">
           <p className="text-xl">Nenhuma mídia encontrada para este gênero.</p>
         </div>
       )}

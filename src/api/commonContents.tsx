@@ -42,9 +42,9 @@ export const getCommonMediaByGenre = async (
   limit = 10,
 ): Promise<IMovie[] | ISeries[]> => {
   try {
-    let endpoint = '';
+    let endpoint = "";
     const params = { page, limit, genre };
-    
+
     if (type === "movies") {
       endpoint = "/movies/byGenre";
     } else if (type === "series") {
@@ -52,7 +52,7 @@ export const getCommonMediaByGenre = async (
     } else {
       endpoint = "/commonMedia/byGenre"; // Default endpoint for all media types
     }
-    
+
     const response = await axiosInstance.post(endpoint, params);
     return response.data;
   } catch (err) {

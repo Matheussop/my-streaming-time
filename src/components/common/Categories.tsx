@@ -66,8 +66,7 @@ export function Categories() {
           {uniqueCategoryNames.map((object, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center gap-y-4 text-center 
-              cursor-pointer hover:bg-white/10 transition-all duration-300 hover:scale-105 rounded-md p-2"
+              className="flex cursor-pointer flex-col items-center justify-center gap-y-4 rounded-md p-2 text-center transition-all duration-300 hover:scale-105 hover:bg-white/10"
               onClick={() => handleRedirectToCategoryPage(object.name)}
             >
               <strong className="text-lg">{object.name}</strong>

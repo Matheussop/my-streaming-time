@@ -10,7 +10,7 @@ export interface IEpisode {
   poster: string;
 }
 
-export interface ISeason{
+export interface ISeason {
   _id: string;
   seriesId: string;
   seasonNumber: number;
