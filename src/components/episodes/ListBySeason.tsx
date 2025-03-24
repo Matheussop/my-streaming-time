@@ -9,16 +9,25 @@ import {
 import { Card } from "@components/ui/card";
 import { IEpisode, ISeason, ISeasonSummary } from "@interfaces/series";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { seasonApi } from "api/season";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { ChevronDown } from "lucide-react";
-import { set } from "lodash";
 import SafeImage from "@components/common/SafeImage";
+import { Button } from "@components/ui/button";
+import { toast } from "sonner";
+import {
+  IEpisodeWatched,
+  IWatchHistoryEntry,
+} from "@interfaces/userStremingHistory";
+import { userStreamingHistoryApi } from "api/userStreamingHistoryApi";
 
 interface ListBySeasonProps {
   seasonsSummary?: ISeason[] | ISeasonSummary[];
   seriesId?: string;
+}
+
+interface IEpisodeShow extends IEpisode {
+  watched: boolean;
 }
 
 export default function ListBySeason({
@@ -27,7 +36,10 @@ export default function ListBySeason({
 }: ListBySeasonProps) {
   const [selectedSeasonId, setSelectedSeasonId] = useState<string>("1");
   const [seasons, setSeasons] = useState<ISeason[] | ISeasonSummary[]>([]);
-  const [episodes, setEpisodes] = useState<Record<string, IEpisode[]>>({});
+  const [userEpisodesWatched, setUserEpisodesWatched] = useState<
+    Record<string, IEpisodeWatched>
+  >({});
+  const [episodes, setEpisodes] = useState<Record<string, IEpisodeShow[]>>({});
   const [isAnimating, setIsAnimating] = useState(true);
   const [animationInProgress, setAnimationInProgress] = useState(false);
   const [currentSeasonData, setCurrentSeasonData] = useState<ISeason>(
@@ -36,19 +48,88 @@ export default function ListBySeason({
   const [isExpanded, setIsExpanded] = useState(false);
   const episodesLimit = 3;
 
-  const { isLoading, error, execute } = useApiRequest<ISeason>(
+  const {
+    isLoading: isLoadingUserEpisodesWatched,
+    error: errorUserEpisodesWatched,
+    execute: executeUserEpisodesWatched,
+  } = useApiRequest<Record<string, IEpisodeWatched>>(
+    (userId: string, contentId: string) =>
+      userStreamingHistoryApi.getEpisodesWatched(userId, contentId),
+    {
+      onSuccess: (data: Record<string, IEpisodeWatched>) => {
+        if (data) {
+          setUserEpisodesWatched(data);
+        }
+        if (seasonsSummary?.length) {
+          setSeasons(seasonsSummary);
+          if (seasonsSummary.length > 0 && selectedSeasonId === "1") {
+            const firstSeasonId =
+              "seasonId" in seasonsSummary[0]
+                ? seasonsSummary[0].seasonId
+                : seasonsSummary[0]._id;
+            setSelectedSeasonId(firstSeasonId);
+          }
+        }
+      },
+    },
+  );
+
+  const {
+    isLoading,
+    error,
+    execute: executeSeason,
+  } = useApiRequest<ISeason>(
     (seriesId: string, seasonNumber: number) =>
       seasonApi.getEpisodesBySeasonNumber(seriesId, seasonNumber),
     {
       onSuccess: (data: ISeason) => {
         setCurrentSeasonData(data);
+
+        const episodes = data.episodes?.map((episode) => ({
+          ...episode,
+          watched: episode._id in userEpisodesWatched,
+        }));
+
         setEpisodes((prev) => ({
           ...prev,
-          [selectedSeasonId]: data.episodes || [],
+          [selectedSeasonId]: episodes || [],
         }));
       },
       onError: (error) => {
         console.error("Erro ao carregar episódios:", error);
+      },
+    },
+  );
+
+  const {
+    isLoading: isLoadingMarkIsViewed,
+    error: errorMarkIsViewed,
+    execute: executeMarkIsViewed,
+  } = useApiRequest<IWatchHistoryEntry>(
+    (userId: string, contentId: string, episodeData: IEpisodeShow) =>
+      userStreamingHistoryApi.markIsViewed(userId, contentId, episodeData),
+    {
+      onSuccess: (data: IWatchHistoryEntry) => {
+        if (!data.seriesProgress) {
+          console.error("No series progress found");
+          return;
+        }
+        const episodesWatched: Record<string, IEpisodeWatched> =
+          data.seriesProgress[seriesId!].episodesWatched;
+        setUserEpisodesWatched((prev) => ({
+          ...prev,
+          ...episodesWatched,
+        }));
+
+        const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
+          ...episode,
+          watched: episode._id in episodesWatched,
+        }));
+
+        setEpisodes((prev) => ({
+          ...prev,
+          [selectedSeasonId]: episodesAtt || [],
+        }));
       },
     },
   );
@@ -60,29 +141,45 @@ export default function ListBySeason({
   );
 
   useEffect(() => {
-    if (seasonsSummary?.length) {
-      setSeasons(seasonsSummary);
-
-      if (seasonsSummary.length > 0 && selectedSeasonId === "1") {
-        const firstSeasonId =
-          "seasonId" in seasonsSummary[0]
-            ? seasonsSummary[0].seasonId
-            : seasonsSummary[0]._id;
-        setSelectedSeasonId(firstSeasonId);
-      }
+    if (Object.keys(userEpisodesWatched).length === 0) {
+      const userId = "67745a741402bcf82462362a";
+      executeUserEpisodesWatched(userId, seriesId);
     }
-  }, [seasonsSummary, selectedSeasonId]);
+  }, [seriesId, userEpisodesWatched, executeUserEpisodesWatched]);
+
+  const handleMarkIsViewed = (viewed: boolean, episode: IEpisodeShow) => {
+    const episodeData = {
+      episodeId: episode._id,
+      seasonNumber: currentSeasonData.seasonNumber,
+      episodeNumber: episode.episodeNumber,
+      // watchedAt: new Date(),
+      watchedDurationInMinutes: episode.durationInMinutes,
+    };
+    // TODO: get user id from context
+    const userId = "67745a741402bcf82462362a";
+    toast.promise(executeMarkIsViewed(userId, seriesId, episodeData), {
+      loading: "Marcando como assistido...",
+      success: "Episódio marcado como assistido!",
+      error: "Erro ao marcar episódio como assistido!",
+    });
+  };
 
   useEffect(() => {
     if (!selectedSeasonId || !seriesId || !seasons.length) return;
 
     const season = currentSeason;
-
     if (season && !episodes[selectedSeasonId]) {
       const seasonNumber = season.seasonNumber;
-      execute(seriesId, seasonNumber);
+      executeSeason(seriesId, seasonNumber);
     }
-  }, [selectedSeasonId, seriesId, seasons, execute, episodes, currentSeason]);
+  }, [
+    selectedSeasonId,
+    seriesId,
+    seasons,
+    executeSeason,
+    episodes,
+    currentSeason,
+  ]);
 
   if (!seasonsSummary || seasonsSummary.length === 0) {
     return null;
@@ -200,10 +297,10 @@ export default function ListBySeason({
             <>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {episodes[selectedSeasonId]
-                  .slice(
+                  ?.slice(
                     0,
                     isExpanded
-                      ? episodes[selectedSeasonId].length
+                      ? episodes[selectedSeasonId]?.length
                       : episodesLimit,
                   )
                   .map((episode, index) => {
@@ -244,13 +341,25 @@ export default function ListBySeason({
                               {episode.plot}
                             </p>
                           )}
+                          <div className="flex items-center gap-2">
+                            <Button
+                              className={`flex justify-center gap-2 rounded-full text-white ${episode.watched ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
+                              onClick={() =>
+                                handleMarkIsViewed(episode.watched, episode)
+                              }
+                            >
+                              <span>
+                                {episode.watched ? "Viewed" : "Not watch + "}
+                              </span>
+                            </Button>
+                          </div>
                         </div>
                       </Card>
                     );
                   })}
               </div>
 
-              {episodes[selectedSeasonId].length > episodesLimit && (
+              {(episodes[selectedSeasonId]?.length ?? 0) > episodesLimit && (
                 <div className="mt-8 flex justify-center">
                   <button
                     onClick={toggleExpanded}
@@ -263,7 +372,7 @@ export default function ListBySeason({
                   >
                     {isExpanded
                       ? "Ver menos"
-                      : `Ver mais (${episodes[selectedSeasonId].length - episodesLimit} episódios)`}
+                      : `Ver mais (${(episodes[selectedSeasonId]?.length ?? 0) - episodesLimit} episódios)`}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
                     />

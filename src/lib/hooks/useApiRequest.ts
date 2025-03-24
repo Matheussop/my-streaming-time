@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { AppError } from "../appError";
 
 interface UseApiRequestOptions<T> {
@@ -28,38 +28,88 @@ export const useApiRequest = <T>(
   apiFunction: (...args: any[]) => Promise<T>,
   options: UseApiRequestOptions<T> = {},
 ): UseApiRequestResult<T> => {
-  const { initialData = null, onSuccess, onError, immediate = false } = options;
+  const { initialData = null, immediate = false } = options;
+
+  // Usando refs para armazenar callbacks e função API
+  const apiFunctionRef = useRef(apiFunction);
+  const optionsRef = useRef(options);
+
+  // Ref para controlar se o componente está montado
+  const isMountedRef = useRef(true);
+
+  // Atualizar refs quando as props mudarem
+  useEffect(() => {
+    apiFunctionRef.current = apiFunction;
+    optionsRef.current = options;
+  }, [apiFunction, options]);
+
+  // Controlar desmontagem do componente
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const [data, setData] = useState<T | null>(initialData);
   const [isLoading, setIsLoading] = useState<boolean>(immediate);
   const [error, setError] = useState<AppError | null>(null);
 
-  const execute = useCallback(
-    async (...args: any[]): Promise<T> => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  const execute = useCallback(async (...args: any[]): Promise<T> => {
+    try {
+      // Verificar se o componente ainda está montado
+      if (!isMountedRef.current) {
+        // Em caso de desmontagem, apenas executamos a API sem atualizar estado
+        return await apiFunctionRef.current(...args);
+      }
 
-        const result = await apiFunction(...args);
+      setIsLoading(true);
+      setError(null);
 
+      // Usar a referência da função API em vez da prop direta
+      const result = await apiFunctionRef.current(...args);
+
+      // Só atualizar estado se o componente ainda estiver montado
+      if (isMountedRef.current) {
         setData(result);
-        onSuccess?.(result);
+        // Importante: Certifique-se de acessar onSuccess da referência atual
+        if (
+          optionsRef.current &&
+          typeof optionsRef.current.onSuccess === "function"
+        ) {
+          optionsRef.current.onSuccess(result);
+        }
+      }
 
-        return result;
-      } catch (err) {
-        const appError =
-          err instanceof AppError ? err : AppError.fromError(err);
-        setError(appError);
-        onError?.(appError);
-        throw appError;
-      } finally {
+      return result;
+    } catch (err) {
+      // Se desmontado, apenas propagar o erro sem atualizar estado
+      if (!isMountedRef.current) {
+        throw err;
+      }
+
+      const appError = err instanceof AppError ? err : AppError.fromError(err);
+
+      setError(appError);
+      // Usar a referência das options para acessar onError
+      if (
+        optionsRef.current &&
+        typeof optionsRef.current.onError === "function"
+      ) {
+        optionsRef.current.onError(appError);
+      }
+      throw appError;
+    } finally {
+      // Só atualizar isLoading se ainda estiver montado
+      if (isMountedRef.current) {
         setIsLoading(false);
       }
-    },
-    [apiFunction, onSuccess, onError],
-  );
+    }
+  }, []);
 
   const reset = useCallback(() => {
+    if (!isMountedRef.current) return;
+
     setData(initialData);
     setIsLoading(false);
     setError(null);

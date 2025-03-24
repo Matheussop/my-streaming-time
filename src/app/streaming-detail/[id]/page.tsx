@@ -115,12 +115,15 @@ export default function Streaming({
   }
 
   const changeViewOfStreaming = async (streamingViewed: boolean) => {
+    const watchedDurationInMinutes =
+      "durationTime" in streaming && streaming.durationTime;
+
     const data = {
       userId: "67745a741402bcf82462362a",
       contentId: id,
       contentType: typeStreaming === "movies" ? "movie" : typeStreaming,
       title: streaming.title,
-      watchedDurationInMinutes: 120,
+      watchedDurationInMinutes: watchedDurationInMinutes,
     };
     await changeViewedStreaming(data, streamingViewed); //TODO add userID on the request
   };
@@ -141,12 +144,14 @@ export default function Streaming({
         <div className="container space-y-10 xl:space-y-16">
           <div className="mx-auto grid max-w-[1300px] gap-4 px-4 sm:px-6 md:grid-cols-2 md:gap-16 md:px-10">
             <div>
-              <Button
-                className={`flex justify-center gap-2 rounded-full text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
-                onClick={() => handleMarkIsViewed(viewed)}
-              >
-                <span>{viewed ? "Viewed" : "Not watch + "}</span>
-              </Button>
+              {typeStreaming === "movies" && (
+                <Button
+                  className={`flex justify-center gap-2 rounded-full text-white ${viewed ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
+                  onClick={() => handleMarkIsViewed(viewed)}
+                >
+                  <span>{viewed ? "Viewed" : "Not watch + "}</span>
+                </Button>
+              )}
               <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                 {streaming.title}
               </h1>
