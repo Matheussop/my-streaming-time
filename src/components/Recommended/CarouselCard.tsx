@@ -1,4 +1,5 @@
 "use client";
+import SafeImage from "@components/common/SafeImage";
 import {
   HoverCard,
   HoverCardContent,
@@ -47,12 +48,10 @@ export function CarouselCard({
         <HoverCardTrigger>
           <div className="p-1">
             <div className="flex flex-col items-center gap-4 overflow-auto rounded-md bg-white/5 px-2 py-4 pt-20 text-zinc-400 hover:bg-white/30">
-              <Image
+              <SafeImage
                 width={220}
                 height={280}
                 src={imageUrl ?? ""}
-                placeholder={"blur"}
-                blurDataURL={"/placeholder_gif.gif"}
                 className="-mt-16 h-[300px] w-auto overflow-auto rounded-md sm:h-[50px] md:h-[200px] 2xl:h-[300px]"
                 alt={`Capa do filme ${title}`}
               />

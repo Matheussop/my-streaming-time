@@ -67,10 +67,14 @@ const MovieSearch = () => {
           if (data.length < limit) {
             setHasMore(false);
           }
-          setStreaming((prevStreaming: ICommonMedia[]) => [
-            ...prevStreaming,
-            ...data,
-          ]);
+          if (pageNumber === 1) {
+            setStreaming(data);
+          } else {
+            setStreaming((prevStreaming: ICommonMedia[]) => [
+              ...prevStreaming,
+              ...data,
+            ]);
+          }
           setPage(response.page);
         } else {
           setHasMore(false);
@@ -107,7 +111,9 @@ const MovieSearch = () => {
   useEffect(() => {
     fetchTopStreaming();
   }, [fetchTopStreaming]);
+
   const loadMoreStreaming = () => {
+    if (!hasMore) return;
     fetchStreaming(page + 1, title);
   };
 
