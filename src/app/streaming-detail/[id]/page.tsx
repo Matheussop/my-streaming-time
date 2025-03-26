@@ -1,6 +1,5 @@
 "use client";
 import { getMediaById } from "api/movies";
-import Image from "next/image";
 import { useState, useEffect, use } from "react";
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +12,7 @@ import { ISeries } from "@interfaces/series";
 import Loading from "./loading";
 import { Star } from "lucide-react";
 import ListBySeason from "@components/episodes/ListBySeason";
+import SafeImage from "@components/common/SafeImage";
 
 const backgroundColorGenre = [
   "bg-red-700",
@@ -188,7 +188,7 @@ export default function Streaming({
               </div>
             </div>
             <div>
-              <Image
+              <SafeImage
                 alt="Movie Poster"
                 src={streaming.poster ?? ""}
                 width={600}

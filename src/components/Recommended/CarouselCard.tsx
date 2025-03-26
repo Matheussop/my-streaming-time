@@ -7,7 +7,6 @@ import {
 } from "@components/ui/hover-card";
 import { ICommonMedia } from "@interfaces/commonMedia";
 import { IGenreReference } from "@interfaces/streamingType";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface CarouselCardProps extends ICommonMedia {
