@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 
 interface CarouselCardProps extends ICommonMedia {
   id: string;
-  index: number;
   imageUrl: string;
   year: number;
   typeStreaming: string;
@@ -62,7 +61,6 @@ export function CarouselCard({
                   {genreFormat}
                 </p>
                 <div className="flex text-sm">
-                  <p className="mr-1 after:content-['_•_']">Time: 1h 58m</p>
                   <p className="before:content-['_']">{year ?? "N/A"}</p>
                 </div>
               </div>

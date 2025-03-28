@@ -260,17 +260,27 @@ export default function Streaming({
               <div>
                 <div className="font-medium">Trailer</div>
                 <div>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${streaming.videoUrl}`}
-                    width="100%"
-                    height="250"
-                    title="Trailer"
-                  ></iframe>
+                  {streaming.videoUrl ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${streaming.videoUrl}`}
+                      width="100%"
+                      height="250"
+                      title="Trailer"
+                    ></iframe>
+                  ) : (
+                    <div className="text-gray-400">No trailer available</div>
+                  )}
                 </div>
               </div>
               <div>
                 <div className="font-medium">Runtime</div>
-                <div className="text-white/80">2h 58m</div>
+                <div className="text-white/80">
+                  {"durationTime" in streaming && streaming.durationTime
+                    ? streaming.durationTime
+                    : "totalEpisodes" in streaming && streaming.totalEpisodes
+                      ? streaming.totalEpisodes + " episodes"
+                      : "N/A"}
+                </div>
               </div>
               <div>
                 <div className="font-medium">Ratings</div>
