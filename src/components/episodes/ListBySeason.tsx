@@ -11,7 +11,7 @@ import { IEpisode, ISeason, ISeasonSummary } from "@interfaces/series";
 import { useEffect, useState } from "react";
 import { seasonApi } from "api/season";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import SafeImage from "@components/common/SafeImage";
 import { Button } from "@components/ui/button";
 import { toast } from "sonner";
@@ -20,6 +20,8 @@ import {
   IWatchHistoryEntry,
 } from "@interfaces/userStremingHistory";
 import { userStreamingHistoryApi } from "api/userStreamingHistoryApi";
+
+import { useEpisodeModal } from "@lib/hooks/useEpisodeModal";
 
 interface ListBySeasonProps {
   seasonsSummary?: ISeason[] | ISeasonSummary[];
@@ -46,6 +48,8 @@ export default function ListBySeason({
     {} as ISeason,
   );
   const [isExpanded, setIsExpanded] = useState(false);
+  const { openModal } = useEpisodeModal();
+
   const episodesLimit = 3;
 
   const {
@@ -341,16 +345,24 @@ export default function ListBySeason({
                               {episode.plot}
                             </p>
                           )}
-                          <div className="flex items-center gap-2">
+                          <div className="mt-auto flex items-center justify-between gap-2">
                             <Button
-                              className={`flex justify-center gap-2 rounded-full text-white ${episode.watched ? "bg-primary hover:bg-primary" : "bg-amber-500"}`}
+                              className={`h-8 rounded-md px-3 text-sm font-medium ${
+                                episode.watched
+                                  ? "bg-primary/90 hover:bg-primary/100 text-white"
+                                  : "hover:bg-primary/50 bg-white/10 text-white"
+                              }`}
                               onClick={() =>
                                 handleMarkIsViewed(episode.watched, episode)
                               }
                             >
-                              <span>
-                                {episode.watched ? "Viewed" : "Not watch + "}
-                              </span>
+                              {episode.watched ? "Viewed" : "Not watched"}
+                            </Button>
+                            <Button
+                              className="h-8 rounded-md bg-transparent px-3 text-sm font-medium text-white hover:bg-white/10"
+                              onClick={() => openModal(episode)}
+                            >
+                              <Info size={18} className="mr-2" /> More Details
                             </Button>
                           </div>
                         </div>
@@ -361,7 +373,7 @@ export default function ListBySeason({
 
               {(episodes[selectedSeasonId]?.length ?? 0) > episodesLimit && (
                 <div className="mt-8 flex justify-center">
-                  <button
+                  <Button
                     onClick={toggleExpanded}
                     className={`flex items-center gap-2 rounded-full px-6 py-2 text-white transition-colors ${
                       animationInProgress
@@ -376,7 +388,7 @@ export default function ListBySeason({
                     <ChevronDown
                       className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
                     />
-                  </button>
+                  </Button>
                 </div>
               )}
             </>
