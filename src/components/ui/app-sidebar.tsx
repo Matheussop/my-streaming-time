@@ -1,12 +1,5 @@
 "use client";
-import {
-  Building,
-  ChevronUp,
-  Clock,
-  Home,
-  Settings,
-  User2,
-} from "lucide-react";
+import { Building, Clock, Home, Settings, MenuIcon } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,16 +12,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
+  SidebarHoverTrigger,
+  useSidebar,
 } from "./sidebar";
 import { Logo } from "@components/common/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
+import { UserMenu } from "@components/common/UserMenu";
 
 // Menu items.
 const items = [
@@ -56,64 +47,60 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
   return (
-    <Sidebar>
-      <SidebarHeader className="my-4">
-        <Logo />
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup className="items-center justify-between">
-          <SidebarGroupContent>
-            <SidebarGroupLabel>
-              <p>Navegação</p>
-            </SidebarGroupLabel>
-            <SidebarMenu className="gap-4">
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      href={item.url}
-                      className={`gap-3 px-4 py-2 text-sm font-semibold transition duration-300 ${
-                        pathname === item.url
-                          ? "bg-primary text-white shadow-lg"
-                          : "bg-zinc-700 text-zinc-200 hover:text-white"
-                      }`}
-                    >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter className="focus-visible:outline-hidden">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="bg-zinc-700 transition duration-300">
-                  <User2 /> Username
-                  <ChevronUp className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-(--radix-popper-anchor-width)"
-              >
-                <DropdownMenuItem className="rounded-t-sm bg-zinc-700 px-2 py-2 transition duration-300 hover:bg-zinc-800">
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-t-sm bg-zinc-700 px-2 py-2 transition duration-300 hover:bg-zinc-800">
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+    <>
+      <Sidebar>
+        <SidebarHeader className="my-4 flex items-center justify-between">
+          <Logo />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup className="items-center justify-between">
+            <SidebarGroupContent>
+              <SidebarGroupLabel>
+                <p>Navegação</p>
+              </SidebarGroupLabel>
+              <SidebarMenu className="gap-4">
+                {items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        href={item.url}
+                        className={`gap-3 px-4 py-2 text-sm font-semibold transition duration-300 ${
+                          pathname === item.url
+                            ? "bg-primary text-white shadow-lg"
+                            : "bg-zinc-700 text-zinc-200 hover:text-white"
+                        }`}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter className="focus-visible:outline-hidden">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <UserMenu />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+
+      {/* Trigger que aparece quando o usuário passa o mouse próximo à borda e a sidebar está fechada */}
+      {true && (
+        <SidebarHoverTrigger
+          icon={<MenuIcon className="text-primary" />}
+          isCollapsed={isCollapsed}
+          tooltip={state === "expanded" ? "Esconder Menu" : "Abrir Menu"}
+        />
+      )}
+    </>
   );
 }

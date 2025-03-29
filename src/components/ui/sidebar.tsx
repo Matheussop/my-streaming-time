@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { PanelLeft } from "lucide-react";
+import { MenuIcon, PanelLeft } from "lucide-react";
 import { cn } from "@lib/utils";
 import { Input } from "./input";
 import { Separator } from "./separator";
@@ -273,21 +273,32 @@ const SidebarTrigger = React.forwardRef<
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Button
-      ref={ref}
-      data-sidebar="trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("h-7 w-7", className)}
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
-      {...props}
-    >
-      <PanelLeft />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          ref={ref}
+          data-sidebar="trigger"
+          variant="ghost"
+          size="icon"
+          {...props}
+          onClick={(event) => {
+            onClick?.(event);
+            toggleSidebar();
+          }}
+          className={cn(
+            "border-sidebar-border text-sidebar-foreground hover:bg-sidebar/90 overflow-hidden rounded-full transition-all duration-300 hover:shadow-lg",
+            "hover:text-primary",
+            className,
+          )}
+        >
+          <div className="flex h-full w-full items-center justify-center transition-transform duration-500 ease-out">
+            <MenuIcon className="text-primary" />
+          </div>
+          <span className="sr-only">Esconder Menu</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Esconder Menu</TooltipContent>
+    </Tooltip>
   );
 });
 SidebarTrigger.displayName = "SidebarTrigger";
@@ -742,6 +753,129 @@ const SidebarMenuSubButton = React.forwardRef<
 });
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
 
+const SidebarHoverTrigger = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    side?: "left" | "right";
+    icon?: React.ReactNode;
+    tooltip?: string;
+    isCollapsed?: boolean;
+  }
+>(
+  (
+    {
+      className,
+      side = "left",
+      isCollapsed = false,
+      icon = <PanelLeft />,
+      tooltip = "Toggle Sidebar",
+      ...props
+    },
+    ref,
+  ) => {
+    const { toggleSidebar } = useSidebar();
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [isClicked, setIsClicked] = React.useState(false);
+
+    // Função para lidar com o clique e cortar as animações
+    const handleClick = () => {
+      setIsClicked(true);
+      toggleSidebar();
+
+      setTimeout(() => {
+        setIsClicked(false);
+      }, 200); // Corresponde à duração da transição mais longa
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "group/hover-trigger fixed top-1/2 z-50 -translate-y-1/2 transition-all duration-300",
+          side === "left"
+            ? isCollapsed
+              ? "left-0"
+              : "left-[calc(var(--sidebar-width)-4px)]"
+            : isCollapsed
+              ? "right-0"
+              : "right-[calc(var(--sidebar-width)-4px)]",
+          className,
+        )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        {...props}
+      >
+        {/* Indicator always visible */}
+        <div
+          className={cn(
+            "bg-primary absolute h-24 w-1 rounded-full transition-all",
+            // Quando clicado, diminuir a duração da transição
+            isClicked ? "duration-100" : "duration-300",
+            isHovered || isClicked
+              ? "scale-y-0 opacity-0"
+              : "scale-y-100 opacity-40 hover:opacity-70",
+            !isClicked && "animate-pulse",
+          )}
+        />
+
+        {/* Hover area */}
+        <div
+          className={cn(
+            "flex h-24 w-8 items-center justify-center",
+            side === "left"
+              ? isCollapsed
+                ? "ml-8"
+                : "ml-4.5"
+              : isCollapsed
+                ? "mr-8"
+                : "mr-4.5",
+          )}
+        >
+          {/* Button that appears on hover */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "bg-sidebar/80 text-sidebar-foreground border-sidebar-border hover:bg-sidebar/90 h-8 w-8 overflow-hidden rounded-full border shadow-md hover:shadow-lg",
+                  isClicked ? "transition-none" : "transition-all duration-300",
+                  isHovered || isClicked
+                    ? "translate-x-0 scale-100 opacity-100"
+                    : "scale-75 opacity-0",
+                  side === "left" ? "-translate-x-full" : "translate-x-full",
+                )}
+                onClick={handleClick}
+              >
+                <div
+                  className={cn(
+                    "flex h-full w-full items-center justify-center",
+                    isClicked
+                      ? "transition-none"
+                      : "transition-transform duration-500 ease-out",
+                    isHovered || isClicked
+                      ? "transform-none"
+                      : side === "left"
+                        ? "translate-x-full rotate-90"
+                        : "-translate-x-full -rotate-90",
+                  )}
+                >
+                  {icon}
+                </div>
+                <span className="sr-only">{tooltip}</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side={side === "left" ? "right" : "left"}>
+              {tooltip}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+    );
+  },
+);
+SidebarHoverTrigger.displayName = "SidebarHoverTrigger";
+
 export {
   Sidebar,
   SidebarContent,
@@ -766,5 +900,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  SidebarHoverTrigger,
   useSidebar,
 };
