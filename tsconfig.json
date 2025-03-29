@@ -42,6 +42,9 @@
       ],
       "@context/*": [
         "context/*"
+      ],
+      "@api/*": [
+        "api/*"
       ]
     },
     "target": "ES2017"
