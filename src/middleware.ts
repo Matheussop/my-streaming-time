@@ -2,36 +2,51 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Public routes that don't require authentication
-const publicRoutes = ["/login", "/landing", "/register"];
+const publicRoutes = [
+  { path: "/", whenAuthenticated: "redirect" },
+  { path: "/landing", whenAuthenticated: "next" },
+  { path: "/login", whenAuthenticated: "redirect" },
+  { path: "/register", whenAuthenticated: "redirect" },
+] as const;
+
+const REDIRECT_WHEN_UNAUTHENTICATED = "/landing";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("auth_token")?.value;
   const { pathname } = request.nextUrl;
+
   // Check if the current route is public
-  const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
+  const isPublicRoute = publicRoutes.find((route) => route.path === pathname);
+
+  const token = request.cookies.get("auth_token")?.value;
 
   // If it's the root path, we check for a token
   if (pathname === "/") {
     if (!token) {
-      return NextResponse.redirect(new URL("/landing", request.url));
+      return NextResponse.redirect(
+        new URL(REDIRECT_WHEN_UNAUTHENTICATED, request.url),
+      );
     }
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
-  // If it's a public route, allow access regardless of authentication
-  if (isPublicRoute) {
-    // If authenticated and trying to access the auth route, redirect to home
-    if (token && pathname.startsWith("/login")) {
-      return NextResponse.redirect(new URL("/home", request.url));
-    }
+  if (!token && isPublicRoute) {
     return NextResponse.next();
   }
 
-  // If not authenticated and the route is not public, redirect to login
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (!token && !isPublicRoute) {
+    return NextResponse.redirect(
+      new URL(REDIRECT_WHEN_UNAUTHENTICATED, request.url),
+    );
+  }
+
+  if (
+    token &&
+    isPublicRoute &&
+    isPublicRoute.whenAuthenticated === "redirect"
+  ) {
+    return NextResponse.redirect(
+      new URL(REDIRECT_WHEN_UNAUTHENTICATED, request.url),
+    );
   }
 
   return NextResponse.next();
