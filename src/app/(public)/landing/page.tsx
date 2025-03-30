@@ -4,6 +4,8 @@ import { Logo } from "@components/common/Logo";
 import { Button } from "@components/ui/button";
 import { useAuth } from "@context/AuthContext";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 const Landing = () => {
   const router = useRouter();
 
@@ -14,14 +16,9 @@ const Landing = () => {
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
       <div className="relative flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-40"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1578022761797-b8636ac1773c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80')",
-          }}
-        />
-        <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center">
+        <div className="absolute inset-0 bg-cover bg-center opacity-40" />
+        <Image src="/landing.png" alt="Landing Background" fill />
+        <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center rounded-lg bg-black/20 p-4 backdrop-blur-sm">
           <Logo className="text-4xl" />
           <p className="mx-auto mb-8 max-w-2xl text-xl md:text-2xl">
             Track all your watched movies and TV shows in one place. Discover
@@ -57,11 +54,11 @@ const Landing = () => {
       </div>
 
       {/* Features Section */}
-      <div className="bg-card px-6 py-20">
+      <div className="bg-dark-600 px-6 py-20">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-12 text-center text-3xl font-bold">Features</h2>
           <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
-            <div className="text-center">
+            <div className="rounded-lg bg-zinc-800/50 p-4 text-center">
               <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +83,7 @@ const Landing = () => {
                 one place.
               </p>
             </div>
-            <div className="text-center">
+            <div className="rounded-lg bg-zinc-800/50 p-4 text-center">
               <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +113,7 @@ const Landing = () => {
                 and charts.
               </p>
             </div>
-            <div className="text-center">
+            <div className="rounded-lg bg-zinc-800/50 p-4 text-center">
               <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -279,7 +279,7 @@ export default function Streaming({
                   <div className="font-medium">Runtime</div>
                   <div className="text-white/80">
                     {"durationTime" in streaming && streaming.durationTime
-                      ? streaming.durationTime
+                      ? streaming.durationTime + " min"
                       : "totalEpisodes" in streaming && streaming.totalEpisodes
                         ? streaming.totalEpisodes + " episodes"
                         : "N/A"}

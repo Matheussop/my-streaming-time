@@ -50,7 +50,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
       </div>
 
       {/* Form side */}
-      <div className="bg-card flex w-full items-center justify-center p-6 sm:p-12 lg:w-1/2 xl:w-2/5 dark:bg-[#151515]">
+      <div className="bg-dark-600 flex w-full items-center justify-center p-6 sm:p-12 lg:w-1/2 xl:w-2/5">
         <div className="w-full max-w-md space-y-6">
           <div className="text-center lg:text-left">
             <h2 className="text-primary mb-2 text-2xl font-bold tracking-tight">

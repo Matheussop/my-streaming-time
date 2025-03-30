@@ -45,6 +45,9 @@
       ],
       "@api/*": [
         "api/*"
+      ],
+      "@public/*": [
+        "public/*"
       ]
     },
     "target": "ES2017"

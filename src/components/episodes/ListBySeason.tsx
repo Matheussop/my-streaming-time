@@ -351,6 +351,9 @@ export default function ListBySeason({
                                 episode.watched
                                   ? "bg-primary/90 hover:bg-primary/100 text-white"
                                   : "hover:bg-primary/50 bg-white/10 text-white"
+                              }, ${
+                                new Date(episode.releaseDate) > new Date() &&
+                                "invisible"
                               }`}
                               onClick={() =>
                                 handleMarkIsViewed(episode.watched, episode)
@@ -358,6 +361,7 @@ export default function ListBySeason({
                             >
                               {episode.watched ? "Viewed" : "Not watched"}
                             </Button>
+
                             <Button
                               className="h-8 rounded-md bg-transparent px-3 text-sm font-medium text-white hover:bg-white/10"
                               onClick={() => openModal(episode)}

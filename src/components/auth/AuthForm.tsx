@@ -138,7 +138,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           ? "Falha ao fazer login. Verifique suas credenciais."
           : "Falha ao criar conta. Tente novamente.",
       );
-    } finally {
       setLoading(false);
     }
   };
