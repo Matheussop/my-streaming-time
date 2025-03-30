@@ -36,6 +36,7 @@ export const login = async (
   const response = await loginMock(credentials);
 
   const cookieStore = await cookies();
+
   cookieStore.set("auth_token", response.token);
 
   return response;
@@ -83,9 +84,13 @@ export const validateToken = async (): Promise<AuthResponse> => {
   return response;
 };
 
+const logoutMock = async (): Promise<void> => {};
 /**
  * Realiza o logout do usuário
  */
 export const logout = async (): Promise<void> => {
-  await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
+  // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
+  const cookieStore = await cookies();
+  cookieStore.delete("auth_token");
+  await logoutMock();
 };

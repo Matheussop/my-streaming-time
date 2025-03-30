@@ -12,6 +12,8 @@ import {
 import { User, LogOut, Settings, ChevronUp, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SidebarMenuButton } from "@components/ui/sidebar";
+import { useAuth } from "@context/AuthContext";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface User {
   name: string;
@@ -19,28 +21,17 @@ interface User {
   avatar?: string;
 }
 
-const useAuthMock = () => ({
-  user: {
-    name: "John Doe",
-    email: "john.doe@example.com",
-  } as User,
-  logout: async () => {
-    console.log("logout");
-  },
-  isLoading: false,
-});
-
 export const UserMenu = () => {
-  const { user, logout, isLoading } = useAuthMock();
+  const { user, logout, isLoading } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
-    router.push("/auth");
+    router.push("/");
   };
 
   if (isLoading) {
-    return <div className="h-10 w-10 animate-pulse rounded-full bg-gray-700" />;
+    return <LoadingSpinner className="h-8 w-8" />;
   }
 
   if (!user) {
