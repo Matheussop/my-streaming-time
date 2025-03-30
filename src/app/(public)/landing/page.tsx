@@ -30,10 +30,10 @@ const Landing = () => {
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             {isLoggedIn ? (
               <Button
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/home")}
                 className="bg-primary hover:bg-primary/90 cursor-pointer px-8 py-6 text-lg text-white"
               >
-                Go to Dashboard
+                Go to Home Page
               </Button>
             ) : (
               <>

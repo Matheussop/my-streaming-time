@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
-import { AppSidebar } from "@components/ui/app-sidebar";
-import { SidebarProvider } from "@components/ui/sidebar";
 import ClientProvider from "providers/clientProviders";
 import { Toaster } from "sonner";
 
@@ -38,19 +36,18 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${titan_One.variable} ${roboto.variable}`}
     >
-      <body className={`bg-background min-h-screen text-zinc-100`}>
+      <body
+        className={`bg-background h-full min-h-screen w-full text-zinc-100`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <ClientProvider>
-              <AppSidebar />
-              <div className="flex-1">{children}</div>
-            </ClientProvider>
-          </SidebarProvider>
+          <ClientProvider>
+            <div className="flex-1">{children}</div>
+          </ClientProvider>
           <Toaster toastOptions={toastOptions} theme="dark" />
         </ThemeProvider>
       </body>

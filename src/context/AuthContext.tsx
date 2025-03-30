@@ -69,7 +69,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       const response = await authService.register(userData);
       setUser(response.user);
-      localStorage.setItem("auth_token", response.token);
       toast.success("Registro realizado com sucesso!");
       return true;
     } catch (error: any) {
@@ -87,7 +86,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       await authService.logout();
       setUser(null);
-      localStorage.removeItem("auth_token");
       toast.success("Logout realizado com sucesso!");
     } catch (error) {
       toast.error("Erro ao fazer logout.");
