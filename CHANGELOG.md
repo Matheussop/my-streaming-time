@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Authentication system with login and registration
   - Authentication context
-  - Login and registration forms
+  - Login and registration forms with Zod validation
   - Authentication page
   - Route protection middleware
   - Authentication API service
@@ -21,8 +21,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved navigation between auth pages using Next.js Link
   - Client-side route detection for better UX
 
+### Changed
+- Enhanced form validation with Zod schema
+  - Real-time validation feedback
+  - Detailed validation error messages
+  - Type-safe form handling
+  - Complex validation rules (regex patterns, min length)
+- Simplified AuthForm component
+  - Consolidated form state management
+  - Improved error handling with toast notifications
+  - Better field validation
+  - Portuguese localization of UI elements
+  - Better accessibility with appropriate autoComplete attributes
+  - Streamlined navigation between login and registration pages
+
 ### Removed
 - Context-based layout configuration in favor of route-based approach
+- Unused AuthContainer component in favor of direct page-based routing
 
 ## [0.2.0] - 2024-03-28
 
