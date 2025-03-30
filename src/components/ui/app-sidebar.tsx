@@ -12,7 +12,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   SidebarHoverTrigger,
   useSidebar,
 } from "./sidebar";
@@ -20,6 +19,7 @@ import { Logo } from "@components/common/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserMenu } from "@components/common/UserMenu";
+import { useAuth } from "@context/AuthContext";
 
 // Menu items.
 const items = [
@@ -50,6 +50,9 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
+  const { user } = useAuth();
+
+  if (!user) return null;
   return (
     <>
       <Sidebar>

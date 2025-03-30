@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { AppProvider } from "../context/AppContext";
+import { AuthProvider } from "../context/AuthContext";
 import dynamic from "next/dynamic";
 
 // Dynamically import the ErrorBoundary component
@@ -15,7 +16,9 @@ const ErrorBoundary = dynamic(
 const ClientProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AppProvider>
-      <ErrorBoundary>{children}</ErrorBoundary>
+      <AuthProvider>
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </AuthProvider>
     </AppProvider>
   );
 };

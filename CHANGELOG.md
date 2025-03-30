@@ -8,7 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Login system implementation (in progress)
+- Authentication system with login and registration
+  - Authentication context
+  - Login and registration forms
+  - Authentication page
+  - Route protection middleware
+  - Authentication API service
+  - User interface
+  - User menu with profile and logout options
+- Route-based layout configuration
+  - Dynamic titles and subtitles based on current route path
+  - Improved navigation between auth pages using Next.js Link
+  - Client-side route detection for better UX
+
+### Removed
+- Context-based layout configuration in favor of route-based approach
 
 ## [0.2.0] - 2024-03-28
 

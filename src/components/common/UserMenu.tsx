@@ -11,7 +11,6 @@ import {
 } from "@components/ui/dropdownmenu";
 import { User, LogOut, Settings, ChevronUp, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import SafeImage from "./SafeImage";
 import { SidebarMenuButton } from "@components/ui/sidebar";
 
 interface User {

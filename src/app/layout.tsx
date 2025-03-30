@@ -3,7 +3,7 @@ import { Roboto, Titan_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@components/theme-provider";
 import { AppSidebar } from "@components/ui/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@components/ui/sidebar";
+import { SidebarProvider } from "@components/ui/sidebar";
 import ClientProvider from "providers/clientProviders";
 import { Toaster } from "sonner";
 
@@ -46,12 +46,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SidebarProvider>
-            <AppSidebar />
             <ClientProvider>
-              <div className="flex-1">
-                <SidebarTrigger />
-                {children}
-              </div>
+              <AppSidebar />
+              <div className="flex-1">{children}</div>
             </ClientProvider>
           </SidebarProvider>
           <Toaster toastOptions={toastOptions} theme="dark" />
