@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
   if (isPublicRoute) {
     // If authenticated and trying to access the auth route, redirect to home
     if (token && pathname.startsWith("/login")) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/home", request.url));
     }
     return NextResponse.next();
   }

@@ -207,17 +207,20 @@
 }
 
 @layer base {
-  .font-outline-1 {
-    -webkit-text-stroke: 1px #1E1E1E;
-  }
-}
- 
-@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .font-outline-1 {
+    text-shadow: 
+      -1px -1px 0 #1E1E1E,
+      1px -1px 0 #1E1E1E,
+      -1px 1px 0 #1E1E1E,
+      1px 1px 0 #1E1E1E;
+    -webkit-text-stroke: 1px #1E1E1E;
   }
 }
 

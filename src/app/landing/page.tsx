@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@components/common/Logo";
 import { Button } from "@components/ui/button";
 import { useAuth } from "@context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -20,10 +21,8 @@ const Landing = () => {
               "url('https://images.unsplash.com/photo-1578022761797-b8636ac1773c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80')",
           }}
         />
-        <div className="relative z-10 mx-auto max-w-4xl">
-          <h1 className="text-glow mb-6 text-5xl font-bold md:text-7xl">
-            My-Streaming-Time
-          </h1>
+        <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center">
+          <Logo className="text-4xl" />
           <p className="mx-auto mb-8 max-w-2xl text-xl md:text-2xl">
             Track all your watched movies and TV shows in one place. Discover
             your watching habits and get personalized recommendations.
@@ -32,7 +31,7 @@ const Landing = () => {
             {isLoggedIn ? (
               <Button
                 onClick={() => router.push("/dashboard")}
-                className="bg-primary hover:bg-primary/90 px-8 py-6 text-lg text-white"
+                className="bg-primary hover:bg-primary/90 cursor-pointer px-8 py-6 text-lg text-white"
               >
                 Go to Dashboard
               </Button>
@@ -40,14 +39,14 @@ const Landing = () => {
               <>
                 <Button
                   onClick={() => router.push("/login")}
-                  className="bg-primary hover:bg-primary/90 px-8 py-6 text-lg text-white"
+                  className="bg-primary hover:bg-primary/90 cursor-pointer px-8 py-6 text-lg text-white"
                 >
                   Login
                 </Button>
                 <Button
                   onClick={() => router.push("/register")}
                   variant="outline"
-                  className="border-white px-8 py-6 text-lg text-white hover:bg-white/10"
+                  className="cursor-pointer border-white px-8 py-6 text-lg text-white hover:bg-white/10"
                 >
                   Register
                 </Button>

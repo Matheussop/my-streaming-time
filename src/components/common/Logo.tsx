@@ -1,9 +1,11 @@
-export function Logo() {
+import { cn } from "@lib/utils";
+
+export function Logo({ className }: { className?: string }) {
   return (
-    <div className="font-outline-1 font-secondary my-1 flex text-xl">
-      <p>My</p>
-      <span className="text-primary px-1">STREAMING</span>
-      <p>Time</p>
+    <div className={cn("font-secondary my-1 flex text-xl", className)}>
+      <p className="font-outline-1">My</p>
+      <span className="font-outline-1 text-primary px-1">STREAMING</span>
+      <p className="font-outline-1">Time</p>
     </div>
   );
 }

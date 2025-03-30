@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
-import { login, register } from "@api/auth";
 import { RegisterCredentials } from "@interfaces/user";
 import Link from "next/link";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useAuth } from "@context/AuthContext";
 
 // Esquemas de validação Zod
 const emailSchema = z
@@ -55,6 +55,7 @@ interface AuthFormProps {
 
 const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const router = useRouter();
+  const { login, register } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -112,7 +113,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
         if (success) {
           toast.success("Login realizado com sucesso!");
-          router.push("/dashboard");
+          router.push("/home");
         }
       } else {
         // Register
