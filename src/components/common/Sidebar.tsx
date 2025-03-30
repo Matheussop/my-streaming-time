@@ -22,9 +22,9 @@ export function SideBar() {
           </div>
           <nav className="flex space-x-5">
             <Link
-              href="/"
+              href="/home"
               className={`flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
-                pathname === "/"
+                pathname === "/home"
                   ? "bg-primary text-white shadow-lg"
                   : "hover:bg-primary bg-zinc-700 text-zinc-200 hover:text-white"
               }`}

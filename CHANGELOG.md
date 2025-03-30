@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Login and registration forms with Zod validation
   - Authentication page
   - Route protection middleware
-  - Authentication API service
+  - Server-side Route Handlers for authentication
+  - Cookie-based authentication (HTTPOnly cookies)
   - User interface
   - User menu with profile and logout options
 - Route-based layout configuration
@@ -22,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Client-side route detection for better UX
 
 ### Changed
+- Enhanced security with HTTPOnly cookies instead of localStorage
+  - Protected against XSS attacks
+  - Server-side verification of authentication
+  - Automatic cookie management
 - Enhanced form validation with Zod schema
   - Real-time validation feedback
   - Detailed validation error messages
@@ -38,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Context-based layout configuration in favor of route-based approach
 - Unused AuthContainer component in favor of direct page-based routing
+- localStorage-based token storage in favor of secure cookies
 
 ## [0.2.0] - 2024-03-28
 

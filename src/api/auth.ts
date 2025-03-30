@@ -1,11 +1,29 @@
+"use server";
+
 import {
   AuthResponse,
   RegisterCredentials,
   UserCredentials,
 } from "@interfaces/user";
 import axiosInstance from "@lib/axiosConfig";
+import { cookies } from "next/headers";
 
 const AUTH_ENDPOINT = "/auth";
+
+const loginMock = async (
+  credentials: UserCredentials,
+): Promise<AuthResponse> => {
+  return {
+    token: "1234567890",
+    user: {
+      id: "1",
+      name: "John Doe",
+      email: "john.doe@example.com",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  };
+};
 
 /**
  * Realiza o login do usuário
@@ -15,11 +33,12 @@ const AUTH_ENDPOINT = "/auth";
 export const login = async (
   credentials: UserCredentials,
 ): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>(
-    `${AUTH_ENDPOINT}/login`,
-    credentials,
-  );
-  return response.data;
+  const response = await loginMock(credentials);
+
+  const cookieStore = await cookies();
+  cookieStore.set("auth_token", response.token);
+
+  return response;
 };
 
 /**
@@ -37,15 +56,31 @@ export const register = async (
   return response.data;
 };
 
+const validateTokenMock = async (): Promise<AuthResponse> => {
+  return {
+    token: "1234567890",
+    user: {
+      id: "1",
+      name: "John Doe",
+      email: "john.doe@example.com",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  };
+};
+
 /**
  * Verifica se o token atual é válido
  * @returns Promise com a resposta de autenticação
  */
 export const validateToken = async (): Promise<AuthResponse> => {
-  const response = await axiosInstance.get<AuthResponse>(
-    `${AUTH_ENDPOINT}/validate`,
-  );
-  return response.data;
+  // const response = await axiosInstance.get<AuthResponse>(
+  //   `${AUTH_ENDPOINT}/validate`,
+  // );
+
+  const response = await validateTokenMock();
+
+  return response;
 };
 
 /**

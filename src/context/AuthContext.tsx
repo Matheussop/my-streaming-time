@@ -8,6 +8,7 @@ import React, {
 import { User, UserCredentials, RegisterCredentials } from "@interfaces/user";
 import * as authService from "@api/auth";
 import { toast } from "sonner";
+import { getTokenCookies } from "@lib/getTokenCookies";
 
 interface AuthContextType {
   user: User | null;
@@ -25,19 +26,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = async () => {
-    const token = localStorage.getItem("auth_token");
-
+    const token = await getTokenCookies();
     if (!token) {
       setIsLoading(false);
       return;
     }
 
     try {
+      setIsLoading(true);
       const response = await authService.validateToken();
+      // TODO: update Token in cookies
       setUser(response.user);
-      localStorage.setItem("auth_token", response.token);
-    } catch (error) {
-      localStorage.removeItem("auth_token");
     } finally {
       setIsLoading(false);
     }
@@ -52,11 +51,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       const response = await authService.login(credentials);
       setUser(response.user);
-      localStorage.setItem("auth_token", response.token);
       toast.success("Login realizado com sucesso!");
       return true;
-    } catch (error) {
-      toast.error("Credenciais inválidas. Tente novamente.");
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        "Credenciais inválidas. Tente novamente.";
+      toast.error(errorMessage);
       return false;
     } finally {
       setIsLoading(false);
@@ -71,8 +72,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("auth_token", response.token);
       toast.success("Registro realizado com sucesso!");
       return true;
-    } catch (error) {
-      toast.error("Erro ao registrar. Tente novamente.");
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error || "Erro ao registrar. Tente novamente.";
+      toast.error(errorMessage);
       return false;
     } finally {
       setIsLoading(false);

@@ -7,7 +7,6 @@ const publicRoutes = ["/login", "/landing", "/register"];
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value;
   const { pathname } = request.nextUrl;
-
   // Check if the current route is public
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
@@ -18,7 +17,7 @@ export function middleware(request: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL("/landing", request.url));
     }
-    return NextResponse.next();
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   // If it's a public route, allow access regardless of authentication
