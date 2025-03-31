@@ -12,11 +12,60 @@ export class AppError extends Error {
     errors?: any[],
   ) {
     super(message);
+
+    this.name = "AppError";
+
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.details = details;
-    this.errors = errors;
-    Error.captureStackTrace(this, this.constructor);
+    this.errors = errors || [];
+
+    Object.defineProperties(this, {
+      name: { enumerable: true },
+      message: { enumerable: true },
+      statusCode: { enumerable: true },
+      isOperational: { enumerable: true },
+      details: { enumerable: true },
+      errors: { enumerable: true },
+    });
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+
+  toString(): string {
+    return JSON.stringify({
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      isOperational: this.isOperational,
+      details: this.details,
+      errors: this.errors,
+    });
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      isOperational: this.isOperational,
+      details: this.details,
+      errors: this.errors,
+      stack: this.stack,
+    };
+  }
+
+  debug() {
+    return {
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      isOperational: this.isOperational,
+      details: this.details,
+      errors: this.errors ? [...this.errors] : [],
+    };
   }
 
   static fromError(error: any): AppError {

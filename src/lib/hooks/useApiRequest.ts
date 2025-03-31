@@ -88,7 +88,8 @@ export const useApiRequest = <T>(
         throw err;
       }
 
-      const appError = err instanceof AppError ? err : AppError.fromError(err);
+      const appError: AppError =
+        err instanceof AppError ? err : AppError.fromError(err);
 
       setError(appError);
       // Usar a referência das options para acessar onError

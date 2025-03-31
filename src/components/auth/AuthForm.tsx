@@ -10,6 +10,9 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAuth } from "@context/AuthContext";
+import { useApiRequest } from "@lib/hooks/useApiRequest";
+import { AppError } from "@lib/appError";
+import { register } from "@api/auth";
 
 // Esquemas de validação Zod
 const emailSchema = z
@@ -20,6 +23,13 @@ const emailSchema = z
 const passwordSchema = z
   .string()
   .min(6, { message: "Senha deve ter no mínimo 6 caracteres" });
+// .min(8, { message: "Senha deve ter no mínimo 8 caracteres" })
+// .regex(/[A-Z]/, { message: "Senha deve ter pelo menos uma letra maiúscula" })
+// .regex(/[a-z]/, { message: "Senha deve ter pelo menos uma letra minúscula" })
+// .regex(/[0-9]/, { message: "Senha deve ter pelo menos um número" })
+// .regex(/[^A-Za-z0-9]/, {
+//   message: "Senha deve ter pelo menos um caractere especial",
+// });
 
 const usernameSchema = z
   .string()
@@ -55,7 +65,7 @@ interface AuthFormProps {
 
 const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const router = useRouter();
-  const { login, register } = useAuth();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -82,6 +92,46 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
     return true;
   };
 
+  const {
+    isLoading: isLoadingRegister,
+    error: errorRegister,
+    execute: executeRegister,
+  } = useApiRequest<any>(
+    (registerData: RegisterCredentials) => register(registerData),
+    {
+      onSuccess: (data: Record<string, any>) => {
+        toast.success("Conta criada com sucesso!");
+        router.push("/login");
+      },
+      onError: (error: AppError) => {
+        setLoading(false);
+
+        // Verificar se temos erros de campo específicos para exibir no formulário
+        if (error.errors && error.errors.length > 0) {
+          const fieldErrors: FormErrors = {};
+
+          error.errors.forEach((err) => {
+            if (err.field && err.message) {
+              fieldErrors[err.field as keyof FormErrors] = err.message;
+            }
+          });
+
+          // Atualizar estado de erros com os erros do backend se encontramos algum
+          if (Object.keys(fieldErrors).length > 0) {
+            setErrors((prev) => ({ ...prev, ...fieldErrors }));
+
+            // Mostrar mensagem geral de erro
+            toast.error("Por favor, corrija os erros no formulário");
+            return;
+          } else {
+            const message = error.errors.map((err) => err.message).join("\n");
+            toast.error(message);
+          }
+        }
+      },
+    },
+  );
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -103,44 +153,29 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
     setLoading(true);
 
-    try {
-      if (isLogin) {
-        // Login
-        const success = await login({
-          email: formData.email,
-          password: formData.password,
-        });
+    if (isLogin) {
+      // Login
+      const success = await login({
+        email: formData.email,
+        password: formData.password,
+      });
 
-        if (success) {
-          toast.success("Login realizado com sucesso!");
-          router.push("/home");
-        }
-      } else {
-        // Register
-        const registerData: RegisterCredentials = {
-          email: formData.email,
-          password: formData.password,
-          username: formData.username,
-          // confirmPassword: formData.password, // No campo de confirmação separado na UI
-        };
-
-        const success = await register(registerData);
-
-        if (success) {
-          toast.success("Conta criada com sucesso!");
-          router.push("/login");
-        } else {
-          setLoading(false);
-        }
+      if (success) {
+        toast.success("Login realizado com sucesso!");
+        router.push("/home");
       }
-    } catch (error) {
-      console.error("Authentication error:", error);
-      toast.error(
-        isLogin
-          ? "Falha ao fazer login. Verifique suas credenciais."
-          : "Falha ao criar conta. Tente novamente.",
-      );
-      setLoading(false);
+    } else {
+      // Register
+      const registerData: RegisterCredentials = {
+        email: formData.email,
+        password: formData.password,
+        username: formData.username,
+        // confirmPassword: formData.password, // No campo de confirmação separado na UI
+      };
+
+      await executeRegister(registerData);
+
+      // const success = await register(registerData);
     }
   };
 
@@ -280,7 +315,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
         <Button
           type="submit"
-          disabled={loading}
+          disabled={loading || isLoadingRegister}
           className="bg-primary hover:bg-primary/90 w-full"
         >
           {loading ? "Processando..." : pageTexts.button}
