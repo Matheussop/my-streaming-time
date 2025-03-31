@@ -15,12 +15,6 @@ import { SidebarMenuButton } from "@components/ui/sidebar";
 import { useAuth } from "@context/AuthContext";
 import LoadingSpinner from "./LoadingSpinner";
 
-interface User {
-  name: string;
-  email: string;
-  avatar?: string;
-}
-
 export const UserMenu = () => {
   const { user, logout, isLoading } = useAuth();
   const router = useRouter();
@@ -50,14 +44,14 @@ export const UserMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton className="bg-zinc-700 transition duration-300">
-          <User2 /> {user.name}
+          <User2 /> {user.username}
           <ChevronUp className="ml-auto" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm leading-none font-medium">{user.name}</p>
+            <p className="text-sm leading-none font-medium">{user.username}</p>
             <p className="text-muted-foreground text-xs leading-none">
               {user.email}
             </p>

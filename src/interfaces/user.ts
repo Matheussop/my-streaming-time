@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  name: string;
+  username: string;
   email: string;
   avatar?: string;
   createdAt: string;
@@ -13,8 +13,8 @@ export interface UserCredentials {
 }
 
 export interface RegisterCredentials extends UserCredentials {
-  name: string;
-  confirmPassword: string;
+  username: string;
+  // confirmPassword: string;
 }
 
 export interface AuthResponse {

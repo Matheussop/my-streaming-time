@@ -8,7 +8,7 @@ import {
 import axiosInstance from "@lib/axiosConfig";
 import { cookies } from "next/headers";
 
-const AUTH_ENDPOINT = "/auth";
+const AUTH_ENDPOINT = "/user";
 
 const loginMock = async (
   credentials: UserCredentials,
@@ -17,14 +17,13 @@ const loginMock = async (
     token: "1234567890",
     user: {
       id: "1",
-      name: "John Doe",
+      username: "John Doe",
       email: "john.doe@example.com",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
   };
 };
-
 /**
  * Realiza o login do usuário
  * @param credentials Credenciais do usuário (email e senha)
@@ -33,13 +32,17 @@ const loginMock = async (
 export const login = async (
   credentials: UserCredentials,
 ): Promise<AuthResponse> => {
-  const response = await loginMock(credentials);
+  const response = await axiosInstance.post<AuthResponse>(
+    `/login`,
+    credentials,
+  );
+  // const response = await loginMock(credentials);
 
   const cookieStore = await cookies();
 
-  cookieStore.set("auth_token", response.token);
+  cookieStore.set("auth_token", response.data.token);
 
-  return response;
+  return response.data;
 };
 
 /**
@@ -62,7 +65,7 @@ const validateTokenMock = async (): Promise<AuthResponse> => {
     token: "1234567890",
     user: {
       id: "1",
-      name: "John Doe",
+      username: "John Doe",
       email: "john.doe@example.com",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

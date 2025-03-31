@@ -21,32 +21,32 @@ const passwordSchema = z
   .string()
   .min(6, { message: "Senha deve ter no mínimo 6 caracteres" });
 
-const nameSchema = z
+const usernameSchema = z
   .string()
-  .min(3, { message: "Nome deve ter no mínimo 3 caracteres" })
+  .min(3, { message: "Username deve ter no mínimo 3 caracteres" })
   .regex(/^[a-zA-ZÀ-ÖØ-öø-ÿ\s]+$/, {
-    message: "Nome deve conter apenas letras",
+    message: "Username deve conter apenas letras",
   });
 
 // Esquema para Login
 const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
-  name: z.string().optional(),
+  username: z.string().optional(),
 });
 
 // Esquema para Registro
 const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
-  name: nameSchema,
+  username: usernameSchema,
 });
 
 // Tipo das validações
 type FormErrors = {
   email?: string;
   password?: string;
-  name?: string;
+  username?: string;
 };
 
 interface AuthFormProps {
@@ -59,7 +59,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    name: "",
+    username: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
@@ -120,8 +120,8 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         const registerData: RegisterCredentials = {
           email: formData.email,
           password: formData.password,
-          name: formData.name,
-          confirmPassword: formData.password, // No campo de confirmação separado na UI
+          username: formData.username,
+          // confirmPassword: formData.password, // No campo de confirmação separado na UI
         };
 
         const success = await register(registerData);
@@ -129,6 +129,8 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         if (success) {
           toast.success("Conta criada com sucesso!");
           router.push("/login");
+        } else {
+          setLoading(false);
         }
       }
     } catch (error) {
@@ -158,23 +160,23 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         {/* Campo nome - apenas para registro */}
         {!isLogin && (
           <div className="space-y-2">
-            <Label className="text-primary/80" htmlFor="name">
+            <Label className="text-primary/80" htmlFor="username">
               Nome
             </Label>
             <Input
-              id="name"
-              name="name"
+              id="username"
+              name="username"
               required
-              value={formData.name}
+              value={formData.username}
               onChange={handleChange}
               className={`bg-background/50 border-foreground/10 backdrop-blur-sm ${
-                errors.name ? "border-red-500" : ""
+                errors.username ? "border-red-500" : ""
               }`}
               placeholder="Seu nome"
-              autoComplete="name"
+              autoComplete="username"
             />
-            {errors.name && (
-              <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+            {errors.username && (
+              <p className="mt-1 text-xs text-red-500">{errors.username}</p>
             )}
           </div>
         )}
@@ -229,6 +231,50 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           />
           {errors.password && (
             <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+          )}
+          {!isLogin && !errors.password && (
+            <div className="text-muted-foreground mt-1 text-xs">
+              <p>A senha deve conter:</p>
+              <ul className="mt-1 ml-2 list-disc space-y-0.5">
+                <li
+                  className={
+                    formData.password.length >= 8 ? "text-green-500" : ""
+                  }
+                >
+                  Pelo menos 8 caracteres
+                </li>
+                <li
+                  className={
+                    /[A-Z]/.test(formData.password) ? "text-green-500" : ""
+                  }
+                >
+                  Uma letra maiúscula
+                </li>
+                <li
+                  className={
+                    /[a-z]/.test(formData.password) ? "text-green-500" : ""
+                  }
+                >
+                  Uma letra minúscula
+                </li>
+                <li
+                  className={
+                    /[0-9]/.test(formData.password) ? "text-green-500" : ""
+                  }
+                >
+                  Um número
+                </li>
+                <li
+                  className={
+                    /[^A-Za-z0-9]/.test(formData.password)
+                      ? "text-green-500"
+                      : ""
+                  }
+                >
+                  Um caractere especial
+                </li>
+              </ul>
+            </div>
           )}
         </div>
 
