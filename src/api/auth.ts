@@ -1,12 +1,11 @@
 "use server";
-// TODO: change to server side
 import {
   AuthResponse,
   RegisterCredentials,
   UserCredentials,
 } from "@interfaces/user";
 import axiosInstance from "@lib/axiosConfig";
-// import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 
 const AUTH_ENDPOINT = "/user";
 
@@ -36,11 +35,9 @@ export const login = async (
     `/login`,
     credentials,
   );
-  // const response = await loginMock(credentials);
+  const cookieStore = await cookies();
 
-  // const cookieStore = await cookies();
-
-  // cookieStore.set("auth_token", response.data.token);
+  cookieStore.set("auth_token", response.data.token);
 
   return response.data;
 };
@@ -92,8 +89,8 @@ const logoutMock = async (): Promise<void> => {};
  * Realiza o logout do usuário
  */
 export const logout = async (): Promise<void> => {
-  // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
-  // const cookieStore = await cookies();
-  // cookieStore.delete("auth_token");
+  await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
+  const cookieStore = await cookies();
+  cookieStore.delete("auth_token");
   await logoutMock();
 };

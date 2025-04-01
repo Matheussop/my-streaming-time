@@ -58,11 +58,10 @@ export async function Recommended() {
   return (
     <Carousel className="flex items-center">
       <CarouselContent>
-        {recommendations.map((media, index) => (
+        {recommendations.map((media) => (
           <CarouselItem className="max-w-[16%]" key={media._id}>
             <CarouselCard
               id={media._id}
-              index={index}
               imageUrl={media.url ?? ""}
               title={media.title}
               plot={media.plot ?? ""}

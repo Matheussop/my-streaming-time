@@ -13,9 +13,9 @@ interface UseApiRequestOptions<T> {
 interface UseApiRequestResult<T> {
   data: T | null;
   isLoading: boolean;
-  error: AppError | null;
+  error?: AppError | null;
   execute: (...args: any[]) => Promise<T>;
-  reset: () => void;
+  reset?: () => void;
 }
 
 /**

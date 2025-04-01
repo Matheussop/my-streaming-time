@@ -54,10 +54,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Login realizado com sucesso!");
       return true;
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error ||
-        "Credenciais inválidas. Tente novamente.";
-      toast.error(errorMessage);
+      const errorMessageArray = error.message.split("\n");
+      errorMessageArray.forEach((error: string) => {
+        toast.error(error);
+      });
+      toast.error(errorMessageArray);
       return false;
     } finally {
       setIsLoading(false);
@@ -72,10 +73,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Registro realizado com sucesso!");
       return true;
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "Erro ao registrar. Tente novamente.";
-      toast.error(errorMessage);
-      return false;
+      const errorMessageArray = error.message.split("\n");
+      errorMessageArray.forEach((error: string) => {
+        toast.error(error);
+      });
+      throw error;
     } finally {
       setIsLoading(false);
     }

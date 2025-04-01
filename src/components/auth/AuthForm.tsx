@@ -10,8 +10,9 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAuth } from "@context/AuthContext";
-import { register } from "@api/auth";
 import { cn } from "@lib/utils";
+import { useApiRequest } from "@lib/hooks/useApiRequest";
+import { AppError } from "@lib/appError";
 // Esquemas de validação Zod
 const emailSchema = z
   .string()
@@ -62,15 +63,24 @@ interface AuthFormProps {
 
 const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     username: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const { isLoading: isLoadingRegister, execute: executeRegister } =
+    useApiRequest<any>(
+      (registerData: RegisterCredentials) => register(registerData),
+      {
+        onSuccess: () => {
+          router.push("/login");
+        },
+      },
+    );
 
   const validateForm = (): boolean => {
     const schema = isLogin ? loginSchema : registerSchema;
@@ -110,9 +120,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
       return;
     }
 
-    setLoading(true);
-
-    if (isLogin) {
+    if (isLoadingRegister) {
       // Login
       const success = await login({
         email: formData.email,
@@ -132,20 +140,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         // confirmPassword: formData.password, // No campo de confirmação separado na UI
       };
 
-      try {
-        const response = await register(registerData);
-        if (response) {
-          toast.success("Conta criada com sucesso!");
-          router.push("/login");
-        }
-      } catch (error: any) {
-        setLoading(false);
-        const errorMessageArray = error.message.split("\n");
-        errorMessageArray.forEach((error: string) => {
-          toast.error(error);
-        });
-      }
-      // const success = await register(registerData);
+      executeRegister(registerData);
     }
   };
 
@@ -323,10 +318,10 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
         <Button
           type="submit"
-          disabled={loading}
+          disabled={isLoadingRegister}
           className="bg-primary hover:bg-primary/90 w-full"
         >
-          {loading ? "Processando..." : pageTexts.button}
+          {isLoadingRegister ? "Processando..." : pageTexts.button}
         </Button>
       </form>
 
