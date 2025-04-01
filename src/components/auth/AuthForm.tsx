@@ -10,10 +10,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAuth } from "@context/AuthContext";
-import { useApiRequest } from "@lib/hooks/useApiRequest";
-import { AppError } from "@lib/appError";
 import { register } from "@api/auth";
-
+import { cn } from "@lib/utils";
 // Esquemas de validação Zod
 const emailSchema = z
   .string()
@@ -72,6 +70,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const validateForm = (): boolean => {
     const schema = isLogin ? loginSchema : registerSchema;
@@ -103,6 +102,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormSubmitted(true);
 
     // Validar formulário antes de enviar
     if (!validateForm()) {
@@ -175,7 +175,11 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
               value={formData.username}
               onChange={handleChange}
               className={`bg-background/50 border-foreground/10 backdrop-blur-sm ${
-                errors.username ? "border-red-500" : ""
+                errors.username
+                  ? formSubmitted
+                    ? "animate-pulse border-red-500"
+                    : "border-red-500"
+                  : ""
               }`}
               placeholder="Seu nome"
               autoComplete="username"
@@ -193,12 +197,16 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           <Input
             id="email"
             name="email"
-            // type="email"
+            type="email"
             required
             value={formData.email}
             onChange={handleChange}
             className={`bg-background/50 border-foreground/10 backdrop-blur-sm ${
-              errors.email ? "border-red-500" : ""
+              errors.email
+                ? formSubmitted
+                  ? "animate-pulse border-red-500"
+                  : "border-red-500"
+                : ""
             }`}
             placeholder="seu@email.com"
             autoComplete={isLogin ? "email" : "new-email"}
@@ -230,69 +238,81 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
             value={formData.password}
             onChange={handleChange}
             className={`bg-background/50 border-foreground/10 backdrop-blur-sm ${
-              errors.password ? "border-red-500" : ""
+              errors.password
+                ? formSubmitted
+                  ? "animate-pulse border-red-500"
+                  : "border-red-500"
+                : ""
             }`}
             autoComplete={isLogin ? "current-password" : "new-password"}
           />
-          {errors.password && (
-            <p className="mt-1 text-xs text-red-500">{errors.password}</p>
-          )}
+
           {!isLogin && (
             <div className="text-muted-foreground mt-1 text-xs">
               <p>A senha deve conter:</p>
               <ul className="mt-1 ml-2 list-disc space-y-0.5">
                 <li
-                  className={
+                  className={cn(
                     !formData.password
                       ? ""
                       : formData.password.length >= 8
                         ? "text-green-500"
-                        : "text-red-500"
-                  }
+                        : formSubmitted
+                          ? "animate-pulse text-red-500"
+                          : "text-red-500",
+                  )}
                 >
                   Pelo menos 8 caracteres
                 </li>
                 <li
-                  className={
+                  className={cn(
                     !formData.password
                       ? ""
                       : /[A-Z]/.test(formData.password)
                         ? "text-green-500"
-                        : "text-red-500"
-                  }
+                        : formSubmitted
+                          ? "animate-pulse text-red-500"
+                          : "text-red-500",
+                  )}
                 >
                   Uma letra maiúscula
                 </li>
                 <li
-                  className={
+                  className={cn(
                     !formData.password
                       ? ""
                       : /[a-z]/.test(formData.password)
                         ? "text-green-500"
-                        : "text-red-500"
-                  }
+                        : formSubmitted
+                          ? "animate-pulse text-red-500"
+                          : "text-red-500",
+                  )}
                 >
                   Uma letra minúscula
                 </li>
                 <li
-                  className={
+                  className={cn(
                     !formData.password
                       ? ""
                       : /[0-9]/.test(formData.password)
                         ? "text-green-500"
-                        : "text-red-500"
-                  }
+                        : formSubmitted
+                          ? "animate-pulse text-red-500"
+                          : "text-red-500",
+                  )}
                 >
                   Um número
                 </li>
                 <li
-                  className={
+                  className={cn(
                     !formData.password
                       ? ""
                       : /[^A-Za-z0-9]/.test(formData.password)
                         ? "text-green-500"
-                        : "text-red-500"
-                  }
+                        : formSubmitted
+                          ? "animate-pulse text-red-500"
+                          : "text-red-500",
+                  )}
                 >
                   Um caractere especial
                 </li>
