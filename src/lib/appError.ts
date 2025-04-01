@@ -90,6 +90,9 @@ export class AppError extends Error {
         message = "Duplicate field value entered";
       }
 
+      if (errors.length > 0) {
+        message = errors.map((errorItem: any) => errorItem.message).join("\n");
+      }
       return new AppError(message, status, true, data.details, errors);
     }
 

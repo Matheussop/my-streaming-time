@@ -22,14 +22,13 @@ const emailSchema = z
 
 const passwordSchema = z
   .string()
-  .min(6, { message: "Senha deve ter no mínimo 6 caracteres" });
-// .min(8, { message: "Senha deve ter no mínimo 8 caracteres" })
-// .regex(/[A-Z]/, { message: "Senha deve ter pelo menos uma letra maiúscula" })
-// .regex(/[a-z]/, { message: "Senha deve ter pelo menos uma letra minúscula" })
-// .regex(/[0-9]/, { message: "Senha deve ter pelo menos um número" })
-// .regex(/[^A-Za-z0-9]/, {
-//   message: "Senha deve ter pelo menos um caractere especial",
-// });
+  .min(8, { message: "Senha deve ter no mínimo 8 caracteres" })
+  .regex(/[A-Z]/, { message: "Senha deve ter pelo menos uma letra maiúscula" })
+  .regex(/[a-z]/, { message: "Senha deve ter pelo menos uma letra minúscula" })
+  .regex(/[0-9]/, { message: "Senha deve ter pelo menos um número" })
+  .regex(/[^A-Za-z0-9]/, {
+    message: "Senha deve ter pelo menos um caractere especial",
+  });
 
 const usernameSchema = z
   .string()
@@ -92,46 +91,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
     return true;
   };
 
-  const {
-    isLoading: isLoadingRegister,
-    error: errorRegister,
-    execute: executeRegister,
-  } = useApiRequest<any>(
-    (registerData: RegisterCredentials) => register(registerData),
-    {
-      onSuccess: (data: Record<string, any>) => {
-        toast.success("Conta criada com sucesso!");
-        router.push("/login");
-      },
-      onError: (error: AppError) => {
-        setLoading(false);
-
-        // Verificar se temos erros de campo específicos para exibir no formulário
-        if (error.errors && error.errors.length > 0) {
-          const fieldErrors: FormErrors = {};
-
-          error.errors.forEach((err) => {
-            if (err.field && err.message) {
-              fieldErrors[err.field as keyof FormErrors] = err.message;
-            }
-          });
-
-          // Atualizar estado de erros com os erros do backend se encontramos algum
-          if (Object.keys(fieldErrors).length > 0) {
-            setErrors((prev) => ({ ...prev, ...fieldErrors }));
-
-            // Mostrar mensagem geral de erro
-            toast.error("Por favor, corrija os erros no formulário");
-            return;
-          } else {
-            const message = error.errors.map((err) => err.message).join("\n");
-            toast.error(message);
-          }
-        }
-      },
-    },
-  );
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -173,8 +132,19 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         // confirmPassword: formData.password, // No campo de confirmação separado na UI
       };
 
-      await executeRegister(registerData);
-
+      try {
+        const response = await register(registerData);
+        if (response) {
+          toast.success("Conta criada com sucesso!");
+          router.push("/login");
+        }
+      } catch (error: any) {
+        setLoading(false);
+        const errorMessageArray = error.message.split("\n");
+        errorMessageArray.forEach((error: string) => {
+          toast.error(error);
+        });
+      }
       // const success = await register(registerData);
     }
   };
@@ -223,7 +193,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           <Input
             id="email"
             name="email"
-            type="email"
+            // type="email"
             required
             value={formData.email}
             onChange={handleChange}
@@ -267,43 +237,61 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           {errors.password && (
             <p className="mt-1 text-xs text-red-500">{errors.password}</p>
           )}
-          {!isLogin && !errors.password && (
+          {!isLogin && (
             <div className="text-muted-foreground mt-1 text-xs">
               <p>A senha deve conter:</p>
               <ul className="mt-1 ml-2 list-disc space-y-0.5">
                 <li
                   className={
-                    formData.password.length >= 8 ? "text-green-500" : ""
+                    !formData.password
+                      ? ""
+                      : formData.password.length >= 8
+                        ? "text-green-500"
+                        : "text-red-500"
                   }
                 >
                   Pelo menos 8 caracteres
                 </li>
                 <li
                   className={
-                    /[A-Z]/.test(formData.password) ? "text-green-500" : ""
+                    !formData.password
+                      ? ""
+                      : /[A-Z]/.test(formData.password)
+                        ? "text-green-500"
+                        : "text-red-500"
                   }
                 >
                   Uma letra maiúscula
                 </li>
                 <li
                   className={
-                    /[a-z]/.test(formData.password) ? "text-green-500" : ""
+                    !formData.password
+                      ? ""
+                      : /[a-z]/.test(formData.password)
+                        ? "text-green-500"
+                        : "text-red-500"
                   }
                 >
                   Uma letra minúscula
                 </li>
                 <li
                   className={
-                    /[0-9]/.test(formData.password) ? "text-green-500" : ""
+                    !formData.password
+                      ? ""
+                      : /[0-9]/.test(formData.password)
+                        ? "text-green-500"
+                        : "text-red-500"
                   }
                 >
                   Um número
                 </li>
                 <li
                   className={
-                    /[^A-Za-z0-9]/.test(formData.password)
-                      ? "text-green-500"
-                      : ""
+                    !formData.password
+                      ? ""
+                      : /[^A-Za-z0-9]/.test(formData.password)
+                        ? "text-green-500"
+                        : "text-red-500"
                   }
                 >
                   Um caractere especial
@@ -315,7 +303,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
         <Button
           type="submit"
-          disabled={loading || isLoadingRegister}
+          disabled={loading}
           className="bg-primary hover:bg-primary/90 w-full"
         >
           {loading ? "Processando..." : pageTexts.button}

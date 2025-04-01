@@ -1,4 +1,4 @@
-"use client";
+"use server";
 // TODO: change to server side
 import {
   AuthResponse,
@@ -53,15 +53,11 @@ export const login = async (
 export const register = async (
   userData: RegisterCredentials,
 ): Promise<AuthResponse> => {
-  try {
-    const response = await axiosInstance.post<AuthResponse>(
-      `${AUTH_ENDPOINT}/register`,
-      userData,
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.post<AuthResponse>(
+    `${AUTH_ENDPOINT}/register`,
+    userData,
+  );
+  return response.data;
 };
 
 const validateTokenMock = async (): Promise<AuthResponse> => {
