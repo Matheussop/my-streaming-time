@@ -1,6 +1,6 @@
 import { AppError } from "../appError";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { axiosInstance } from "../axiosConfig";
+import axiosInstance from "../axiosConfig";
 import { cache } from "react";
 
 interface ServerApiRequestOptions<T> {
