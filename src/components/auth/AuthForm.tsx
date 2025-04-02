@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
-import { RegisterCredentials } from "@interfaces/user";
+import { RegisterCredentials, UserCredentials } from "@interfaces/user";
 import Link from "next/link";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -82,6 +82,14 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
       },
     );
 
+  const { isLoading: isLoadingLogin, execute: executeLogin } =
+    useApiRequest<any>((loginData: UserCredentials) => login(loginData), {
+      onSuccess: () => {
+        toast.success("Login realizado com sucesso!");
+        router.push("/home");
+      },
+    });
+
   const validateForm = (): boolean => {
     const schema = isLogin ? loginSchema : registerSchema;
     const result = schema.safeParse(formData);
@@ -114,24 +122,18 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    // Validar formulário antes de enviar
-    if (!validateForm()) {
-      toast.error("Por favor, corrija os erros no formulário");
-      return;
-    }
-
-    if (isLoadingRegister) {
+    if (isLogin) {
       // Login
-      const success = await login({
+      await executeLogin({
         email: formData.email,
         password: formData.password,
       });
-
-      if (success) {
-        toast.success("Login realizado com sucesso!");
-        router.push("/home");
-      }
     } else {
+      // Validar formulário antes de enviar
+      if (!validateForm()) {
+        toast.error("Por favor, corrija os erros no formulário");
+        return;
+      }
       // Register
       const registerData: RegisterCredentials = {
         email: formData.email,
@@ -233,7 +235,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
             value={formData.password}
             onChange={handleChange}
             className={`bg-background/50 border-foreground/10 backdrop-blur-sm ${
-              errors.password
+              !isLogin && errors.password
                 ? formSubmitted
                   ? "animate-pulse border-red-500"
                   : "border-red-500"
@@ -318,10 +320,12 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
         <Button
           type="submit"
-          disabled={isLoadingRegister}
+          disabled={isLoadingRegister || isLoadingLogin}
           className="bg-primary hover:bg-primary/90 w-full"
         >
-          {isLoadingRegister ? "Processando..." : pageTexts.button}
+          {isLoadingRegister || isLoadingLogin
+            ? "Processando..."
+            : pageTexts.button}
         </Button>
       </form>
 

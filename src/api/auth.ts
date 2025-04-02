@@ -9,20 +9,6 @@ import { cookies } from "next/headers";
 
 const AUTH_ENDPOINT = "/user";
 
-const loginMock = async (
-  credentials: UserCredentials,
-): Promise<AuthResponse> => {
-  return {
-    token: "1234567890",
-    user: {
-      id: "1",
-      username: "John Doe",
-      email: "john.doe@example.com",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  };
-};
 /**
  * Realiza o login do usuário
  * @param credentials Credenciais do usuário (email e senha)
@@ -32,12 +18,13 @@ export const login = async (
   credentials: UserCredentials,
 ): Promise<AuthResponse> => {
   const response = await axiosInstance.post<AuthResponse>(
-    `/login`,
+    `${AUTH_ENDPOINT}/login`,
     credentials,
   );
   const cookieStore = await cookies();
 
-  cookieStore.set("auth_token", response.data.token);
+  const token: string = response.data.token || "test";
+  cookieStore.set("auth_token", token);
 
   return response.data;
 };
@@ -89,7 +76,7 @@ const logoutMock = async (): Promise<void> => {};
  * Realiza o logout do usuário
  */
 export const logout = async (): Promise<void> => {
-  await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
+  // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
   const cookieStore = await cookies();
   cookieStore.delete("auth_token");
   await logoutMock();

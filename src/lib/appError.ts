@@ -73,7 +73,9 @@ export class AppError extends Error {
       const { status, data } = error.response;
       let message = data.message || "An error occurred";
       let errors = data.errors || [];
-
+      if (status === 404) {
+        message = "Not Found";
+      }
       // Handle specific error types
       if (status === 400 && data.errors) {
         message = "Validation Error";

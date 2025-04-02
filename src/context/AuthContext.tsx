@@ -58,8 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       errorMessageArray.forEach((error: string) => {
         toast.error(error);
       });
-      toast.error(errorMessageArray);
-      return false;
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -68,8 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (userData: RegisterCredentials): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await authService.register(userData);
-      setUser(response.user);
+      await authService.register(userData);
       toast.success("Registro realizado com sucesso!");
       return true;
     } catch (error: any) {
