@@ -44,31 +44,15 @@ export const register = async (
   return response.data;
 };
 
-const validateTokenMock = async (): Promise<AuthResponse> => {
-  return {
-    token: "1234567890",
-    user: {
-      _id: "1",
-      username: "John Doe",
-      email: "john.doe@example.com",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  };
-};
-
 /**
  * Verifica se o token atual é válido
  * @returns Promise com a resposta de autenticação
  */
 export const validateToken = async (): Promise<AuthResponse> => {
-  // const response = await axiosInstance.get<AuthResponse>(
-  //   `${AUTH_ENDPOINT}/validate`,
-  // );
-
-  const response = await validateTokenMock();
-
-  return response;
+  const response = await axiosInstance.get<AuthResponse>(
+    `${AUTH_ENDPOINT}/validate`,
+  );
+  return response.data;
 };
 
 const logoutMock = async (): Promise<void> => {};

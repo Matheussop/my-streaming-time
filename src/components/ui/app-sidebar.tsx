@@ -20,6 +20,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserMenu } from "@components/common/UserMenu";
 import { useAuth } from "@context/AuthContext";
+import { User } from "@interfaces/user";
+import { useEffect } from "react";
 
 // Menu items.
 const items = [
@@ -45,12 +47,17 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ user }: { user: User }) {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, updateUser, user: userContext } = useAuth();
+  useEffect(() => {
+    if (!userContext) {
+      updateUser(user);
+    }
+  }, [user, updateUser, userContext]);
 
   if (!isAuthenticated) return null;
 
