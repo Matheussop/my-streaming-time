@@ -14,6 +14,7 @@ import { Star } from "lucide-react";
 import ListBySeason from "@components/episodes/ListBySeason";
 import SafeImage from "@components/common/SafeImage";
 import { EpisodeModalProvider } from "@context/EpisodeModalContext";
+import { useAuth } from "@context/AuthContext";
 
 const backgroundColorGenre = [
   "bg-red-700",
@@ -79,6 +80,7 @@ export default function Streaming({
   const router = useRouter();
   const { id } = use(params);
   const searchParams = useSearchParams();
+  const { user } = useAuth();
   const [viewed, setViewed] = useState(false);
   let typeStreaming = searchParams.get("typeStreaming")
     ? searchParams.get("typeStreaming")
@@ -101,7 +103,7 @@ export default function Streaming({
       const isViewed = async () => {
         const data = {
           contentId: id,
-          userId: "67745a741402bcf82462362a",
+          userId: user?._id ?? "",
         };
         const isViewed = await getIsViewed(data);
         setViewed(isViewed);
@@ -109,7 +111,7 @@ export default function Streaming({
       fetchMovie();
       isViewed();
     }
-  }, [id, typeStreaming, router]);
+  }, [id, typeStreaming, router, user]);
 
   if (!streaming || !streaming.title) {
     return <Loading />;
@@ -118,15 +120,15 @@ export default function Streaming({
   const changeViewOfStreaming = async (streamingViewed: boolean) => {
     const watchedDurationInMinutes =
       "durationTime" in streaming && streaming.durationTime;
-
+    console.log(user?._id);
     const data = {
-      userId: "67745a741402bcf82462362a",
+      userId: user?._id ?? "",
       contentId: id,
       contentType: typeStreaming === "movies" ? "movie" : typeStreaming,
       title: streaming.title,
       watchedDurationInMinutes: watchedDurationInMinutes,
     };
-    await changeViewedStreaming(data, streamingViewed); //TODO add userID on the request
+    await changeViewedStreaming(data, streamingViewed);
   };
 
   const handleMarkIsViewed = (streamingViewed: boolean) => {

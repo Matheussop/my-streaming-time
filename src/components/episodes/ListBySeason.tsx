@@ -22,6 +22,7 @@ import {
 import { userStreamingHistoryApi } from "api/userStreamingHistoryApi";
 
 import { useEpisodeModal } from "@lib/hooks/useEpisodeModal";
+import { useAuth } from "@context/AuthContext";
 
 interface ListBySeasonProps {
   seasonsSummary?: ISeason[] | ISeasonSummary[];
@@ -47,6 +48,7 @@ export default function ListBySeason({
   const [currentSeasonData, setCurrentSeasonData] = useState<ISeason>(
     {} as ISeason,
   );
+  const { user } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
   const { openModal } = useEpisodeModal();
 
@@ -146,10 +148,10 @@ export default function ListBySeason({
 
   useEffect(() => {
     if (Object.keys(userEpisodesWatched).length === 0) {
-      const userId = "67745a741402bcf82462362a";
+      const userId = user?._id ?? "";
       executeUserEpisodesWatched(userId, seriesId);
     }
-  }, [seriesId, userEpisodesWatched, executeUserEpisodesWatched]);
+  }, [seriesId, userEpisodesWatched, executeUserEpisodesWatched, user]);
 
   const handleMarkIsViewed = (viewed: boolean, episode: IEpisodeShow) => {
     const episodeData = {
@@ -159,8 +161,7 @@ export default function ListBySeason({
       // watchedAt: new Date(),
       watchedDurationInMinutes: episode.durationInMinutes,
     };
-    // TODO: get user id from context
-    const userId = "67745a741402bcf82462362a";
+    const userId = user?._id ?? "";
     toast.promise(executeMarkIsViewed(userId, seriesId, episodeData), {
       loading: "Marcando como assistido...",
       success: "Episódio marcado como assistido!",

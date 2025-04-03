@@ -48,7 +48,7 @@ const validateTokenMock = async (): Promise<AuthResponse> => {
   return {
     token: "1234567890",
     user: {
-      id: "1",
+      _id: "1",
       username: "John Doe",
       email: "john.doe@example.com",
       createdAt: new Date().toISOString(),
