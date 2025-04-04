@@ -20,8 +20,9 @@ export const UserMenu = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await logout();
-    router.push("/");
+    logout().then(() => {
+      router.push("/");
+    });
   };
 
   if (isLoading) {

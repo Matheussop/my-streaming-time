@@ -1,51 +1,37 @@
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { CarouselCard } from "./CarouselCard";
 import { ICommonMedia } from "@interfaces/commonMedia";
-import { serverApi } from "@lib/server/serverApiRequest";
 import { AppError } from "@lib/appError";
-import console from "console";
+import axiosInstance from "@lib/axiosConfig";
 
+export const revalidate = 3600;
 export async function getRecommendations() {
   try {
+    const response = await axiosInstance.get<ICommonMedia[]>("/commonMedia", {
+      params: {
+        limit: 10,
+      },
+    });
     return {
-      data: await serverApi<ICommonMedia[], { limit: number }>(`/commonMedia`, {
-        method: "GET",
-        params: {
-          limit: 10,
-        },
-        next: {
-          revalidate: 60, // Cache por 24 horas
-          tags: ["recommendations"],
-        },
-      }),
+      data: response.data,
       error: null,
     };
   } catch (error) {
-    console.error(error);
     return {
       data: null,
-      error: error as AppError,
+      error: AppError.fromError(error),
     };
   }
 }
+
 export async function Recommended() {
   const { data: recommendations, error } = await getRecommendations();
-  // Client Side request
-  // const {
-  //   data: recommendations,
-  //   isLoading,
-  //   error,
-  // } = useApiRequest<ICommonMedia[]>(recommendationsApi.getRecommendations, {
-  //   immediate: true,
-  //   onError: handleError,
-  //   onSuccess: handleSuccess,
-  // });
 
   if (error) {
     return <ErrorState error={error} />;
   }
 
-  if (!recommendations.length) {
+  if (!recommendations || !recommendations.length) {
     return (
       <div className="flex h-[27rem] w-full items-center justify-center">
         <p className="text-center text-gray-500">

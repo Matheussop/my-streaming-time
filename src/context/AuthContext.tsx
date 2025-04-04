@@ -85,8 +85,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      await authService.logout();
       setUser(null);
+      await authService.logout();
       toast.success("Logout realizado com sucesso!");
     } catch (error) {
       toast.error("Erro ao fazer logout.");
