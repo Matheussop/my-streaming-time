@@ -39,6 +39,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Portuguese localization of UI elements
   - Better accessibility with appropriate autoComplete attributes
   - Streamlined navigation between login and registration pages
+- Refatoração do sistema de recomendações
+  - Melhor tratamento de erros
+  - Implementação de cache com revalidação
+  - Otimização da performance de carregamento
+- Aprimoramento no processo de logout do usuário
+  - Melhor fluxo de redirecionamento após logout
+  - Gerenciamento adequado do estado de autenticação
 
 ### Removed
 - Context-based layout configuration in favor of route-based approach
