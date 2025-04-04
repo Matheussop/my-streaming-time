@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export async function getCookies() {
+export async function getCookies(cookieName?: string) {
   const cookieStore = await cookies();
-  return cookieStore.get("auth_token");
+  return cookieStore.get(cookieName || "auth_token");
 }

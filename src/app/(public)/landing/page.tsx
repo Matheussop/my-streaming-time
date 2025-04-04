@@ -9,8 +9,7 @@ import Image from "next/image";
 const Landing = () => {
   const router = useRouter();
 
-  const { user } = useAuth();
-  const isLoggedIn = !!user;
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -25,7 +24,7 @@ const Landing = () => {
             your watching habits and get personalized recommendations.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <Button
                 onClick={() => router.push("/home")}
                 className="bg-primary hover:bg-primary/90 cursor-pointer px-8 py-6 text-lg text-white"

@@ -52,12 +52,13 @@ export function AppSidebar({ user }: { user: User }) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  const { isAuthenticated, updateUser, user: userContext } = useAuth();
+  const { isAuthenticated, updateUser } = useAuth();
+
   useEffect(() => {
-    if (!userContext) {
+    if (user && isAuthenticated) {
       updateUser(user);
     }
-  }, [user, updateUser, userContext]);
+  }, [user, isAuthenticated, updateUser]);
 
   if (!isAuthenticated) return null;
 
