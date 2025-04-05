@@ -8,7 +8,7 @@ import React, {
 import { User, UserCredentials, RegisterCredentials } from "@interfaces/user";
 import * as authService from "@api/auth";
 import { toast } from "sonner";
-import { getTokenCookies } from "@lib/getTokenCookies";
+import { getAuthToken } from "@lib/tokenService";
 
 interface AuthContextType {
   user: User | null;
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = async () => {
-    const token = await getTokenCookies();
+    const token = await getAuthToken();
     if (!token) {
       setIsLoading(false);
       return;

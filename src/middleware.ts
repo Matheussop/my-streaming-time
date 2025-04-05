@@ -10,6 +10,7 @@ const publicRoutes = [
 ] as const;
 
 const REDIRECT_WHEN_UNAUTHENTICATED = "/landing";
+const REDIRECT_WHEN_AUTHENTICATED = "/home";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -26,7 +27,9 @@ export function middleware(request: NextRequest) {
         new URL(REDIRECT_WHEN_UNAUTHENTICATED, request.url),
       );
     }
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(
+      new URL(REDIRECT_WHEN_AUTHENTICATED, request.url),
+    );
   }
 
   if (!token && isPublicRoute) {
@@ -45,7 +48,7 @@ export function middleware(request: NextRequest) {
     isPublicRoute.whenAuthenticated === "redirect"
   ) {
     return NextResponse.redirect(
-      new URL(REDIRECT_WHEN_UNAUTHENTICATED, request.url),
+      new URL(REDIRECT_WHEN_AUTHENTICATED, request.url),
     );
   }
 

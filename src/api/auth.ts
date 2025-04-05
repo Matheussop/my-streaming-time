@@ -5,9 +5,13 @@ import {
   UserCredentials,
 } from "@interfaces/user";
 import axiosInstance from "@lib/axiosConfig";
-import { cookies } from "next/headers";
+import {
+  setAuthTokens,
+  removeAuthTokens,
+  getRefreshToken,
+} from "@lib/tokenService";
 
-const AUTH_ENDPOINT = "/user";
+const AUTH_ENDPOINT = "/auth";
 
 /**
  * Realiza o login do usuário
@@ -21,10 +25,9 @@ export const login = async (
     `${AUTH_ENDPOINT}/login`,
     credentials,
   );
-  const cookieStore = await cookies();
 
-  const token: string = response.data.token || "test";
-  cookieStore.set("auth_token", token);
+  // Armazena token e refresh token (se existir)
+  await setAuthTokens(response.data.token, response.data.refreshToken);
 
   return response.data;
 };
@@ -52,6 +55,30 @@ export const validateToken = async (): Promise<AuthResponse> => {
   const response = await axiosInstance.get<AuthResponse>(
     `${AUTH_ENDPOINT}/validate`,
   );
+
+  // Se a API retornar um novo token, atualizar nos cookies
+  if (response.data.token) {
+    await setAuthTokens(response.data.token, response.data.refreshToken);
+  }
+  return response.data;
+};
+
+/**
+ * Atualiza o token usando o refresh token
+ * @returns Promise com o novo token
+ */
+export const refreshToken = async (): Promise<AuthResponse> => {
+  const refreshToken = await getRefreshToken();
+  const response = await axiosInstance.post<AuthResponse>(
+    `${AUTH_ENDPOINT}/refresh-token`,
+    { refreshToken },
+  );
+
+  // Armazena os novos tokens
+  if (response.data.token) {
+    await setAuthTokens(response.data.token, response.data.refreshToken);
+  }
+
   return response.data;
 };
 
@@ -60,8 +87,11 @@ const logoutMock = async (): Promise<void> => {};
  * Realiza o logout do usuário
  */
 export const logout = async (): Promise<void> => {
-  // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
-  const cookieStore = await cookies();
-  cookieStore.delete("auth_token");
-  await logoutMock();
+  try {
+    // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
+    await logoutMock();
+  } finally {
+    // Remover tokens independente do resultado da requisição
+    await removeAuthTokens();
+  }
 };
