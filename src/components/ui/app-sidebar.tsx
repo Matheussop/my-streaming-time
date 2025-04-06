@@ -47,18 +47,12 @@ const items = [
   },
 ];
 
-export function AppSidebar({ user }: { user: User }) {
+export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  const { isAuthenticated, updateUser } = useAuth();
-
-  useEffect(() => {
-    if (user && isAuthenticated) {
-      updateUser(user);
-    }
-  }, [user, isAuthenticated, updateUser]);
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return null;
 
