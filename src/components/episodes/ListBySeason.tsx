@@ -102,7 +102,7 @@ export default function ListBySeason({
         }));
       },
       onError: (error) => {
-        console.error("Erro ao carregar episódios:", error);
+        console.error("Error loading episodes:", error);
       },
     },
   );
@@ -163,9 +163,9 @@ export default function ListBySeason({
     };
     const userId = user?._id ?? "";
     toast.promise(executeMarkIsViewed(userId, seriesId, episodeData), {
-      loading: "Marcando como assistido...",
-      success: "Episódio marcado como assistido!",
-      error: "Erro ao marcar episódio como assistido!",
+      loading: "Marking as watched...",
+      success: "Episode marked as watched!",
+      error: "Error marking episode as watched!",
     });
   };
 
@@ -208,22 +208,22 @@ export default function ListBySeason({
         `.episode-card-${selectedSeasonId}`,
       );
 
-      // Aplicar animação imediatamente em todos os cartões que serão escondidos
+      // Apply animation immediately to all cards that will be hidden
       for (let i = cards.length - 1; i >= episodesLimit; i--) {
         const card = cards[i] as HTMLElement;
-        // Delay mais curto entre os cartões, mas começando já
+        // Shorter delay between cards, but starting immediately
         const delay = (cards.length - 1 - i) * 30;
 
-        // Aplicar a transformação imediatamente com opacity reduzida
+        // Apply transformation immediately with reduced opacity
         card.style.transition = `opacity 250ms ease-out, transform 250ms ease-out ${delay}ms`;
-        // Iniciar a animação imediatamente
+        // Start animation immediately
         window.requestAnimationFrame(() => {
           card.style.opacity = "0";
           card.style.transform = "translateY(20px)";
         });
       }
 
-      // Tempo total reduzido para a animação terminar
+      // Reduced total time for animation to finish
       setTimeout(
         () => {
           setIsAnimating(false);
@@ -238,7 +238,7 @@ export default function ListBySeason({
         Math.max((cards.length - episodesLimit) * 10, 200),
       );
     } else {
-      // Expandindo
+      // Expanding
       setIsAnimating(false);
       setTimeout(() => {
         setIsExpanded(true);
@@ -252,11 +252,11 @@ export default function ListBySeason({
 
   return (
     <div className="w-full px-4 py-8 md:px-6">
-      <h2 className="mb-6 text-3xl font-bold tracking-tighter">Episódios</h2>
+      <h2 className="mb-6 text-3xl font-bold tracking-tighter">Episodes</h2>
       <div className="mb-8 max-w-xs">
         <Select value={selectedSeasonId} onValueChange={handleSeasonChange}>
           <SelectTrigger className="w-full border-white/20 bg-white/5 text-white">
-            <SelectValue placeholder="Selecione uma temporada" />
+            <SelectValue placeholder="Select a season" />
           </SelectTrigger>
           <SelectContent className="bg-dark-700 max-h-[300px] border-white/20 text-white">
             {seasons.map((season) => (
@@ -265,7 +265,7 @@ export default function ListBySeason({
                 value={"seasonId" in season ? season.seasonId : season._id}
                 className="focus:bg-white/10 focus:text-white"
               >
-                {season.title} - Temporada {season.seasonNumber}
+                {season.title} - Season {season.seasonNumber}
               </SelectItem>
             ))}
           </SelectContent>
@@ -279,7 +279,7 @@ export default function ListBySeason({
           <div className="mb-4">
             <h3 className="text-xl font-medium">
               {currentSeasonData?.title ||
-                `Temporada ${currentSeasonData?.seasonNumber}`}
+                `Season ${currentSeasonData?.seasonNumber}`}
             </h3>
             {"plot" in currentSeasonData && currentSeasonData?.plot && (
               <p className="mt-2 text-gray-400">{currentSeasonData.plot}</p>
@@ -294,7 +294,7 @@ export default function ListBySeason({
 
           {error && (
             <div className="rounded-md bg-red-500/20 p-4 text-red-200">
-              <p>Erro ao carregar episódios. Tente novamente.</p>
+              <p>Error loading episodes. Try again.</p>
             </div>
           )}
 
@@ -322,7 +322,7 @@ export default function ListBySeason({
                                 src={episode.poster}
                                 alt={
                                   episode.title ||
-                                  `Episódio ${episode.episodeNumber}`
+                                  `Episode ${episode.episodeNumber}`
                                 }
                                 width={120}
                                 height={68}
@@ -333,7 +333,7 @@ export default function ListBySeason({
                               <h3 className="font-semibold text-white">
                                 {episode.episodeNumber}.{" "}
                                 {episode.title ||
-                                  `Episódio ${episode.episodeNumber}`}
+                                  `Episode ${episode.episodeNumber}`}
                               </h3>
                               <p className="text-sm text-gray-400">
                                 {episode.durationInMinutes &&
@@ -388,8 +388,8 @@ export default function ListBySeason({
                     disabled={animationInProgress}
                   >
                     {isExpanded
-                      ? "Ver menos"
-                      : `Ver mais (${(episodes[selectedSeasonId]?.length ?? 0) - episodesLimit} episódios)`}
+                      ? "See less"
+                      : `See more (${(episodes[selectedSeasonId]?.length ?? 0) - episodesLimit} episodes)`}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
                     />

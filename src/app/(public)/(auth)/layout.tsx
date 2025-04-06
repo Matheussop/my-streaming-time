@@ -10,11 +10,9 @@ interface AuthLayoutProps {
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   const pathname = usePathname();
 
-  // Determinar qual é a página atual com base no pathname
   const isLogin = pathname.includes("/login");
   const isRegister = pathname.includes("/register");
 
-  // Configurar título e subtítulo baseados na rota atual
   let title = "Autenticação";
   let subtitle = "Acesse sua conta ou crie uma nova";
 
@@ -28,7 +26,6 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
 
   return (
     <div className="flex min-h-screen w-full overflow-hidden bg-black">
-      {/* Background image side */}
       <div className="relative hidden lg:block lg:w-1/2 xl:w-3/5">
         <div
           className="hero-gradient absolute inset-0 bg-cover bg-center"

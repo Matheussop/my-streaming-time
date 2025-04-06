@@ -11,12 +11,12 @@ import { getAuthToken } from "./tokenService";
 // Define base URL from environment variable or default
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-// Variável para rastrear se estamos renovando o token
+// Variable to track if we are renewing the token
 let isRefreshing = false;
-// Fila de requisições que aguardam a renovação do token
+// Queue of requests waiting for token renewal
 let failedQueue: { resolve: Function; reject: Function }[] = [];
 
-// Função para processar a fila de requisições após renovação do token
+// Function to process the request queue after token renewal
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -26,7 +26,7 @@ const processQueue = (error: any, token: string | null = null) => {
     }
   });
 
-  // Limpa a fila
+  // Clear the queue
   failedQueue = [];
 };
 
@@ -63,18 +63,10 @@ axiosInstance.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Log para depuração
-    console.log(`Erro na requisição: ${error.response?.status}`);
-
-    // Se for erro 401 (Unauthorized) e a requisição ainda não foi refeita
+    // If it's a 401 error (Unauthorized) and the request hasn't been retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
-      console.log("Detectado erro 401, tentando renovar token");
-
       if (isRefreshing) {
-        console.log(
-          "Já estamos atualizando o token, adicionando requisição à fila",
-        );
-        // Se já estamos atualizando o token, adiciona a requisição à fila
+        // If we're already updating the token, add the request to the queue
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -86,26 +78,23 @@ axiosInstance.interceptors.response.use(
           });
       }
 
-      // Marca que estamos atualizando o token e que a requisição será refeita
+      // Mark that we're updating the token and that the request will be retried
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        // Tenta renovar o token usando o serviço dedicado
-        console.log("Chamando serviço de renovação de token");
+        // Try to renew the token using the dedicated service
         const response = await refreshToken();
         const newToken = response.token;
 
-        console.log("Token renovado com sucesso");
-
-        // Processa a fila com o novo token
+        // Process the queue with the new token
         processQueue(null, newToken);
 
-        // Refaz a requisição original com o novo token
+        // Retry the original request with the new token
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Se falhar na renovação do token, processa a fila com erro
-        console.error("Erro ao renovar token:", refreshError);
+        // If token renewal fails, process the queue with error
+        console.error("Error renewing token:", refreshError);
         processQueue(refreshError, null);
         return Promise.reject(AppError.fromError(refreshError as Error));
       } finally {

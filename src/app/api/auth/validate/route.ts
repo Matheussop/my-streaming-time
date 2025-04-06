@@ -4,7 +4,6 @@ import { validateToken } from "@api/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    // Obter o token dos cookies
     const token = await getAuthToken();
     if (!token) {
       return NextResponse.json(
@@ -15,7 +14,6 @@ export async function GET(request: NextRequest) {
 
     const responseValidateToken = await validateToken();
 
-    // Retornar resposta de sucesso
     return NextResponse.json(responseValidateToken);
   } catch (error) {
     console.error("Erro ao validar token:", error);

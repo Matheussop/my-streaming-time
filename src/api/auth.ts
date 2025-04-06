@@ -14,9 +14,9 @@ import {
 const AUTH_ENDPOINT = "/auth";
 
 /**
- * Realiza o login do usuário
- * @param credentials Credenciais do usuário (email e senha)
- * @returns Promise com a resposta de autenticação
+ * Performs user login
+ * @param credentials User credentials (email and password)
+ * @returns Promise with authentication response
  */
 export const login = async (
   credentials: UserCredentials,
@@ -26,16 +26,16 @@ export const login = async (
     credentials,
   );
 
-  // Armazena token e refresh token (se existir)
+  // Stores token and refresh token (if exists)
   await setAuthTokens(response.data.token, response.data.refreshToken);
 
   return response.data;
 };
 
 /**
- * Realiza o registro de um novo usuário
- * @param userData Dados do usuário para registro
- * @returns Promise com a resposta de autenticação
+ * Registers a new user
+ * @param userData User data for registration
+ * @returns Promise with authentication response
  */
 export const register = async (
   userData: RegisterCredentials,
@@ -48,15 +48,15 @@ export const register = async (
 };
 
 /**
- * Verifica se o token atual é válido
- * @returns Promise com a resposta de autenticação
+ * Validates if the current token is valid
+ * @returns Promise with authentication response
  */
 export const validateToken = async (): Promise<AuthResponse> => {
   const response = await axiosInstance.get<AuthResponse>(
     `${AUTH_ENDPOINT}/validate`,
   );
 
-  // Se a API retornar um novo token, atualizar nos cookies
+  // If the API returns a new token, update it in cookies
   if (response.data.token) {
     await setAuthTokens(response.data.token, response.data.refreshToken);
   }
@@ -64,8 +64,8 @@ export const validateToken = async (): Promise<AuthResponse> => {
 };
 
 /**
- * Atualiza o token usando o refresh token
- * @returns Promise com o novo token
+ * Updates the token using refresh token
+ * @returns Promise with the new token
  */
 export const refreshToken = async (): Promise<AuthResponse> => {
   const refreshToken = await getRefreshToken();
@@ -74,7 +74,6 @@ export const refreshToken = async (): Promise<AuthResponse> => {
     { refreshToken },
   );
 
-  // Armazena os novos tokens
   if (response.data.token) {
     await setAuthTokens(response.data.token, response.data.refreshToken);
   }
@@ -84,14 +83,14 @@ export const refreshToken = async (): Promise<AuthResponse> => {
 
 const logoutMock = async (): Promise<void> => {};
 /**
- * Realiza o logout do usuário
+ * Performs user logout
  */
 export const logout = async (): Promise<void> => {
   try {
     // await axiosInstance.post(`${AUTH_ENDPOINT}/logout`);
     await logoutMock();
   } finally {
-    // Remover tokens independente do resultado da requisição
+    // Remove tokens regardless of request result
     await removeAuthTokens();
   }
 };

@@ -30,20 +30,20 @@ export const useApiRequest = <T>(
 ): UseApiRequestResult<T> => {
   const { initialData = null, immediate = false } = options;
 
-  // Usando refs para armazenar callbacks e função API
+  // Using refs to store callbacks and API function
   const apiFunctionRef = useRef(apiFunction);
   const optionsRef = useRef(options);
 
-  // Ref para controlar se o componente está montado
+  // Ref to control if component is mounted
   const isMountedRef = useRef(true);
 
-  // Atualizar refs quando as props mudarem
+  // Update refs when props change
   useEffect(() => {
     apiFunctionRef.current = apiFunction;
     optionsRef.current = options;
   }, [apiFunction, options]);
 
-  // Controlar desmontagem do componente
+  // Control component unmounting
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
@@ -57,22 +57,22 @@ export const useApiRequest = <T>(
 
   const execute = useCallback(async (...args: any[]): Promise<T> => {
     try {
-      // Verificar se o componente ainda está montado
+      // Check if component is still mounted
       if (!isMountedRef.current) {
-        // Em caso de desmontagem, apenas executamos a API sem atualizar estado
+        // In case of unmounting, we just execute the API without updating state
         return await apiFunctionRef.current(...args);
       }
 
       setIsLoading(true);
       setError(null);
 
-      // Usar a referência da função API em vez da prop direta
+      // Use the API function reference instead of the direct prop
       const result = await apiFunctionRef.current(...args);
 
-      // Só atualizar estado se o componente ainda estiver montado
+      // Only update state if component is still mounted
       if (isMountedRef.current) {
         setData(result);
-        // Importante: Certifique-se de acessar onSuccess da referência atual
+        // Important: Make sure to access onSuccess from current reference
         if (
           optionsRef.current &&
           typeof optionsRef.current.onSuccess === "function"
@@ -83,7 +83,7 @@ export const useApiRequest = <T>(
 
       return result;
     } catch (err) {
-      // Se desmontado, apenas propagar o erro sem atualizar estado
+      // If unmounted, just propagate the error without updating state
       if (!isMountedRef.current) {
         throw err;
       }
@@ -92,7 +92,7 @@ export const useApiRequest = <T>(
         err instanceof AppError ? err : AppError.fromError(err);
 
       setError(appError);
-      // Usar a referência das options para acessar onError
+      // Use options reference to access onError
       if (
         optionsRef.current &&
         typeof optionsRef.current.onError === "function"
@@ -101,7 +101,7 @@ export const useApiRequest = <T>(
       }
       throw appError;
     } finally {
-      // Só atualizar isLoading se ainda estiver montado
+      // Only update isLoading if still mounted
       if (isMountedRef.current) {
         setIsLoading(false);
       }

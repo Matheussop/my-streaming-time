@@ -40,7 +40,7 @@ export default function CategoryPage({
     "movies" | "series" | "animes" | "all"
   >(currentStreamingType || "all");
 
-  // Garante que o componente só tenta usar o router após montagem
+  // Ensures that the component only tries to use the router after mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);

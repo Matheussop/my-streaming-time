@@ -13,44 +13,48 @@ import { useAuth } from "@context/AuthContext";
 import { cn } from "@lib/utils";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { AppError } from "@lib/appError";
-// Esquemas de validação Zod
+// Zod validation schemas
 const emailSchema = z
   .string()
-  .min(1, { message: "Email é obrigatório" })
-  .email({ message: "Email inválido" });
+  .min(1, { message: "Email is required" })
+  .email({ message: "Invalid email" });
 
 const passwordSchema = z
   .string()
-  .min(8, { message: "Senha deve ter no mínimo 8 caracteres" })
-  .regex(/[A-Z]/, { message: "Senha deve ter pelo menos uma letra maiúscula" })
-  .regex(/[a-z]/, { message: "Senha deve ter pelo menos uma letra minúscula" })
-  .regex(/[0-9]/, { message: "Senha deve ter pelo menos um número" })
+  .min(8, { message: "Password must have at least 8 characters" })
+  .regex(/[A-Z]/, {
+    message: "Password must have at least one uppercase letter",
+  })
+  .regex(/[a-z]/, {
+    message: "Password must have at least one lowercase letter",
+  })
+  .regex(/[0-9]/, { message: "Password must have at least one number" })
   .regex(/[^A-Za-z0-9]/, {
-    message: "Senha deve ter pelo menos um caractere especial",
+    message: "Password must have at least one special character",
   });
 
 const usernameSchema = z
   .string()
-  .min(3, { message: "Username deve ter no mínimo 3 caracteres" })
+  .min(3, { message: "Username must have at least 3 characters" })
   .regex(/^[a-zA-ZÀ-ÖØ-öø-ÿ\s]+$/, {
-    message: "Username deve conter apenas letras",
+    message: "Username must contain only letters",
   });
 
-// Esquema para Login
+// Login Schema
 const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   username: z.string().optional(),
 });
 
-// Esquema para Registro
+// Registration Schema
 const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   username: usernameSchema,
 });
 
-// Tipo das validações
+// Validation type
 type FormErrors = {
   email?: string;
   password?: string;
@@ -85,7 +89,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const { isLoading: isLoadingLogin, execute: executeLogin } =
     useApiRequest<any>((loginData: UserCredentials) => login(loginData), {
       onSuccess: () => {
-        toast.success("Login realizado com sucesso!");
+        toast.success("Login successful!");
         router.push("/home");
       },
     });
@@ -129,9 +133,9 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         password: formData.password,
       });
     } else {
-      // Validar formulário antes de enviar
+      // Validate form before submitting
       if (!validateForm()) {
-        toast.error("Por favor, corrija os erros no formulário");
+        toast.error("Please correct the errors in the form");
         return;
       }
       // Register
@@ -139,31 +143,31 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         email: formData.email,
         password: formData.password,
         username: formData.username,
-        // confirmPassword: formData.password, // No campo de confirmação separado na UI
+        // confirmPassword: formData.password, // No separate confirmation field in the UI
       };
 
       executeRegister(registerData);
     }
   };
 
-  // Texto e rótulos com base no modo (login/registro)
+  // Text and labels based on mode (login/register)
   const pageTexts = {
-    title: isLogin ? "Login" : "Criar Conta",
-    button: isLogin ? "Entrar" : "Cadastrar",
+    title: isLogin ? "Login" : "Create Account",
+    button: isLogin ? "Enter" : "Register",
     linkText: isLogin
-      ? "Não tem uma conta? Cadastre-se"
-      : "Já tem uma conta? Faça login",
+      ? "Don't have an account? Sign up"
+      : "Already have an account? Log in",
     linkHref: isLogin ? "/register" : "/login",
   };
 
   return (
     <div className="w-full max-w-md">
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Campo nome - apenas para registro */}
+        {/* Name field - only for registration */}
         {!isLogin && (
           <div className="space-y-2">
             <Label className="text-primary/80" htmlFor="username">
-              Nome
+              Name
             </Label>
             <Input
               id="username"
@@ -178,7 +182,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                     : "border-red-500"
                   : ""
               }`}
-              placeholder="Seu nome"
+              placeholder="Your name"
               autoComplete="username"
             />
             {errors.username && (
@@ -205,7 +209,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                   : "border-red-500"
                 : ""
             }`}
-            placeholder="seu@email.com"
+            placeholder="your@email.com"
             autoComplete={isLogin ? "email" : "new-email"}
           />
           {errors.email && (
@@ -216,14 +220,14 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         <div className="space-y-2">
           <div className="flex justify-between">
             <Label className="text-primary/80" htmlFor="password">
-              Senha
+              Password
             </Label>
             {isLogin && (
               <Link
                 href="/forgot-password"
                 className="text-primary text-xs hover:underline"
               >
-                Esqueceu a senha?
+                Forgot password?
               </Link>
             )}
           </div>
@@ -246,7 +250,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
           {!isLogin && (
             <div className="text-muted-foreground mt-1 text-xs">
-              <p>A senha deve conter:</p>
+              <p>Password must contain:</p>
               <ul className="mt-1 ml-2 list-disc space-y-0.5">
                 <li
                   className={cn(
@@ -259,7 +263,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                           : "text-red-500",
                   )}
                 >
-                  Pelo menos 8 caracteres
+                  At least 8 characters
                 </li>
                 <li
                   className={cn(
@@ -272,7 +276,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                           : "text-red-500",
                   )}
                 >
-                  Uma letra maiúscula
+                  One uppercase letter
                 </li>
                 <li
                   className={cn(
@@ -285,7 +289,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                           : "text-red-500",
                   )}
                 >
-                  Uma letra minúscula
+                  One lowercase letter
                 </li>
                 <li
                   className={cn(
@@ -298,7 +302,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                           : "text-red-500",
                   )}
                 >
-                  Um número
+                  One number
                 </li>
                 <li
                   className={cn(
@@ -311,7 +315,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                           : "text-red-500",
                   )}
                 >
-                  Um caractere especial
+                  One special character
                 </li>
               </ul>
             </div>
@@ -324,7 +328,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           className="bg-primary hover:bg-primary/90 w-full"
         >
           {isLoadingRegister || isLoadingLogin
-            ? "Processando..."
+            ? "Processing..."
             : pageTexts.button}
         </Button>
       </form>

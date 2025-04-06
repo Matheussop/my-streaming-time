@@ -2,9 +2,9 @@
 import { cookies } from "next/headers";
 
 /**
- * Armazena o token de autenticação nos cookies
- * @param token Token de autenticação
- * @param refreshToken Refresh token opcional
+ * Stores the authentication token in cookies
+ * @param token Authentication token
+ * @param refreshToken Optional refresh token
  */
 export const setAuthTokens = async (
   token: string,
@@ -12,28 +12,28 @@ export const setAuthTokens = async (
 ): Promise<void> => {
   const cookieStore = await cookies();
 
-  // Definir expiração para o token principal (24h)
+  // Set expiration for the main token (24h)
   cookieStore.set("auth_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24, // 24 horas
+    maxAge: 60 * 60 * 24, // 24 hours
     path: "/",
   });
 
-  // Se houver refresh token, armazená-lo também (7 dias)
+  // If there's a refresh token, store it as well (7 days)
   if (refreshToken) {
     cookieStore.set("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 7 dias
+      maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
   }
 };
 
 /**
- * Obtém o token de autenticação dos cookies
- * @returns Token de autenticação
+ * Gets the authentication token from cookies
+ * @returns Authentication token
  */
 export const getAuthToken = async (): Promise<string | undefined> => {
   const cookieStore = await cookies();
@@ -41,7 +41,7 @@ export const getAuthToken = async (): Promise<string | undefined> => {
 };
 
 /**
- * Obtém o refresh token dos cookies
+ * Gets the refresh token from cookies
  * @returns Refresh token
  */
 export const getRefreshToken = async (): Promise<string | undefined> => {
@@ -50,7 +50,7 @@ export const getRefreshToken = async (): Promise<string | undefined> => {
 };
 
 /**
- * Remove os tokens de autenticação dos cookies
+ * Removes authentication tokens from cookies
  */
 export const removeAuthTokens = async (): Promise<void> => {
   const cookieStore = await cookies();
