@@ -15,6 +15,16 @@ const ContentSectionSkeleton = () => {
   );
 };
 
+const TopStreamingSkeleton = () => {
+  return (
+    <div className="mt-6 grid grid-cols-6 gap-6 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-6">
+      <SkeletonsArray
+        length={6}
+        className="h-28 w-60 sm:max-h-24 md:max-h-[12rem] lg:max-h-[20rem] xl:max-h-[27rem]"
+      />
+    </div>
+  );
+};
 // Dynamic greeting message generator
 const getGreetingMessage = () => {
   /* TODO Transformar em uma
@@ -36,7 +46,9 @@ export default function Home() {
   return (
     <div className="bg-dark-600 font-primary m-4 mt-2 mr-2 flex flex-col rounded-lg p-6 shadow-lg">
       <main>
-        <TopStreaming />
+        <Suspense fallback={<TopStreamingSkeleton />}>
+          <TopStreaming />
+        </Suspense>
         <div className="flex flex-1 break-all">
           <div className="mb-4 flex flex-1 flex-col">
             <div className="mt-10 mb-4 text-2xl font-semibold text-white">

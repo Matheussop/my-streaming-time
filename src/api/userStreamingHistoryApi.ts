@@ -30,4 +30,9 @@ export const userStreamingHistoryApi = {
     );
     return response.data;
   },
+
+  getStats: async (userId: string) => {
+    const response = await axiosInstance.get(`/statistics/${userId}`);
+    return response.data;
+  },
 };

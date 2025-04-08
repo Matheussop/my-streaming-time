@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Bar,
   BarChart,
@@ -15,69 +13,35 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@components/ui/chart";
-import { useState, useEffect } from "react";
-
-const streamingGenre = [
-  { genre: "Action", quantity: 300 },
-  { genre: "Comedy", quantity: 400 },
-  { genre: "Drama", quantity: 400 },
-  { genre: "Horror", quantity: 200 },
-  { genre: "Sci-Fi", quantity: 300 },
-];
 
 interface ScreenTimeData {
   genre: string;
   quantity: number;
 }
 
-export default function GenreChart() {
-  const [screenTime, setScreenTime] = useState<ScreenTimeData[] | undefined>(
-    undefined,
-  );
-  const [chartConfig, setChartConfig] = useState<ChartConfig>(
-    {} as ChartConfig,
-  );
-
-  const fetchScreenTime = async () => {
-    // Dados fictícios
-    const data: ScreenTimeData[] = streamingGenre;
-    const config: ChartConfig = {
-      quantity: {
-        label: "Quantity",
-      },
-      ...streamingGenre.reduce((acc, item, index) => {
-        acc[item.genre.toLowerCase()] = {
-          label: item.genre,
-          color: `hsl(var(--chart-${(index % 5) + 1}))`,
-        };
-        return acc;
-      }, {} as ChartConfig),
-    };
-    const newData = data.map((item) => ({
-      ...item,
-      fill: `var(--color-${item.genre.toLowerCase()})`,
-    }));
-    setChartConfig(config);
-    setScreenTime(newData);
+export default function GenreChart({ data }: { data: ScreenTimeData[] }) {
+  const config: ChartConfig = {
+    quantity: {
+      label: "Quantity",
+    },
+    ...data.reduce((acc, item, index) => {
+      acc[item.genre.toLowerCase()] = {
+        label: item.genre,
+        color: `hsl(var(--chart-${(index % 5) + 1}))`,
+      };
+      return acc;
+    }, {} as ChartConfig),
   };
+  const newData = data.map((item) => ({
+    ...item,
+    quantity: item.quantity.toFixed(2),
+    fill: `var(--color-${item.genre.toLowerCase()})`,
+  }));
 
-  useEffect(() => {
-    fetchScreenTime();
-  }, []);
-
-  if (!screenTime) {
-    return <div>Loading...</div>;
-  }
   return (
     <div>
-      <ChartContainer config={chartConfig}>
-        <BarChart
-          accessibilityLayer
-          data={screenTime}
-          margin={{
-            top: 30,
-          }}
-        >
+      <ChartContainer config={config}>
+        <BarChart accessibilityLayer data={newData}>
           <CartesianGrid vertical={false} horizontal={false} />
           <XAxis
             dataKey="genre"
@@ -93,6 +57,8 @@ export default function GenreChart() {
           <Bar
             dataKey="quantity"
             strokeWidth={2}
+            width={10}
+            height={10}
             radius={8}
             activeBar={({ ...props }) => {
               return (
