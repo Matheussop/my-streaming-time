@@ -4,6 +4,13 @@ import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { useAuth } from "@context/AuthContext";
 import { userStreamingHistoryApi } from "@api/userStreamingHistoryApi";
 import { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@components/ui/carousel";
 
 interface WatchTimeStats {
   totalWatchTimeInMinutes: number;
@@ -80,7 +87,9 @@ export default function ScreenTime() {
     const daysStr = days > 1 ? `${days} dias ` : days === 1 ? "1 dia " : "";
     const hoursStr =
       hours > 1 ? `${hours} horas ` : hours === 1 ? "1 hora " : "";
-    const minsStr = mins > 1 ? `${mins} minutos` : mins === 1 ? "1 minuto" : "";
+    const minsStr =
+      // mostrar casas decimais no caso exista
+      mins > 1 ? `${Math.round(mins)} minutos` : mins === 1 ? "1 minuto" : "";
     return `${daysStr}${hoursStr}${minsStr}`;
   };
 
@@ -183,22 +192,42 @@ export default function ScreenTime() {
       {/* Seção de Progresso das Séries */}
       <section className="space-y-4">
         <h2 className="text-2xl font-bold">Progresso das Séries</h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {data.seriesProgressStats.series.map((series, index) => (
-            <div key={index} className="rounded-lg bg-gray-700 p-4 shadow-md">
-              <h3 className="text-lg font-semibold">{series.title}</h3>
-              <div className="mt-2 space-y-1">
-                <p>
-                  Episódios: {series.watchedEpisodes}/{series.totalEpisodes}
-                </p>
-                <p>
-                  Progresso: {formatPercentage(series.completionPercentage)}
-                </p>
-                <p>Tempo Total: {formatTime(series.totalWatchTimeInMinutes)}</p>
-                <p>Duração Média: {formatTime(series.averageEpisodeLength)}</p>
-              </div>
-            </div>
-          ))}
+        <div className="px-4">
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {data.seriesProgressStats.series.map((series, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="rounded-lg bg-gray-700 p-4 shadow-md">
+                    <h3 className="text-lg font-semibold">{series.title}</h3>
+                    <div className="mt-2 space-y-1">
+                      <p>
+                        Episódios: {series.watchedEpisodes}/
+                        {series.totalEpisodes}
+                      </p>
+                      <p>
+                        Progresso:{" "}
+                        {formatPercentage(series.completionPercentage)}
+                      </p>
+                      <p>
+                        Tempo Total:{" "}
+                        {formatTime(series.totalWatchTimeInMinutes)}
+                      </p>
+                      <p>
+                        Duração Média: {formatTime(series.averageEpisodeLength)}
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
       </section>
 
