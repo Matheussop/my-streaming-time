@@ -107,11 +107,7 @@ export default function ListBySeason({
     },
   );
 
-  const {
-    isLoading: isLoadingMarkIsViewed,
-    error: errorMarkIsViewed,
-    execute: executeMarkIsViewed,
-  } = useApiRequest<IWatchHistoryEntry>(
+  const { execute: executeMarkIsViewed } = useApiRequest<IWatchHistoryEntry>(
     (userId: string, contentId: string, episodeData: IEpisodeShow) =>
       userStreamingHistoryApi.markIsViewed(userId, contentId, episodeData),
     {
@@ -127,6 +123,36 @@ export default function ListBySeason({
           ...episodesWatched,
         }));
 
+        const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
+          ...episode,
+          watched: episode._id in episodesWatched,
+        }));
+
+        setEpisodes((prev) => ({
+          ...prev,
+          [selectedSeasonId]: episodesAtt || [],
+        }));
+      },
+    },
+  );
+
+  const { execute: executeUnMarkIsViewed } = useApiRequest<IWatchHistoryEntry>(
+    (userId: string, contentId: string, episodeId: string) =>
+      userStreamingHistoryApi.unMarkIsViewed(userId, contentId, episodeId),
+    {
+      onSuccess: (data: IWatchHistoryEntry) => {
+        console.log(data);
+        if (!data.seriesProgress) {
+          console.error("No series progress found");
+          return;
+        }
+        const episodesWatched: Record<string, IEpisodeWatched> =
+          data.seriesProgress[seriesId!].episodesWatched;
+        setUserEpisodesWatched((prev) => ({
+          ...prev,
+          ...episodesWatched,
+        }));
+        console.log(episodesWatched);
         const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
           ...episode,
           watched: episode._id in episodesWatched,
@@ -162,11 +188,19 @@ export default function ListBySeason({
       watchedDurationInMinutes: episode.durationInMinutes,
     };
     const userId = user?._id ?? "";
-    toast.promise(executeMarkIsViewed(userId, seriesId, episodeData), {
-      loading: "Marking as watched...",
-      success: "Episode marked as watched!",
-      error: "Error marking episode as watched!",
-    });
+    if (viewed) {
+      toast.promise(executeUnMarkIsViewed(userId, seriesId, episode._id), {
+        loading: "Removing from watched...",
+        success: "Episode removed from watched!",
+        error: "Error removing episode from watched!",
+      });
+    } else {
+      toast.promise(executeMarkIsViewed(userId, seriesId, episodeData), {
+        loading: "Marking as watched...",
+        success: "Episode marked as watched!",
+        error: "Error marking episode as watched!",
+      });
+    }
   };
 
   useEffect(() => {

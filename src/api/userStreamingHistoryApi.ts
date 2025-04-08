@@ -18,6 +18,24 @@ export const userStreamingHistoryApi = {
     return response.data.history;
   },
 
+  unMarkIsViewed: async (
+    userId: string,
+    contentId: string,
+    episodeId: string,
+  ) => {
+    const response = await axiosInstance.delete(
+      `/user-streaming-history/remove-entry`,
+      {
+        params: {
+          userId,
+          contentId,
+          episodeId,
+        },
+      },
+    );
+    return response.data.history;
+  },
+
   getEpisodesWatched: async (userId: string, contentId: string) => {
     const response = await axiosInstance.get(
       `/user-streaming-history/get-episodes-watched`,
