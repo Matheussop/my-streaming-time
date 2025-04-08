@@ -223,10 +223,10 @@ export default function ScreenTime() {
 
       {/* Seção de Preferências de Gênero */}
       <section className="flex flex-col space-y-4">
-        <h2 className="text-2xl font-bold">Preferências de Gênero</h2>
+        <h2 className="text-2xl font-bold">Top 10 Gêneros</h2>
         <div className="flex flex-row justify-evenly gap-8">
           {/* Gráfico de Gêneros */}
-          <div className="h-[50%] w-[50%] rounded-lg bg-gray-700 p-6 shadow-md">
+          <div className="h-[60%] w-[60%] rounded-lg bg-gray-700 p-6 shadow-md">
             <h3 className="mb-4 text-lg font-semibold">
               Distribuição de Gêneros
             </h3>
@@ -241,7 +241,7 @@ export default function ScreenTime() {
           </div>
 
           {/* Cards de Gêneros */}
-          <div className="grid h-[50%] w-[50%] grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid h-[40%] w-[40%] grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             {data.genrePreferenceStats.topGenres.map((genre, index) => (
               <div key={index} className="rounded-lg bg-gray-700 p-4 shadow-md">
                 <h3 className="text-lg font-semibold">{genre.genre}</h3>
