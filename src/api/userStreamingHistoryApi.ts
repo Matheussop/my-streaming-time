@@ -24,7 +24,7 @@ export const userStreamingHistoryApi = {
     episodeId: string,
   ) => {
     const response = await axiosInstance.delete(
-      `/user-streaming-history/remove-entry`,
+      `/user-streaming-history/remove-episode`,
       {
         params: {
           userId,
