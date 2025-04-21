@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@components/ui/dialog";
-import { Star, Play, X, Calendar, Clock } from "lucide-react";
-import { cn } from "@lib/utils";
+import { Dialog, DialogContent, DialogTitle } from "@components/ui/dialog";
+import { Play, Calendar, Clock } from "lucide-react";
 import SafeImage from "@components/common/SafeImage";
 import { IEpisode } from "@interfaces/series";
 import { Button } from "@components/ui/button";
