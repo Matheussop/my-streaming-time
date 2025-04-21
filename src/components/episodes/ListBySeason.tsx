@@ -8,7 +8,7 @@ import {
 } from "@components/ui/select";
 import { Card } from "@components/ui/card";
 import { IEpisode, ISeason, ISeasonSummary } from "@interfaces/series";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { seasonApi } from "api/season";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { ChevronDown, Info } from "lucide-react";
@@ -51,12 +51,12 @@ export default function ListBySeason({
   const { user } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
   const { openModal } = useEpisodeModal();
+  const episodesRequestedRef = useRef(false);
 
   const episodesLimit = 3;
 
   const {
     isLoading: isLoadingUserEpisodesWatched,
-    error: errorUserEpisodesWatched,
     execute: executeUserEpisodesWatched,
   } = useApiRequest<Record<string, IEpisodeWatched>>(
     (userId: string, contentId: string) =>
@@ -141,7 +141,6 @@ export default function ListBySeason({
       userStreamingHistoryApi.unMarkIsViewed(userId, contentId, episodeId),
     {
       onSuccess: (data: IWatchHistoryEntry) => {
-        console.log(data);
         if (!data.seriesProgress) {
           console.error("No series progress found");
           return;
@@ -152,7 +151,7 @@ export default function ListBySeason({
           ...prev,
           ...episodesWatched,
         }));
-        console.log(episodesWatched);
+
         const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
           ...episode,
           watched: episode._id in episodesWatched,
@@ -173,11 +172,12 @@ export default function ListBySeason({
   );
 
   useEffect(() => {
-    if (Object.keys(userEpisodesWatched).length === 0) {
+    if (!episodesRequestedRef.current && seriesId && user?._id) {
       const userId = user?._id ?? "";
+      episodesRequestedRef.current = true;
       executeUserEpisodesWatched(userId, seriesId);
     }
-  }, [seriesId, userEpisodesWatched, executeUserEpisodesWatched, user]);
+  }, [seriesId, executeUserEpisodesWatched, user]);
 
   const handleMarkIsViewed = (viewed: boolean, episode: IEpisodeShow) => {
     const episodeData = {
@@ -204,8 +204,6 @@ export default function ListBySeason({
   };
 
   useEffect(() => {
-    if (!selectedSeasonId || !seriesId || !seasons.length) return;
-
     const season = currentSeason;
     if (season && !episodes[selectedSeasonId]) {
       const seasonNumber = season.seasonNumber;
@@ -235,11 +233,15 @@ export default function ListBySeason({
 
   const toggleExpanded = () => {
     if (animationInProgress) return;
+    console.log(`[DEBUG] toggleExpanded: ${isExpanded} -> ${!isExpanded}`);
     setAnimationInProgress(true);
 
     if (isExpanded) {
       const cards = document.querySelectorAll(
         `.episode-card-${selectedSeasonId}`,
+      );
+      console.log(
+        `[DEBUG] toggleExpanded - Contraindo lista: cards=${cards.length}, visíveis=${episodesLimit}`,
       );
 
       // Apply animation immediately to all cards that will be hidden
@@ -273,6 +275,9 @@ export default function ListBySeason({
       );
     } else {
       // Expanding
+      console.log(
+        `[DEBUG] toggleExpanded - Expandindo lista: total=${episodes[selectedSeasonId]?.length}`,
+      );
       setIsAnimating(false);
       setTimeout(() => {
         setIsExpanded(true);
