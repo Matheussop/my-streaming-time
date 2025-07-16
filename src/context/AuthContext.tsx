@@ -9,6 +9,8 @@ import { User, UserCredentials, RegisterCredentials } from "@interfaces/user";
 import * as authService from "@api/auth";
 import { toast } from "sonner";
 import { getAuthToken } from "@lib/tokenService";
+import { ensureBackendReady } from "@lib/healthCheck";
+import { BackendLoading } from "@components/common/BackendLoading";
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +28,12 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isBackendReady, setIsBackendReady] = useState(false);
+  const [backendProgress, setBackendProgress] = useState<{
+    attempt: number;
+    maxAttempts: number;
+    elapsedTime: number;
+  } | null>(null);
 
   const checkAuth = async () => {
     const token = await getAuthToken();
@@ -48,13 +56,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const initializeBackend = async () => {
+    try {
+      console.log("🔍 Verificando disponibilidade do backend...");
+      await ensureBackendReady((attempt, maxAttempts, elapsedTime) => {
+        setBackendProgress({ attempt, maxAttempts, elapsedTime });
+      });
+      setIsBackendReady(true);
+      setBackendProgress(null);
+      console.log("✅ Backend está pronto, verificando autenticação...");
+      await checkAuth();
+    } catch (error) {
+      console.error("❌ Erro ao inicializar backend:", error);
+      toast.error("Erro ao conectar com o servidor. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const retryBackendConnection = () => {
+    setBackendProgress(null);
+    setIsBackendReady(false);
+    setIsLoading(true);
+    initializeBackend();
+  };
+
   useEffect(() => {
-    checkAuth();
+    initializeBackend();
   }, []);
 
   const login = async (credentials: UserCredentials): Promise<boolean> => {
     try {
       setIsLoading(true);
+
+      // Ensure backend is ready before login
+      if (!isBackendReady) {
+        await ensureBackendReady();
+        setIsBackendReady(true);
+      }
+
       const response = await authService.login(credentials);
       if (response.token) {
         await updateTokenOnNext(response.token, response.refreshToken);
@@ -76,6 +116,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (userData: RegisterCredentials): Promise<boolean> => {
     try {
       setIsLoading(true);
+
+      // Ensure backend is ready before register
+      if (!isBackendReady) {
+        await ensureBackendReady();
+        setIsBackendReady(true);
+      }
+
       await authService.register(userData);
       toast.success("Registro realizado com sucesso!");
       return true;
@@ -106,6 +153,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUser = (user: User) => {
     setUser(user);
   };
+
+  // Show backend loading if backend is not ready yet
+  if (!isBackendReady && isLoading) {
+    return (
+      <BackendLoading
+        message="Inicializando conexão com o servidor..."
+        attempt={backendProgress?.attempt}
+        maxAttempts={backendProgress?.maxAttempts}
+        elapsedTime={backendProgress?.elapsedTime}
+        onRetry={retryBackendConnection}
+      />
+    );
+  }
 
   return (
     <AuthContext.Provider
@@ -142,7 +202,7 @@ export async function updateTokenOnNext(token: string, refreshToken?: string) {
   const isBrowser = typeof window !== "undefined";
   const url = isBrowser
     ? "/api/auth/update-token"
-    : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/auth/update-token`;
+    : `${baseUrl}/api/auth/update-token`;
 
   await fetch(url, {
     method: "POST",
