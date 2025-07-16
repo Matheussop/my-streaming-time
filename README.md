@@ -12,10 +12,12 @@ A platform designed to help users track and organize their streaming activities 
 
 ## Tech Stack
 
-- **Frontend:** React.js 18 with Next.js
+- **Frontend:** React.js 19 with Next.js 15
 - **Styling:** Tailwind CSS
 - **UI Components:** Shadcn/UI
 - **Package Manager:** pnpm
+- **Authentication:** JWT with HTTPOnly cookies
+- **Testing:** Jest with React Testing Library
 
 ## Getting Started
 
@@ -24,7 +26,7 @@ A platform designed to help users track and organize their streaming activities 
 - Node.js (LTS version)
 - pnpm package manager
 
-### Installation
+### Installation (Local)
 
 1. Clone the repository:
    ```bash
@@ -37,12 +39,23 @@ A platform designed to help users track and organize their streaming activities 
    pnpm install
    ```
 
-3. Start the development server:
+3. Configure environment variables:
+   ```bash
+   cp env.example .env.local
+   ```
+   
+   Edit `.env.local` with your configuration:
+   ```env
+   NEXT_PUBLIC_API_URL=https://your-api-domain.com
+   NEXT_PUBLIC_BASE_URL=http://localhost:3000
+   ```
+
+4. Start the development server:
    ```bash
    pnpm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Development
 
@@ -54,6 +67,8 @@ A platform designed to help users track and organize their streaming activities 
 | `pnpm build` | Build for production |
 | `pnpm start` | Start production server |
 | `pnpm lint` | Run ESLint |
+| `pnpm test` | Run tests in watch mode |
+| `pnpm test:coverage` | Run tests with coverage |
 
 ### Project Structure
 
@@ -63,7 +78,9 @@ my-streaming-time/
 │   ├── app/         # Next.js app directory
 │   ├── components/  # Reusable components
 │   ├── lib/         # Utility functions
-│   └── styles/      # Global styles
+│   ├── context/     # React contexts
+│   ├── interfaces/  # TypeScript interfaces
+│   └── api/         # API services
 ├── public/          # Static assets
 └── ...config files
 ```
