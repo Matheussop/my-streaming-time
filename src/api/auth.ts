@@ -5,11 +5,7 @@ import {
   UserCredentials,
 } from "@interfaces/user";
 import axiosInstance from "@lib/axiosConfig";
-import {
-  setAuthTokens,
-  removeAuthTokens,
-  getRefreshToken,
-} from "@lib/tokenService";
+import { removeAuthTokens, getRefreshToken } from "@lib/tokenService";
 
 const AUTH_ENDPOINT = "/auth";
 
@@ -25,9 +21,6 @@ export const login = async (
     `${AUTH_ENDPOINT}/login`,
     credentials,
   );
-
-  // Stores token and refresh token (if exists)
-  await setAuthTokens(response.data.token, response.data.refreshToken);
 
   return response.data;
 };
@@ -56,10 +49,6 @@ export const validateToken = async (): Promise<AuthResponse> => {
     `${AUTH_ENDPOINT}/validate`,
   );
 
-  // If the API returns a new token, update it in cookies
-  if (response.data.token) {
-    await setAuthTokens(response.data.token, response.data.refreshToken);
-  }
   return response.data;
 };
 
@@ -73,10 +62,6 @@ export const refreshToken = async (): Promise<AuthResponse> => {
     `${AUTH_ENDPOINT}/refresh-token`,
     { refreshToken },
   );
-
-  if (response.data.token) {
-    await setAuthTokens(response.data.token, response.data.refreshToken);
-  }
 
   return response.data;
 };

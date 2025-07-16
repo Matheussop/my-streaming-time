@@ -20,8 +20,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserMenu } from "@components/common/UserMenu";
 import { useAuth } from "@context/AuthContext";
-import { User } from "@interfaces/user";
-import { useEffect } from "react";
 
 // Menu items.
 const items = [
@@ -51,7 +49,6 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return null;

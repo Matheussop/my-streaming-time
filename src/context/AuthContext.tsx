@@ -21,6 +21,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -35,7 +36,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       setIsLoading(true);
+
       const response = await authService.validateToken();
+      if (response.token) {
+        await updateTokenOnNext(response.token, response.refreshToken);
+      }
       // TODO: update Token in cookies
       setUser(response.user);
     } finally {
@@ -51,6 +56,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
       const response = await authService.login(credentials);
+      if (response.token) {
+        await updateTokenOnNext(response.token, response.refreshToken);
+      }
       setUser(response.user);
       toast.success("Login realizado com sucesso!");
       return true;
@@ -123,3 +131,23 @@ export const useAuth = () => {
   }
   return context;
 };
+
+/**
+ * Updates the token on the next server
+ * @param token - The new token
+ * @param refreshToken - The new refresh token (optional)
+ */
+export async function updateTokenOnNext(token: string, refreshToken?: string) {
+  // Detecta se está no browser
+  const isBrowser = typeof window !== "undefined";
+  const url = isBrowser
+    ? "/api/auth/update-token"
+    : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/auth/update-token`;
+
+  await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ token, refreshToken }),
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+  });
+}
