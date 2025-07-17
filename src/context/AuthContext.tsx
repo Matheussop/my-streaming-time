@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { getAuthToken } from "@lib/tokenService";
 import { ensureBackendReady } from "@lib/healthCheck";
 import { BackendLoading } from "@components/common/BackendLoading";
+import { updateTokenOnNext } from "utils";
 
 interface AuthContextType {
   user: User | null;
@@ -23,7 +24,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -191,23 +191,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-/**
- * Updates the token on the next server
- * @param token - The new token
- * @param refreshToken - The new refresh token (optional)
- */
-export async function updateTokenOnNext(token: string, refreshToken?: string) {
-  // Detecta se está no browser
-  const isBrowser = typeof window !== "undefined";
-  const url = isBrowser
-    ? "/api/auth/update-token"
-    : `${baseUrl}/api/auth/update-token`;
-
-  await fetch(url, {
-    method: "POST",
-    body: JSON.stringify({ token, refreshToken }),
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
-  });
-}

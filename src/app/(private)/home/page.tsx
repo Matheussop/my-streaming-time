@@ -44,7 +44,7 @@ export default function Home() {
   const greetingMessage = getGreetingMessage();
 
   return (
-    <div className="bg-dark-600 font-primary m-4 mt-2 mr-2 flex flex-col rounded-lg p-6 shadow-lg">
+    <div className="bg-dark-600 font-primary m-4 mt-2 mr-2 flex w-full flex-col rounded-lg p-6 shadow-lg">
       <main>
         <Suspense fallback={<TopStreamingSkeleton />}>
           <TopStreaming />
