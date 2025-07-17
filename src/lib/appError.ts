@@ -106,7 +106,7 @@ export class AppError extends Error {
       );
     }
 
-    if (error.message.includes("timeout")) {
+    if (error.message && error.message.includes("timeout")) {
       return new AppError(
         "Request Timeout: The server took too long to respond",
         0,

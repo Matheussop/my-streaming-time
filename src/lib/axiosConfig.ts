@@ -7,6 +7,7 @@ import axios, {
 import { AppError } from "./appError";
 import { refreshToken } from "@api/auth";
 import { getAuthToken } from "./tokenService";
+import { removeTokenOnNext, updateTokenOnNext } from "utils";
 
 // Define base URL from environment variable or default
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -62,18 +63,24 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
-
     // If it's a 401 error (Unauthorized) and the request hasn't been retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // If we're already updating the token, add the request to the queue
-        return new Promise((resolve, reject) => {
+        if (originalRequest?.url?.includes("refresh-token")) {
+          await removeTokenOnNext();
+          return Promise.reject(
+            AppError.fromError("Error to validate refresh token"),
+          );
+        }
+        return new Promise(async (resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
             return axiosInstance(originalRequest);
           })
-          .catch((err) => {
+          .catch(async (err) => {
+            await removeTokenOnNext();
             return Promise.reject(err);
           });
       }
@@ -85,8 +92,15 @@ axiosInstance.interceptors.response.use(
       try {
         // Try to renew the token using the dedicated service
         const response = await refreshToken();
-        const newToken = response.token;
 
+        const newToken = response.token;
+        const newRefreshToken = response.refreshToken;
+        if (response && response?.token && response?.refreshToken) {
+          // Atualiza o cookie do client com o novo token
+          if (typeof window !== "undefined" && newToken) {
+            await updateTokenOnNext(newToken, newRefreshToken);
+          }
+        }
         // Process the queue with the new token
         processQueue(null, newToken);
 

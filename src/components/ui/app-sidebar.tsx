@@ -51,7 +51,7 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) return null;
+  // if (!isAuthenticated) return null;
 
   return (
     <>

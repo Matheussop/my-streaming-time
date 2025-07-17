@@ -19,3 +19,20 @@ export async function updateTokenOnNext(token: string, refreshToken?: string) {
     credentials: "same-origin",
   });
 }
+
+/**
+ * Remove the token on the next server
+ */
+export async function removeTokenOnNext() {
+  // Detecta se está no browser
+  const isBrowser = typeof window !== "undefined";
+  const url = isBrowser
+    ? "/api/auth/update-token"
+    : `${baseUrl}/api/auth/update-token`;
+
+  await fetch(url, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+  });
+}

@@ -48,6 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await authService.validateToken();
       if (response.token) {
         await updateTokenOnNext(response.token, response.refreshToken);
+      } else {
+        setIsLoading(false);
       }
       // TODO: update Token in cookies
       setUser(response.user);
@@ -68,7 +70,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await checkAuth();
     } catch (error) {
       console.error("❌ Erro ao inicializar backend:", error);
-      toast.error("Erro ao conectar com o servidor. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
