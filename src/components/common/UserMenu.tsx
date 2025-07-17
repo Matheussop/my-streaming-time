@@ -33,10 +33,10 @@ export const UserMenu = () => {
     return (
       <Button
         variant="outline"
-        onClick={() => router.push("/auth")}
+        onClick={() => router.push("/landing")}
         className="px-4"
       >
-        Login
+        Logout
       </Button>
     );
   }
