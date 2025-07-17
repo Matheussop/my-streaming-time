@@ -19,11 +19,11 @@ export const BackendLoading: React.FC<BackendLoadingProps> = ({
 }) => {
   const [showLongWaitMessage, setShowLongWaitMessage] = useState(false);
 
-  // Show long wait message after 1 minute
+  // Show long wait message after 30 seconds
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setShowLongWaitMessage(true);
-    }, 60000); // 1 minute
+    }, 30000); // 30 seconds
 
     return () => clearTimeout(timer);
   }, []);

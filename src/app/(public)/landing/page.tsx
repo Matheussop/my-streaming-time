@@ -4,7 +4,6 @@ import { Logo } from "@components/common/Logo";
 import { Button } from "@components/ui/button";
 import { useAuth } from "@context/AuthContext";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 const Landing = () => {
   const router = useRouter();
@@ -12,11 +11,9 @@ const Landing = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="hero-gradient absolute inset-0 bg-[url('/landingPageImg.png')] bg-cover">
       {/* Hero Section */}
       <div className="relative flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <div className="absolute inset-0 bg-cover bg-center opacity-40" />
-        <Image src="/landing.png" alt="Landing Background" fill />
         <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center justify-center rounded-lg bg-black/20 p-4 backdrop-blur-sm">
           <Logo className="text-4xl" />
           <p className="mx-auto mb-8 max-w-2xl text-xl md:text-2xl">
@@ -51,7 +48,6 @@ const Landing = () => {
           </div>
         </div>
       </div>
-
       {/* Features Section */}
       <div className="bg-dark-600 px-6 py-20">
         <div className="mx-auto max-w-7xl">

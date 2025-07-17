@@ -77,5 +77,5 @@ export async function ensureBackendReady(
   }
 
   // If not available, wait for it
-  return await waitForBackend(10, 2000, onProgress);
+  return await waitForBackend(12, 5000, onProgress);
 }
