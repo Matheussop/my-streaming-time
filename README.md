@@ -1,5 +1,8 @@
 # My Streaming Time
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-ISC-green.svg)
+
 A platform designed to help users track and organize their streaming activities across different services.
 
 ## Features
@@ -8,7 +11,6 @@ A platform designed to help users track and organize their streaming activities 
 - Organize and manage your watching activities
 - Get personalized streaming recommendations
 - Rate and analyze your watched content
-- And more...
 
 ## Tech Stack
 

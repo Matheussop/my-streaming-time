@@ -5,48 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2025-07-27
 
 ### Added
-- Authentication system with login and registration
-  - Authentication context
-  - Login and registration forms with Zod validation
-  - Authentication page
-  - Route protection middleware
-  - Server-side Route Handlers for authentication
-  - Cookie-based authentication (HTTPOnly cookies)
-  - User interface
-  - User menu with profile and logout options
-- Route-based layout configuration
-  - Dynamic titles and subtitles based on current route path
-  - Improved navigation between auth pages using Next.js Link
-  - Client-side route detection for better UX
+- **User Streaming History UI**: Introduced user interface for tracking watched content, including support for episode-level tracking, progress percentage, and watched duration in minutes.
+- **Seasons and Episodes Pages**: Created components and dynamic routes for displaying season summaries and detailed episode information.
+- **Genre Management UI**: Added pages and components for managing genres, integrated with TMDB-based genre data.
+- **Authentication Enhancements**: Improved login validation, enhanced error messages for token extraction and authorization issues.
+- **Initial Genre Synchronization**: Automatically fetches and displays movie and TV genres from TMDB if the local database is empty.
+- **Form Validation with Zod**: Implemented robust form validation using Zod and React Hook Form, with user-friendly error messages.
+- **Updated Types and Interfaces**: Introduced new types/interfaces for `watchedDurationInMinutes`, `completionPercentage`, `episodeId`, and other updated models.
 
 ### Changed
-- Enhanced security with HTTPOnly cookies instead of localStorage
-  - Protected against XSS attacks
-  - Server-side verification of authentication
-  - Automatic cookie management
-- Enhanced form validation with Zod schema
-  - Real-time validation feedback
-  - Detailed validation error messages
-  - Type-safe form handling
-  - Complex validation rules (regex patterns, min length)
-- Simplified AuthForm component
-  - Consolidated form state management
-  - Improved error handling with toast notifications
-  - Better field validation
-  - Portuguese localization of UI elements
-  - Better accessibility with appropriate autoComplete attributes
-  - Streamlined navigation between login and registration pages
-- Refatoração do sistema de recomendações
-  - Melhor tratamento de erros
-  - Implementação de cache com revalidação
-  - Otimização da performance de carregamento
-- Aprimoramento no processo de logout do usuário
-  - Melhor fluxo de redirecionamento após logout
-  - Gerenciamento adequado do estado de autenticação
+- **Series View Enhancements**: Updated series pages to reflect new season structure with `seasonsSummary`, including season and episode counters.
+- **Toast Notifications**: Standardized error and success messages using Shadcn/UI toasts across the app.
+- **Validation Architecture**: Migrated all validation logic to Zod schemas for consistency and better error handling.
+- **New Routes**: Added new frontend routes for `/history`, `/genres`, `/seasons/[id]`, and `/episodes/[id]`.
+- **Performance Improvements**: Applied lazy loading and conditional rendering to improve load times for content-heavy components.
+- **UI/UX Polish**: Adjusted layout, spacing, icons, and responsiveness for better user experience across devices.
 
+### Fixed
+- Fixed empty history rendering issue.
+- Fixed crash when episodes had undefined or null duration.
+- Fixed genre duplication display issue.
+- Fixed token extraction issues that caused login failures with malformed headers.
+  
 ### Removed
 - Context-based layout configuration in favor of route-based approach
 - Unused AuthContainer component in favor of direct page-based routing
