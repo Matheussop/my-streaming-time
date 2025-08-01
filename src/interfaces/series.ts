@@ -26,6 +26,7 @@ export interface ISeasonSummary {
   seasonId: string;
   seasonNumber: number;
   title: string;
+  plot?: string;
   episodeCount: number;
   releaseDate: string;
 }

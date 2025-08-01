@@ -53,4 +53,36 @@ export const userStreamingHistoryApi = {
     const response = await axiosInstance.get(`/statistics/${userId}`);
     return response.data;
   },
+
+  markSeasonWatched: async (
+    userId: string,
+    contentId: string,
+    seasonNumber: number,
+  ) => {
+    const response = await axiosInstance.post(
+      `/user-streaming-history/mark-season-watched`,
+      {
+        userId,
+        contentId,
+        seasonNumber,
+      },
+    );
+    return response.data.history;
+  },
+
+  unMarkSeasonWatched: async (
+    userId: string,
+    contentId: string,
+    seasonNumber: number,
+  ) => {
+    const response = await axiosInstance.post(
+      `/user-streaming-history/unMark-season-watched`,
+      {
+        userId,
+        contentId,
+        seasonNumber,
+      },
+    );
+    return response.data.history;
+  },
 };

@@ -165,6 +165,72 @@ export default function ListBySeason({
     },
   );
 
+  const { execute: executeMarkAllSeason } = useApiRequest<IWatchHistoryEntry>(
+    (userId: string, contentId: string, seasonNumber: number) =>
+      userStreamingHistoryApi.markSeasonWatched(
+        userId,
+        contentId,
+        seasonNumber,
+      ),
+    {
+      onSuccess: (data: IWatchHistoryEntry) => {
+        if (!data.seriesProgress) {
+          console.error("No series progress found");
+          return;
+        }
+        const episodesWatched: Record<string, IEpisodeWatched> =
+          data.seriesProgress[seriesId!].episodesWatched;
+        setUserEpisodesWatched((prev) => ({
+          ...prev,
+          ...episodesWatched,
+        }));
+
+        const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
+          ...episode,
+          watched: episode._id in episodesWatched,
+        }));
+
+        setEpisodes((prev) => ({
+          ...prev,
+          [selectedSeasonId]: episodesAtt || [],
+        }));
+      },
+    },
+  );
+
+  const { execute: executeUnMarkAllSeason } = useApiRequest<IWatchHistoryEntry>(
+    (userId: string, contentId: string, seasonNumber: number) =>
+      userStreamingHistoryApi.unMarkSeasonWatched(
+        userId,
+        contentId,
+        seasonNumber,
+      ),
+    {
+      onSuccess: (data: IWatchHistoryEntry) => {
+        if (!data.seriesProgress) {
+          console.error("No series progress found");
+          return;
+        }
+        const episodesWatched: Record<string, IEpisodeWatched> =
+          data.seriesProgress[seriesId!].episodesWatched;
+        setUserEpisodesWatched((prev) => ({
+          ...prev,
+          ...episodesWatched,
+        }));
+
+        const episodesAtt = episodes[selectedSeasonId]?.map((episode) => ({
+          ...episode,
+          watched: episode._id in episodesWatched,
+        }));
+
+        setEpisodes((prev) => ({
+          ...prev,
+          [selectedSeasonId]: episodesAtt || [],
+        }));
+      },
+    },
+  );
+
   const currentSeason = seasons.find(
     (season) =>
       ("seasonId" in season ? season.seasonId : season._id) ===
@@ -208,6 +274,8 @@ export default function ListBySeason({
     if (season && !episodes[selectedSeasonId]) {
       const seasonNumber = season.seasonNumber;
       executeSeason(seriesId, seasonNumber);
+    } else if (currentSeasonData.seasonNumber !== season?.seasonNumber) {
+      setCurrentSeasonData(season as ISeason);
     }
   }, [
     selectedSeasonId,
@@ -216,6 +284,7 @@ export default function ListBySeason({
     executeSeason,
     episodes,
     currentSeason,
+    currentSeasonData,
   ]);
 
   if (!seasonsSummary || seasonsSummary.length === 0) {
@@ -225,6 +294,7 @@ export default function ListBySeason({
   const handleSeasonChange = (value: string) => {
     setIsAnimating(false);
     setIsExpanded(false);
+    currentSeason!.plot = currentSeasonData.plot;
     setTimeout(() => {
       setSelectedSeasonId(value);
       setIsAnimating(true);
@@ -233,15 +303,11 @@ export default function ListBySeason({
 
   const toggleExpanded = () => {
     if (animationInProgress) return;
-    console.log(`[DEBUG] toggleExpanded: ${isExpanded} -> ${!isExpanded}`);
     setAnimationInProgress(true);
 
     if (isExpanded) {
       const cards = document.querySelectorAll(
         `.episode-card-${selectedSeasonId}`,
-      );
-      console.log(
-        `[DEBUG] toggleExpanded - Contraindo lista: cards=${cards.length}, visíveis=${episodesLimit}`,
       );
 
       // Apply animation immediately to all cards that will be hidden
@@ -289,6 +355,32 @@ export default function ListBySeason({
     }
   };
 
+  const handleMarkSeasonWatched = () => {
+    const userId = user?._id ?? "";
+
+    toast.promise(
+      executeMarkAllSeason(userId, seriesId, currentSeasonData.seasonNumber),
+      {
+        loading: "Adding from watched...",
+        success: "Season add from watched!",
+        error: "Error add season from watched!",
+      },
+    );
+  };
+
+  const handleUnMarkSeasonWatched = () => {
+    const userId = user?._id ?? "";
+
+    toast.promise(
+      executeUnMarkAllSeason(userId, seriesId, currentSeasonData.seasonNumber),
+      {
+        loading: "Removing from watched...",
+        success: "Season remove from watched!",
+        error: "Error removing season from watched!",
+      },
+    );
+  };
+
   return (
     <div className="w-full px-4 py-8 md:px-6">
       <h2 className="mb-6 text-3xl font-bold tracking-tighter">Episodes</h2>
@@ -315,14 +407,24 @@ export default function ListBySeason({
         <div
           className={`transform transition-all duration-500 ${isAnimating ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
         >
-          <div className="mb-4">
-            <h3 className="text-xl font-medium">
-              {currentSeasonData?.title ||
-                `Season ${currentSeasonData?.seasonNumber}`}
-            </h3>
-            {"plot" in currentSeasonData && currentSeasonData?.plot && (
-              <p className="mt-2 text-gray-400">{currentSeasonData.plot}</p>
-            )}
+          <div className="align-center flex flex-row justify-between">
+            <div className="mb-4 flex-2/3">
+              <h3 className="text-xl font-medium">
+                {currentSeasonData?.title ||
+                  `Season ${currentSeasonData?.seasonNumber}`}
+              </h3>
+              {"plot" in currentSeasonData && currentSeasonData?.plot && (
+                <p className="mt-2 text-gray-400">{currentSeasonData.plot}</p>
+              )}
+            </div>
+            <div className="mr-1 flex-1/3 content-center text-end">
+              <Button className="mr-2" onClick={handleMarkSeasonWatched}>
+                Mark all watched
+              </Button>
+              <Button onClick={handleUnMarkSeasonWatched}>
+                UnMark all watched
+              </Button>
+            </div>
           </div>
 
           {isLoading && (
