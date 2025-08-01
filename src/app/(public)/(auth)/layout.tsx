@@ -2,17 +2,18 @@
 
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { useAutoDevLogin } from "@lib/useAutoDevLogin";
 
 interface AuthLayoutProps {
   children: ReactNode;
 }
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
+  useAutoDevLogin();
   const pathname = usePathname();
 
   const isLogin = pathname.includes("/login");
   const isRegister = pathname.includes("/register");
-
   let title = "Autenticação";
   let subtitle = "Acesse sua conta ou crie uma nova";
 
