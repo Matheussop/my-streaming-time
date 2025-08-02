@@ -95,12 +95,12 @@ export function TopStreaming() {
         >
           Filmes
         </Button>
-        <Button
+        {/* <Button
           onClick={() => onHandleChangeTypeStreaming("animes")}
           className={`${typeStreaming === "animes" ? menuButtons({ status: "active" }) : menuButtons()}`}
         >
           Animes
-        </Button>
+        </Button> */}
       </div>
       {streaming && streaming.length > 0 ? (
         <div className="mt-6 grid grid-cols-3 gap-6">

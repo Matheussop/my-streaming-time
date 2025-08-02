@@ -381,6 +381,14 @@ export default function ListBySeason({
     );
   };
 
+  const areAllEpisodesWatched = () => {
+    const currentEpisodes = episodes[selectedSeasonId];
+    if (!currentEpisodes || currentEpisodes.length === 0) {
+      return false;
+    }
+    return currentEpisodes.every((episode) => episode.watched);
+  };
+
   return (
     <div className="w-full px-4 py-8 md:px-6">
       <h2 className="mb-6 text-3xl font-bold tracking-tighter">Episodes</h2>
@@ -418,12 +426,47 @@ export default function ListBySeason({
               )}
             </div>
             <div className="mr-1 flex-1/3 content-center text-end">
-              <Button className="mr-2" onClick={handleMarkSeasonWatched}>
-                Mark all watched
-              </Button>
-              <Button onClick={handleUnMarkSeasonWatched}>
-                UnMark all watched
-              </Button>
+              {areAllEpisodesWatched() ? (
+                <Button
+                  className="ring-offset-background focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md border border-red-500 bg-red-400 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors hover:bg-red-600 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                  onClick={handleUnMarkSeasonWatched}
+                >
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  UnMark all watched
+                </Button>
+              ) : (
+                <Button
+                  className="ring-offset-background focus-visible:ring-ring bg-primary/70 hover:bg-primary inline-flex h-10 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                  onClick={handleMarkSeasonWatched}
+                >
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  Mark all watched
+                </Button>
+              )}
             </div>
           </div>
 
