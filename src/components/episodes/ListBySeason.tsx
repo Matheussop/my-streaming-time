@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import {
   IEpisodeWatched,
   IWatchHistoryEntry,
-} from "@interfaces/userStremingHistory";
+} from "@interfaces/userStreamingHistory";
 import { userStreamingHistoryApi } from "api/userStreamingHistoryApi";
 
 import { useEpisodeModal } from "@lib/hooks/useEpisodeModal";
