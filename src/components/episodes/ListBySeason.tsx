@@ -428,7 +428,7 @@ export default function ListBySeason({
             <div className="mr-1 flex-1/3 content-center text-end">
               {areAllEpisodesWatched() ? (
                 <Button
-                  className="ring-offset-background focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md border border-red-500 bg-red-400 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors hover:bg-red-600 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                  className="ring-offset-background focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md border border-red-500 bg-red-600 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
                   onClick={handleUnMarkSeasonWatched}
                 >
                   <svg
@@ -448,22 +448,9 @@ export default function ListBySeason({
                 </Button>
               ) : (
                 <Button
-                  className="ring-offset-background focus-visible:ring-ring bg-primary/70 hover:bg-primary inline-flex h-10 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                  className="ring-offset-background focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md border border-green-500 bg-green-600 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-colors hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
                   onClick={handleMarkSeasonWatched}
                 >
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
                   Mark all watched
                 </Button>
               )}

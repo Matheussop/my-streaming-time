@@ -120,7 +120,6 @@ export default function Streaming({
   const changeViewOfStreaming = async (streamingViewed: boolean) => {
     const watchedDurationInMinutes =
       "durationTime" in streaming && streaming.durationTime;
-    console.log(user?._id);
     const data = {
       userId: user?._id ?? "",
       contentId: id,

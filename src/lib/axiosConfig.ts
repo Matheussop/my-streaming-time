@@ -108,7 +108,6 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         // If token renewal fails, process the queue with error
-        console.error("Error renewing token:", refreshError);
         processQueue(refreshError, null);
         return Promise.reject(AppError.fromError(refreshError as Error));
       } finally {
