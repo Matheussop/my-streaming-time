@@ -8,7 +8,7 @@ import {
 } from "@components/ui/select";
 import { Card } from "@components/ui/card";
 import { IEpisode, ISeason, ISeasonSummary } from "@interfaces/series";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { seasonApi } from "api/season";
 import { useApiRequest } from "@lib/hooks/useApiRequest";
 import { ChevronDown, Info } from "lucide-react";
@@ -55,10 +55,9 @@ export default function ListBySeason({
 
   const episodesLimit = 3;
 
-  const {
-    isLoading: isLoadingUserEpisodesWatched,
-    execute: executeUserEpisodesWatched,
-  } = useApiRequest<Record<string, IEpisodeWatched>>(
+  const { execute: executeUserEpisodesWatched } = useApiRequest<
+    Record<string, IEpisodeWatched>
+  >(
     (userId: string, contentId: string) =>
       userStreamingHistoryApi.getEpisodesWatched(userId, contentId),
     {
@@ -66,16 +65,9 @@ export default function ListBySeason({
         if (data) {
           setUserEpisodesWatched(data);
         }
-        if (seasonsSummary?.length) {
-          setSeasons(seasonsSummary);
-          if (seasonsSummary.length > 0 && selectedSeasonId === "1") {
-            const firstSeasonId =
-              "seasonId" in seasonsSummary[0]
-                ? seasonsSummary[0].seasonId
-                : seasonsSummary[0]._id;
-            setSelectedSeasonId(firstSeasonId);
-          }
-        }
+      },
+      onError: () => {
+        setUserEpisodesWatched({});
       },
     },
   );
@@ -90,7 +82,6 @@ export default function ListBySeason({
     {
       onSuccess: (data: ISeason) => {
         setCurrentSeasonData(data);
-
         const episodes = data.episodes?.map((episode) => ({
           ...episode,
           watched: episode._id in userEpisodesWatched,
@@ -237,6 +228,19 @@ export default function ListBySeason({
       selectedSeasonId,
   );
 
+  const selectFirstSeason = useCallback(() => {
+    if (seasonsSummary?.length) {
+      setSeasons(seasonsSummary);
+      if (seasonsSummary.length > 0 && selectedSeasonId === "1") {
+        const firstSeasonId =
+          "seasonId" in seasonsSummary[0]
+            ? seasonsSummary[0].seasonId
+            : seasonsSummary[0]._id;
+        setSelectedSeasonId(firstSeasonId);
+      }
+    }
+  }, [seasonsSummary, selectedSeasonId]);
+
   useEffect(() => {
     if (!episodesRequestedRef.current && seriesId && user?._id) {
       const userId = user?._id ?? "";
@@ -277,12 +281,16 @@ export default function ListBySeason({
     } else if (currentSeasonData.seasonNumber !== season?.seasonNumber) {
       setCurrentSeasonData(season as ISeason);
     }
+    if (!season) {
+      selectFirstSeason();
+    }
   }, [
     selectedSeasonId,
     seriesId,
     seasons,
     executeSeason,
     episodes,
+    selectFirstSeason,
     currentSeason,
     currentSeasonData,
   ]);
@@ -340,10 +348,6 @@ export default function ListBySeason({
         Math.max((cards.length - episodesLimit) * 10, 200),
       );
     } else {
-      // Expanding
-      console.log(
-        `[DEBUG] toggleExpanded - Expandindo lista: total=${episodes[selectedSeasonId]?.length}`,
-      );
       setIsAnimating(false);
       setTimeout(() => {
         setIsExpanded(true);
