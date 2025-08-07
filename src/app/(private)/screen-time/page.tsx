@@ -94,7 +94,7 @@ export default function ScreenTime() {
   };
 
   const formatPercentage = (value: number) => {
-    return `${value.toFixed(1)}%`;
+    return value && `${value.toFixed(1)}%`;
   };
 
   const [data, setData] = useState<ScreenTimeData | null>(null);
@@ -166,26 +166,30 @@ export default function ScreenTime() {
       <section className="space-y-4">
         <h2 className="text-2xl font-bold">Distribuição por Tipo</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-            <h3 className="text-lg font-semibold">Séries</h3>
-            <p className="text-xl font-bold">
-              {data.contentTypeDistribution.byType.series} (
-              {formatPercentage(
-                data.contentTypeDistribution.percentageByType.series,
-              )}
-              )
-            </p>
-          </div>
-          <div className="rounded-lg bg-gray-700 p-4 shadow-md">
-            <h3 className="text-lg font-semibold">Filmes</h3>
-            <p className="text-xl font-bold">
-              {data.contentTypeDistribution.byType.movie} (
-              {formatPercentage(
-                data.contentTypeDistribution.percentageByType.movie,
-              )}
-              )
-            </p>
-          </div>
+          {data.contentTypeDistribution.percentageByType.series && (
+            <div className="rounded-lg bg-gray-700 p-4 shadow-md">
+              <h3 className="text-lg font-semibold">Séries</h3>
+              <p className="text-xl font-bold">
+                {data.contentTypeDistribution.byType.series} (
+                {formatPercentage(
+                  data.contentTypeDistribution.percentageByType.series,
+                )}
+                )
+              </p>
+            </div>
+          )}
+          {data.contentTypeDistribution.percentageByType.movie && (
+            <div className="rounded-lg bg-gray-700 p-4 shadow-md">
+              <h3 className="text-lg font-semibold">Filmes</h3>
+              <p className="text-xl font-bold">
+                {data.contentTypeDistribution.byType.movie} (
+                {formatPercentage(
+                  data.contentTypeDistribution.percentageByType.movie,
+                )}
+                )
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
