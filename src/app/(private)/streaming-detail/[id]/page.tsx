@@ -97,7 +97,6 @@ export default function Streaming({
           id as string,
           typeStreaming as string,
         );
-
         setStreaming(movieData);
       };
       const isViewed = async () => {
@@ -109,7 +108,9 @@ export default function Streaming({
         setViewed(isViewed);
       };
       fetchMovie();
-      isViewed();
+      if (typeStreaming === "movies") {
+        isViewed();
+      }
     }
   }, [id, typeStreaming, router, user]);
 
