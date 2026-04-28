@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@components/ui/dropdownmenu";
-import { User, LogOut, Settings, ChevronUp, User2 } from "lucide-react";
+import { LogOut, ChevronUp, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SidebarMenuButton } from "@components/ui/sidebar";
 import { useAuth } from "@context/AuthContext";
@@ -19,10 +19,18 @@ export const UserMenu = () => {
   const { user, logout, isLoading } = useAuth();
   const router = useRouter();
 
+  const initials = user?.username
+    ? user.username
+        .split(" ")
+        .map((name) => name[0]?.toUpperCase())
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+    : "MS";
+
   const handleLogout = async () => {
-    logout().then(() => {
-      router.push("/");
-    });
+    await logout();
+    router.push("/");
   };
 
   if (isLoading) {
@@ -34,9 +42,9 @@ export const UserMenu = () => {
       <Button
         variant="outline"
         onClick={() => router.push("/landing")}
-        className="px-4"
+        className="w-full rounded-2xl border-white/10 bg-white/4 px-4 text-zinc-100 hover:bg-white/8"
       >
-        Logout
+        Entrar
       </Button>
     );
   }
@@ -44,39 +52,74 @@ export const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton className="bg-zinc-700 transition duration-300">
-          <User2 /> {user.username}
-          <ChevronUp className="ml-auto" />
-        </SidebarMenuButton>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm leading-none font-medium">{user.username}</p>
-            <p className="text-muted-foreground text-xs leading-none">
-              {user.email}
+        <SidebarMenuButton
+          aria-label="Abrir menu da conta"
+          tooltip="Abrir menu da conta"
+          size="lg"
+          className="hover:border-primary/20 data-[state=open]:border-primary/25 rounded-2xl border border-white/8 bg-linear-to-r from-white/8 to-white/4 px-3 py-3 transition-all duration-300 hover:bg-white/8 data-[state=open]:bg-white/10"
+        >
+          <div className="bg-primary/16 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 text-sm font-semibold">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1 text-left group-data-[collapsible=icon]:hidden">
+            <p className="truncate text-sm font-semibold text-zinc-100">
+              {user.username}
+            </p>
+            <p className="mt-0.5 truncate text-xs text-zinc-400">
+              Conta conectada
             </p>
           </div>
+          <ChevronUp className="ml-auto h-4 w-4 text-zinc-400 transition-transform group-data-[collapsible=icon]:hidden" />
+        </SidebarMenuButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="bg-dark-700 w-64 rounded-2xl border-white/10 p-2 text-zinc-100 shadow-2xl"
+        align="end"
+      >
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex items-center gap-3 rounded-xl bg-white/4 p-3">
+            <div className="bg-primary/16 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 text-sm font-semibold">
+              {initials}
+            </div>
+            <div className="min-w-0 space-y-1">
+              <p className="text-sm leading-none font-medium text-zinc-100">
+                {user.username}
+              </p>
+              <p className="text-xs leading-none text-zinc-400">Sessão ativa</p>
+              <p className="truncate text-xs leading-none text-zinc-500">
+                {user.email}
+              </p>
+            </div>
+          </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-white/8" />
+        <DropdownMenuLabel className="px-3 pb-1 text-[0.65rem] font-semibold tracking-[0.22em] text-zinc-500 uppercase">
+          Conta
+        </DropdownMenuLabel>
         <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={() => router.push("/profile")}
+          className="cursor-default rounded-xl px-3 py-2.5 text-zinc-400"
+          disabled
         >
-          <User className="mr-2 h-4 w-4" />
-          <span>Profile</span>
+          <User2 className="h-4 w-4" />
+          <div className="flex flex-col">
+            <span>Perfil e preferências</span>
+            <span className="text-[11px] text-zinc-500">
+              Disponível em breve
+            </span>
+          </div>
         </DropdownMenuItem>
+        <DropdownMenuSeparator className="bg-white/8" />
         <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={() => router.push("/settings")}
+          className="cursor-pointer rounded-xl px-3 py-2.5 text-zinc-100 focus:bg-white/8 focus:text-white"
+          onSelect={handleLogout}
         >
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Configuration</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onSelect={handleLogout}>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Logout</span>
+          <LogOut className="text-primary h-4 w-4" />
+          <div className="flex flex-col">
+            <span>Sair da conta</span>
+            <span className="text-[11px] text-zinc-500">
+              Encerrar sessão neste dispositivo
+            </span>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

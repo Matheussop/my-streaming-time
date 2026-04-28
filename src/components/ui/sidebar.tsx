@@ -808,20 +808,17 @@ const SidebarHoverTrigger = React.forwardRef<
         {/* Indicator always visible */}
         <div
           className={cn(
-            "bg-primary absolute h-24 w-1 rounded-full transition-all",
-            // Quando clicado, diminuir a duração da transição
+            "bg-primary/70 absolute h-16 w-[2px] rounded-full blur-[0.5px] transition-all",
             isClicked ? "duration-100" : "duration-300",
             isHovered || isClicked
               ? "scale-y-0 opacity-0"
-              : "scale-y-100 opacity-40 hover:opacity-70",
-            !isClicked && "animate-pulse",
+              : "scale-y-100 opacity-55 hover:opacity-80",
           )}
         />
 
-        {/* Hover area */}
         <div
           className={cn(
-            "flex h-24 w-8 items-center justify-center",
+            "flex h-20 w-8 items-center justify-center",
             side === "left"
               ? isCollapsed
                 ? "ml-8"
@@ -831,14 +828,13 @@ const SidebarHoverTrigger = React.forwardRef<
                 : "mr-4.5",
           )}
         >
-          {/* Button that appears on hover */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "bg-sidebar/80 text-sidebar-foreground border-sidebar-border hover:bg-sidebar/90 h-8 w-8 overflow-hidden rounded-full border shadow-md hover:shadow-lg",
+                  "bg-sidebar/92 text-sidebar-foreground hover:bg-sidebar h-9 w-9 overflow-hidden rounded-full border border-white/10 shadow-[0_16px_30px_-20px_rgba(0,0,0,0.85)] hover:shadow-[0_18px_36px_-20px_rgba(0,0,0,0.95)]",
                   isClicked ? "transition-none" : "transition-all duration-300",
                   isHovered || isClicked
                     ? "translate-x-0 scale-100 opacity-100"

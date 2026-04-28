@@ -21,7 +21,7 @@ export function StreamingCard({
   return (
     <div className="flex min-w-52 items-center gap-2 rounded-md bg-white/5 p-2">
       <div className="flex min-w-24 overflow-auto">
-        {title ? (
+        {imageUrl ? (
           <SafeImage
             src={imageUrl}
             alt={`Capa do filme ${title}`}
